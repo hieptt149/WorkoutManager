@@ -13,24 +13,24 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@color/colorPrimary">
+
         <TextView
-            android:id="@+id/tv_toolbar"
+            android:id="@+id/tv_app_toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="Toolbar Title"
+            android:text="@string/toolbar_title"
+            android:textColor="@android:color/white"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/white"/>
+            android:textStyle="bold" />
     </android.support.v7.widget.Toolbar>
 
-    <LinearLayout
-        android:id="@+id/ln_app_container"
+    <vn.com.hieptt149.workoutmanager.CustomViewPager
+        android:id="@+id/vp_app_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="8"
-        android:orientation="vertical"></LinearLayout>
+        android:layout_weight="8"></vn.com.hieptt149.workoutmanager.CustomViewPager>
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_nav"

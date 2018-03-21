@@ -1,6 +1,17 @@
 <resources>
     <string name="app_name">WorkoutManager</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="toolbar_title">Toolbar Title</string>
+    <string name="back">Back</string>
+    <string name="workout">Workout</string>
+    <string name="profile">Profile</string>
+    <string name="settings">Settings</string>
+    <string name="cardio">Cardio</string>
+    <string name="strength">Strength</string>
+    <string name="mobility">Mobility</string>
+    <string name="total_exercise">Total exercise</string>
+    <string name="total_time">Total time</string>
+    <string name="add_exercise">Add Exercise</string>
+    <string name="add_workout">Add Workout</string>
 </resources>

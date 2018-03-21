@@ -17,8 +17,6 @@ import vn.com.hieptt149.workoutmanager.R;
  */
 public class ProfileFragment extends Fragment {
 
-    private TextView tvToolbar;
-
     public static ProfileFragment newInstance() {
         ProfileFragment profileFragment = new ProfileFragment();
         return profileFragment;
@@ -35,7 +33,5 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        tvToolbar = getActivity().findViewById(R.id.tv_toolbar);
-        tvToolbar.setText("Profile");
     }
 }
