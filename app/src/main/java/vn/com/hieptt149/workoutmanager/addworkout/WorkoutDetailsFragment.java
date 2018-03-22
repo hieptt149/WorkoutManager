@@ -27,7 +27,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     private ProgressBar pbCardio, pbStrength, pbMobility;
     private ImageView ivChooseWorkoutIcon;
     private EditText edtWorkoutTitle;
-    private RecyclerView rvChosenExercise;
+    private RecyclerView rvSelectedExercise;
     private Button btnAddExercise;
 
 
@@ -60,7 +60,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         pbMobility = view.findViewById(R.id.pb_mobility);
         ivChooseWorkoutIcon = view.findViewById(R.id.iv_choose_workout_icon);
         edtWorkoutTitle = view.findViewById(R.id.edt_workout_title);
-        rvChosenExercise = view.findViewById(R.id.rv_chosen_exercise);
+        rvSelectedExercise = view.findViewById(R.id.rv_selected_exercise);
         btnAddExercise = view.findViewById(R.id.btn_add_exercise);
         btnAddExercise.setOnClickListener(this);
         tvAddWorkoutToolbarTitle.setText(R.string.add_workout);

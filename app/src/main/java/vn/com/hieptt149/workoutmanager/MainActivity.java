@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import vn.com.hieptt149.workoutmanager.profile.ProfileFragment;
 import vn.com.hieptt149.workoutmanager.settings.SettingsFragment;
+import vn.com.hieptt149.workoutmanager.utils.CustomViewPager;
 import vn.com.hieptt149.workoutmanager.workout.WorkoutFragment;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {

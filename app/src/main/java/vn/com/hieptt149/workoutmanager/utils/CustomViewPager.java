@@ -1,4 +1,4 @@
-package vn.com.hieptt149.workoutmanager;
+package vn.com.hieptt149.workoutmanager.utils;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;
@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 
 /**
  * Created by Administrator on 03/21/2018.
+ * Unscrollable viewpager
  */
 
 public class CustomViewPager extends ViewPager {
