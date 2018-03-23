@@ -6,11 +6,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.addworkout.AddWorkoutActivity;
@@ -20,6 +19,7 @@ import vn.com.hieptt149.workoutmanager.addworkout.AddWorkoutActivity;
  */
 public class WorkoutFragment extends Fragment implements View.OnClickListener {
 
+    private RecyclerView rvPreviewWorkoutList;
     private FloatingActionButton fabAddWorkout;
 
     public static WorkoutFragment newInstance() {
@@ -39,6 +39,7 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         fabAddWorkout = view.findViewById(R.id.fab_addworkout);
+        rvPreviewWorkoutList = view.findViewById(R.id.rv_preview_workout_list);
         fabAddWorkout.setOnClickListener(this);
     }
 

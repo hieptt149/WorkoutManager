@@ -2,9 +2,12 @@
 <resources>
     <dimen name="medium_space">10dp</dimen>
     <dimen name="small_space">5dp</dimen>
-    <dimen name="workout_details_image_view_width">200dp</dimen>
+    <dimen name="small_text_size">12sp</dimen>
     <dimen name="normal_text_size">16sp</dimen>
+    <dimen name="workout_details_image_view_width">200dp</dimen>
     <dimen name="big_text_size">20sp</dimen>
     <dimen name="button_corners_radius">5dp</dimen>
     <dimen name="item_height">56dp</dimen>
+    <dimen name="workout_details_item_width">100dp</dimen>
+    <dimen name="workout_details_item_height">125dp</dimen>
 </resources>

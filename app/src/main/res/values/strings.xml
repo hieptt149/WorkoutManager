@@ -9,6 +9,14 @@
     <string name="profile">Profile</string>
     <string name="settings">Settings</string>
 
+    <!--Workout Fragment-->
+    <string name="workout_title">Workout Title</string>
+    <string name="workout_duration">Workout Duration</string>
+    <string name="workout_exercises">Workout&#39;s Exercise</string>
+    <!--Profile Fragment-->
+
+    <!--Settings Fragment-->
+
     <!--Workout Details Fragment-->
     <string name="back">Back</string>
     <string name="cardio">Cardio</string>
