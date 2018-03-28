@@ -1,4 +1,4 @@
-package vn.com.hieptt149.workoutmanager;
+package vn.com.hieptt149.workoutmanager.home;
 
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -10,10 +10,11 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import vn.com.hieptt149.workoutmanager.profile.ProfileFragment;
-import vn.com.hieptt149.workoutmanager.settings.SettingsFragment;
+import vn.com.hieptt149.workoutmanager.R;
+import vn.com.hieptt149.workoutmanager.home.profile.ProfileFragment;
+import vn.com.hieptt149.workoutmanager.home.settings.SettingsFragment;
 import vn.com.hieptt149.workoutmanager.utils.CustomViewPager;
-import vn.com.hieptt149.workoutmanager.workout.WorkoutFragment;
+import vn.com.hieptt149.workoutmanager.home.workout.WorkoutFragment;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 

@@ -18,7 +18,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_weight="2.5"
             android:orientation="vertical"
             android:weightSum="10"
             android:padding="@dimen/small_space">
@@ -39,7 +39,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_weight="2.5"
             android:orientation="vertical"
             android:weightSum="10"
             android:padding="@dimen/small_space">
@@ -60,7 +60,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_weight="2.5"
             android:orientation="vertical"
             android:weightSum="10"
             android:padding="@dimen/small_space">
@@ -86,13 +86,13 @@
         android:orientation="vertical"
         android:weightSum="10">
         <ImageView
-            android:id="@+id/iv_choose_workout_icon"
+            android:id="@+id/iv_choose_icon"
             android:layout_width="@dimen/workout_details_image_view_width"
             android:layout_height="0dp"
             android:layout_weight="6"
             android:layout_gravity="center"/>
         <EditText
-            android:id="@+id/edt_workout_title"
+            android:id="@+id/edt_title"
             android:layout_width="@dimen/workout_details_image_view_width"
             android:layout_height="0dp"
             android:layout_weight="2"

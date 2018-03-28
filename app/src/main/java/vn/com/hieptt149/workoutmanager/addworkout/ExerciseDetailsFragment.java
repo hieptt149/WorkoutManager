@@ -1,8 +1,8 @@
 package vn.com.hieptt149.workoutmanager.addworkout;
 
-
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -18,9 +18,10 @@ import android.widget.TextView;
 import vn.com.hieptt149.workoutmanager.R;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Created by Administrator on 03/28/2018.
  */
-public class WorkoutDetailsFragment extends Fragment implements View.OnClickListener{
+
+public class ExerciseDetailsFragment extends Fragment {
 
     private OpenDetailsFragmentCallback openDetailsFragmentCallback;
     private TextView tvAddWorkoutToolbarTitle, tvTotalExercise, tvTotalTime;
@@ -30,10 +31,9 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     private RecyclerView rvPreviewSelectedExercise;
     private Button btnAddExercise;
 
-
-    public static WorkoutDetailsFragment newInstance() {
-        WorkoutDetailsFragment workoutDetailsFragment = new WorkoutDetailsFragment();
-        return workoutDetailsFragment;
+    public static ExerciseDetailsFragment newInstance(){
+        ExerciseDetailsFragment exerciseDetailsFragment = new ExerciseDetailsFragment();
+        return exerciseDetailsFragment;
     }
 
     @Override
@@ -42,15 +42,14 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         openDetailsFragmentCallback = (OpenDetailsFragmentCallback) context;
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_details, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_details,container,false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         tvAddWorkoutToolbarTitle = getActivity().findViewById(R.id.tv_addworkout_toolbar_title);
         tvTotalExercise = view.findViewById(R.id.tv_total_exercise);
@@ -62,17 +61,6 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         edtWorkoutTitle = view.findViewById(R.id.edt_title);
         rvPreviewSelectedExercise = view.findViewById(R.id.rv_preview_selected_exercise);
         btnAddExercise = view.findViewById(R.id.btn_add_exercise);
-        btnAddExercise.setOnClickListener(this);
-        tvAddWorkoutToolbarTitle.setText(R.string.add_workout);
-
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.btn_add_exercise:
-                openDetailsFragmentCallback.openFragment(AddExerciseFragment.newInstance(),"addexercise");
-                break;
-        }
+//        tvAddWorkoutToolbarTitle.setText(R.string.add_workout);
     }
 }

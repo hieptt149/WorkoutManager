@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import vn.com.hieptt149.workoutmanager.R;
 
-public class AddWorkoutActivity extends AppCompatActivity implements View.OnClickListener,WorkoutDetailsOpenFragmentCallback{
+public class AddWorkoutActivity extends AppCompatActivity implements View.OnClickListener,OpenDetailsFragmentCallback {
 
     private TextView tvAddWorkoutBack;
     private LinearLayout lnAddWorkoutContainer;

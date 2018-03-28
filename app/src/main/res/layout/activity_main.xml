@@ -5,13 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="10"
-    tools:context="vn.com.hieptt149.workoutmanager.MainActivity">
+    tools:context="vn.com.hieptt149.workoutmanager.home.MainActivity">
 
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary">
 
         <TextView
@@ -35,9 +33,9 @@
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="?android:attr/windowBackground"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/colorPrimary"
         android:foreground="?attr/selectableItemBackground"
         app:itemBackground="@color/colorPrimary"
         app:itemIconTint="@color/bottom_nav_item_click"

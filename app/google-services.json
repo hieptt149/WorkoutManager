@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "350684599048",
+    "firebase_url": "https://workoutmanager-3f3b6.firebaseio.com",
+    "project_id": "workoutmanager-3f3b6",
+    "storage_bucket": "workoutmanager-3f3b6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:350684599048:android:cbf27dadd9bc80b2",
+        "android_client_info": {
+          "package_name": "vn.com.hieptt149.workoutmanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "350684599048-iu98597v69v3nvj42voed581ls726pfg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "vn.com.hieptt149.workoutmanager",
+            "certificate_hash": "3022d702fcf2988e30c4079dd464e4ecc6599529"
+          }
+        },
+        {
+          "client_id": "350684599048-ognrsth4i0tq6c6htp5akelersfl7ffe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ63lnbkvBfin4Mnoeo9oQbK2mMe4-KqU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "350684599048-ognrsth4i0tq6c6htp5akelersfl7ffe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
