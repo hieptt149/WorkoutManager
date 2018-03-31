@@ -9,6 +9,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import vn.com.hieptt149.workoutmanager.R;
 
 public class AddWorkoutActivity extends AppCompatActivity implements View.OnClickListener,OpenDetailsFragmentCallback {
@@ -17,14 +20,14 @@ public class AddWorkoutActivity extends AppCompatActivity implements View.OnClic
     private LinearLayout lnAddWorkoutContainer;
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
+    private DatabaseReference exerciseRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_workout);
-        tvAddWorkoutBack = findViewById(R.id.tv_addworkout_back);
-        lnAddWorkoutContainer = findViewById(R.id.ln_addworkout_container);
-        tvAddWorkoutBack.setOnClickListener(this);
+        initView();
+        exerciseRef = FirebaseDatabase.getInstance().getReference().child("exercise");
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.ln_addworkout_container, WorkoutDetailsFragment.newInstance());
@@ -55,5 +58,11 @@ public class AddWorkoutActivity extends AppCompatActivity implements View.OnClic
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void initView() {
+        tvAddWorkoutBack = findViewById(R.id.tv_addworkout_back);
+        lnAddWorkoutContainer = findViewById(R.id.ln_addworkout_container);
+        tvAddWorkoutBack.setOnClickListener(this);
     }
 }
