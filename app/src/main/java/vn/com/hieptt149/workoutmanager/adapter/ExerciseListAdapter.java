@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.model.Exercise;
+import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 
 /**
  * Created by Administrator on 03/28/2018.
@@ -29,35 +30,11 @@ import vn.com.hieptt149.workoutmanager.model.Exercise;
 
 public class ExerciseListAdapter extends RecyclerView.Adapter<ExerciseListAdapter.ViewHolder> {
 
-    private Activity activity;
-    private ArrayList<Exercise> lstExercises = new ArrayList<>();
-    private ProgressDialog progressDialog;
+    private ArrayList<Exercise> lstExercises;
 //    private RequestOptions requestOptions;
 
-    public ExerciseListAdapter(Activity activity, DatabaseReference exerciseRef) {
-        this.activity = activity;
-        progressDialog = new ProgressDialog(activity);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setMessage("Loading...");
-        progressDialog.show();
-        exerciseRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                lstExercises.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    lstExercises.add(snapshot.getValue(Exercise.class));
-                }
-                notifyDataSetChanged();
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+    public ExerciseListAdapter(ArrayList<Exercise> lstExercises) {
+        this.lstExercises = lstExercises;
     }
 
     @Override

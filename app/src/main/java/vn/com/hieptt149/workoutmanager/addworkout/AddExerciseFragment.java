@@ -12,11 +12,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.adapter.ExerciseListAdapter;
+import vn.com.hieptt149.workoutmanager.model.Exercise;
+import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,6 +36,7 @@ public class AddExerciseFragment extends Fragment {
     private ExerciseListAdapter exerciseListAdapter;
     private LinearLayoutManager linearLayoutManager;
     private DividerItemDecoration dividerItemDecoration;
+    private ArrayList<Exercise> lstExercises;
 
     public static AddExerciseFragment newInstance() {
         AddExerciseFragment addExerciseFragment = new AddExerciseFragment();
@@ -46,16 +54,42 @@ public class AddExerciseFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        tvAddWorkoutToolBarTitle = getActivity().findViewById(R.id.tv_addworkout_toolbar_title);
-        rvExercise = view.findViewById(R.id.rv_exercise);
+        initView(view);
+        DisplayView.showProgressDialog(getActivity());
         exerciseRef = FirebaseDatabase.getInstance().getReference().child("exercise");
         tvAddWorkoutToolBarTitle.setText(R.string.add_exercise);
-        exerciseListAdapter = new ExerciseListAdapter(getActivity(),exerciseRef);
+//        exerciseListAdapter = new ExerciseListAdapter(lstExercises);
         linearLayoutManager = new LinearLayoutManager(getActivity());
         dividerItemDecoration = new DividerItemDecoration(getActivity(),linearLayoutManager.getOrientation());
         rvExercise.setHasFixedSize(true);
         rvExercise.setLayoutManager(linearLayoutManager);
         rvExercise.addItemDecoration(dividerItemDecoration);
-        rvExercise.setAdapter(exerciseListAdapter);
+        getNewExerciseList();
+//        rvExercise.setAdapter(exerciseListAdapter);
+    }
+
+    private void initView(View view) {
+        tvAddWorkoutToolBarTitle = getActivity().findViewById(R.id.tv_addworkout_toolbar_title);
+        rvExercise = view.findViewById(R.id.rv_exercise);
+    }
+
+    private void getNewExerciseList() {
+        exerciseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                lstExercises = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    lstExercises.add(snapshot.getValue(Exercise.class));
+                }
+                exerciseListAdapter = new ExerciseListAdapter(lstExercises);
+                rvExercise.setAdapter(exerciseListAdapter);
+                DisplayView.dismissProgressDialog();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                DisplayView.dismissProgressDialog();
+            }
+        });
     }
 }

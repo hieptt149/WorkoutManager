@@ -29,6 +29,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     private EditText edtWorkoutTitle;
     private RecyclerView rvPreviewSelectedExercise;
     private Button btnAddExercise;
+    private Bundle bundle;
 
 
     public static WorkoutDetailsFragment newInstance() {

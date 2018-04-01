@@ -20,14 +20,12 @@ public class AddWorkoutActivity extends AppCompatActivity implements View.OnClic
     private LinearLayout lnAddWorkoutContainer;
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
-    private DatabaseReference exerciseRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_workout);
         initView();
-        exerciseRef = FirebaseDatabase.getInstance().getReference().child("exercise");
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.ln_addworkout_container, WorkoutDetailsFragment.newInstance());

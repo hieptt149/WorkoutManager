@@ -27,10 +27,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initView();
         myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
-        bottomNavigationView = findViewById(R.id.bottom_nav);
-        vpAppContainer = findViewById(R.id.vp_app_container);
-        tvAppToolbarTitle = findViewById(R.id.tv_app_toolbar_title);
         //set số page được off screen
         vpAppContainer.setOffscreenPageLimit(2);
         vpAppContainer.setAdapter(myPagerAdapter);
@@ -56,6 +54,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 return true;
         }
         return false;
+    }
+
+    private void initView() {
+        bottomNavigationView = findViewById(R.id.bottom_nav);
+        vpAppContainer = findViewById(R.id.vp_app_container);
+        tvAppToolbarTitle = findViewById(R.id.tv_app_toolbar_title);
     }
 
     public static class MyPagerAdapter extends FragmentPagerAdapter {

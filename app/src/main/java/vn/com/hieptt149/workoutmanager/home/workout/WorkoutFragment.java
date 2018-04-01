@@ -38,13 +38,18 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        fabAddWorkout = view.findViewById(R.id.fab_addworkout);
-        rvPreviewWorkoutList = view.findViewById(R.id.rv_preview_workout_list);
-        fabAddWorkout.setOnClickListener(this);
+        initView(view);
+
     }
 
     @Override
     public void onClick(View view) {
         startActivity(new Intent(getActivity(), AddWorkoutActivity.class));
+    }
+
+    private void initView(View view) {
+        fabAddWorkout = view.findViewById(R.id.fab_addworkout);
+        rvPreviewWorkoutList = view.findViewById(R.id.rv_preview_workout_list);
+        fabAddWorkout.setOnClickListener(this);
     }
 }
