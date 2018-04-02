@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.addworkout.AddWorkoutActivity;
 
@@ -19,8 +20,11 @@ import vn.com.hieptt149.workoutmanager.addworkout.AddWorkoutActivity;
  */
 public class WorkoutFragment extends Fragment implements View.OnClickListener {
 
-    private RecyclerView rvPreviewWorkoutList;
+    private RecyclerView rvPreviewWorkout;
     private FloatingActionButton fabAddWorkout;
+
+    public WorkoutFragment() {
+    }
 
     public static WorkoutFragment newInstance() {
         WorkoutFragment workoutFragment = new WorkoutFragment();
@@ -40,6 +44,7 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
         initView(view);
 
+
     }
 
     @Override
@@ -49,7 +54,7 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener {
 
     private void initView(View view) {
         fabAddWorkout = view.findViewById(R.id.fab_addworkout);
-        rvPreviewWorkoutList = view.findViewById(R.id.rv_preview_workout_list);
+        rvPreviewWorkout = view.findViewById(R.id.rv_preview_workout);
         fabAddWorkout.setOnClickListener(this);
     }
 }

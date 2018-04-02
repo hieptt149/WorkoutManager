@@ -24,6 +24,7 @@ public class Exercise implements Serializable {
     public int strengthRate;
     @PropertyName("mobility_rate")
     public int mobilityRate;
+    @PropertyName("practice_time")
     public int praticeTime;
     public boolean isAdded;
 

@@ -31,7 +31,6 @@ import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 public class ExerciseListAdapter extends RecyclerView.Adapter<ExerciseListAdapter.ViewHolder> {
 
     private ArrayList<Exercise> lstExercises;
-//    private RequestOptions requestOptions;
 
     public ExerciseListAdapter(ArrayList<Exercise> lstExercises) {
         this.lstExercises = lstExercises;

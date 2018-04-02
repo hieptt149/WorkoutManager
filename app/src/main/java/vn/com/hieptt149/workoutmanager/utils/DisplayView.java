@@ -2,6 +2,7 @@ package vn.com.hieptt149.workoutmanager.utils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.widget.Toast;
 
 /**
@@ -11,9 +12,8 @@ import android.widget.Toast;
 public class DisplayView {
     private static ProgressDialog progressDialog;
 
-    public static void showProgressDialog(Activity activity){
-        progressDialog = new ProgressDialog(activity);
-        progressDialog = new ProgressDialog(activity);
+    public static void showProgressDialog(Context context){
+        progressDialog = new ProgressDialog(context);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setIndeterminate(true);
         progressDialog.setCanceledOnTouchOutside(false);
@@ -25,7 +25,7 @@ public class DisplayView {
         progressDialog.dismiss();
     }
 
-    public static void showToast(Activity activity, String msg){
-        Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show();
+    public static void showToast(Context context, String msg){
+        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
     }
 }

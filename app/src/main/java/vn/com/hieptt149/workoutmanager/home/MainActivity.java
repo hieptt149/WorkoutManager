@@ -1,5 +1,7 @@
 package vn.com.hieptt149.workoutmanager.home;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -10,11 +12,22 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.home.profile.ProfileFragment;
 import vn.com.hieptt149.workoutmanager.home.settings.SettingsFragment;
+import vn.com.hieptt149.workoutmanager.model.User;
+import vn.com.hieptt149.workoutmanager.model.Workout;
 import vn.com.hieptt149.workoutmanager.utils.CustomViewPager;
 import vn.com.hieptt149.workoutmanager.home.workout.WorkoutFragment;
+import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -22,12 +35,21 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private CustomViewPager vpAppContainer;
     private MyPagerAdapter myPagerAdapter;
     private TextView tvAppToolbarTitle;
+    private SharedPreferences sharedPreferences;
+    private DatabaseReference usersRef;
+    private DatabaseReference usersWorkoutRef;
+    //Demo user
+    private int userId = -1;
+    private User currUser;
+    private ArrayList<Workout> lstUsersWorkout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        usersRef = FirebaseDatabase.getInstance().getReference().child("user");
         myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         //set số page được off screen
         vpAppContainer.setOffscreenPageLimit(2);
@@ -35,6 +57,19 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(0);
         tvAppToolbarTitle.setText(R.string.workout);
+        //Lấy id của user đã đăng nhập lần trước
+//        if (sharedPreferences.contains("userid")){
+//            userId = sharedPreferences.getInt("userid",-1);
+//        }
+        //Demo
+        //Trong trường hợp không có phiên đăng nhập nào lần trước
+//        if (userId == -1){
+//
+//        } else {
+//
+//        }
+        userId = 9;
+        getUserInformation();
     }
 
     @Override
@@ -60,6 +95,40 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         bottomNavigationView = findViewById(R.id.bottom_nav);
         vpAppContainer = findViewById(R.id.vp_app_container);
         tvAppToolbarTitle = findViewById(R.id.tv_app_toolbar_title);
+    }
+
+    public void getUserInformation() {
+        DisplayView.showProgressDialog(this);
+        DatabaseReference userRef = usersRef.child(Integer.toString(userId));
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                currUser = dataSnapshot.getValue(User.class);
+                currUser.setId(userId);
+                usersWorkoutRef = FirebaseDatabase.getInstance().getReference().child("workout").child(Integer.toString(currUser.getId()));
+                usersWorkoutRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                            Workout usersWorkout = snapshot.getValue(Workout.class);
+                            usersWorkout.setId(Integer.parseInt(snapshot.getKey()));
+                            lstUsersWorkout.add(usersWorkout);
+                        }
+                        DisplayView.dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public static class MyPagerAdapter extends FragmentPagerAdapter {

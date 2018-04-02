@@ -32,17 +32,19 @@ public class AddExerciseFragment extends Fragment {
 
     private TextView tvAddWorkoutToolBarTitle;
     private RecyclerView rvExercise;
-    private DatabaseReference exerciseRef;
+    private DatabaseReference exercisesRef;
     private ExerciseListAdapter exerciseListAdapter;
     private LinearLayoutManager linearLayoutManager;
     private DividerItemDecoration dividerItemDecoration;
     private ArrayList<Exercise> lstExercises;
 
+    public AddExerciseFragment() {
+    }
+
     public static AddExerciseFragment newInstance() {
         AddExerciseFragment addExerciseFragment = new AddExerciseFragment();
         return addExerciseFragment;
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,12 +57,12 @@ public class AddExerciseFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView(view);
-        DisplayView.showProgressDialog(getActivity());
-        exerciseRef = FirebaseDatabase.getInstance().getReference().child("exercise");
+        DisplayView.showProgressDialog(getContext());
+        exercisesRef = FirebaseDatabase.getInstance().getReference().child("exercise");
         tvAddWorkoutToolBarTitle.setText(R.string.add_exercise);
 //        exerciseListAdapter = new ExerciseListAdapter(lstExercises);
-        linearLayoutManager = new LinearLayoutManager(getActivity());
-        dividerItemDecoration = new DividerItemDecoration(getActivity(),linearLayoutManager.getOrientation());
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        dividerItemDecoration = new DividerItemDecoration(getContext(),linearLayoutManager.getOrientation());
         rvExercise.setHasFixedSize(true);
         rvExercise.setLayoutManager(linearLayoutManager);
         rvExercise.addItemDecoration(dividerItemDecoration);
@@ -74,7 +76,7 @@ public class AddExerciseFragment extends Fragment {
     }
 
     private void getNewExerciseList() {
-        exerciseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        exercisesRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 lstExercises = new ArrayList<>();
