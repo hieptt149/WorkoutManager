@@ -15,7 +15,7 @@ public class Workout implements Serializable{
     @PropertyName("title")
     public String title;
     @PropertyName("icon")
-    public int icon;
+    public String icon;
     @PropertyName("exercises")
     public String lstUsersExercises;
     @PropertyName("total_time")
@@ -30,7 +30,7 @@ public class Workout implements Serializable{
     public Workout() {
     }
 
-    public Workout(int id, int userId, String title, int icon, String lstUsersExercises, int totalTime, int cadioRate, int strength_rate, int mobility_rate) {
+    public Workout(int id, int userId, String title, String icon, String lstUsersExercises, int totalTime, int cadioRate, int strength_rate, int mobility_rate) {
         this.id = id;
         this.userId = userId;
         this.title = title;
@@ -66,11 +66,11 @@ public class Workout implements Serializable{
         this.title = title;
     }
 
-    public int getIcon() {
+    public String getIcon() {
         return icon;
     }
 
-    public void setIcon(int icon) {
+    public void setIcon(String icon) {
         this.icon = icon;
     }
 

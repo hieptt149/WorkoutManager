@@ -23,7 +23,7 @@ import vn.com.hieptt149.workoutmanager.R;
 
 public class ExerciseDetailsFragment extends Fragment {
 
-    private OpenDetailsFragmentCallback openDetailsFragmentCallback;
+    private AddWorkoutActivityIntf addWorkoutActivityIntf;
     private TextView tvAddWorkoutToolbarTitle, tvTotalExercise, tvTotalTime;
     private ProgressBar pbCardio, pbStrength, pbMobility;
     private ImageView ivChooseWorkoutIcon;
@@ -39,7 +39,7 @@ public class ExerciseDetailsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        openDetailsFragmentCallback = (OpenDetailsFragmentCallback) context;
+        addWorkoutActivityIntf = (AddWorkoutActivityIntf) context;
     }
 
     @Nullable

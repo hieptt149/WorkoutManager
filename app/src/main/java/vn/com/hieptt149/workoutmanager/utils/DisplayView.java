@@ -3,6 +3,7 @@ package vn.com.hieptt149.workoutmanager.utils;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.util.DisplayMetrics;
 import android.widget.Toast;
 
 /**
@@ -27,5 +28,12 @@ public class DisplayView {
 
     public static void showToast(Context context, String msg){
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    public static int calculateNoOfColumns(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int noOfColumns = (int) (dpWidth / 180);
+        return noOfColumns;
     }
 }

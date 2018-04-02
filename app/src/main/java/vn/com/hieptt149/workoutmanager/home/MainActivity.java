@@ -1,5 +1,6 @@
 package vn.com.hieptt149.workoutmanager.home;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -18,13 +19,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.home.profile.ProfileFragment;
 import vn.com.hieptt149.workoutmanager.home.settings.SettingsFragment;
 import vn.com.hieptt149.workoutmanager.model.User;
-import vn.com.hieptt149.workoutmanager.model.Workout;
 import vn.com.hieptt149.workoutmanager.utils.CustomViewPager;
 import vn.com.hieptt149.workoutmanager.home.workout.WorkoutFragment;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;
@@ -37,11 +35,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private TextView tvAppToolbarTitle;
     private SharedPreferences sharedPreferences;
     private DatabaseReference usersRef;
-    private DatabaseReference usersWorkoutRef;
+    private MainActivityIntf mainActivityIntf;
     //Demo user
     private int userId = -1;
     private User currUser;
-    private ArrayList<Workout> lstUsersWorkout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +94,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         tvAppToolbarTitle = findViewById(R.id.tv_app_toolbar_title);
     }
 
-    public void getUserInformation() {
+    /**
+     *
+     */
+    private void getUserInformation() {
         DisplayView.showProgressDialog(this);
         DatabaseReference userRef = usersRef.child(Integer.toString(userId));
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -105,33 +105,21 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             public void onDataChange(DataSnapshot dataSnapshot) {
                 currUser = dataSnapshot.getValue(User.class);
                 currUser.setId(userId);
-                usersWorkoutRef = FirebaseDatabase.getInstance().getReference().child("workout").child(Integer.toString(currUser.getId()));
-                usersWorkoutRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                            Workout usersWorkout = snapshot.getValue(Workout.class);
-                            usersWorkout.setId(Integer.parseInt(snapshot.getKey()));
-                            lstUsersWorkout.add(usersWorkout);
-                        }
-                        DisplayView.dismissProgressDialog();
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
+                mainActivityIntf.sendCurrUserInfo(currUser);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                DisplayView.dismissProgressDialog();
             }
         });
     }
 
-    public static class MyPagerAdapter extends FragmentPagerAdapter {
+    public void setMainActivityIntf(MainActivityIntf mainActivityIntf){
+        this.mainActivityIntf = mainActivityIntf;
+    }
+
+    private static class MyPagerAdapter extends FragmentPagerAdapter {
 
         private static int NUM_ITEMS = 3;
 
@@ -158,4 +146,5 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             return NUM_ITEMS;
         }
     }
+
 }

@@ -9,12 +9,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
 import vn.com.hieptt149.workoutmanager.R;
 
-public class AddWorkoutActivity extends AppCompatActivity implements View.OnClickListener,OpenDetailsFragmentCallback {
+public class AddWorkoutActivity extends AppCompatActivity implements View.OnClickListener,AddWorkoutActivityIntf {
 
     private TextView tvAddWorkoutBack;
     private LinearLayout lnAddWorkoutContainer;

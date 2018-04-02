@@ -22,7 +22,7 @@ import vn.com.hieptt149.workoutmanager.R;
  */
 public class WorkoutDetailsFragment extends Fragment implements View.OnClickListener{
 
-    private OpenDetailsFragmentCallback openDetailsFragmentCallback;
+    private AddWorkoutActivityIntf addWorkoutActivityIntf;
     private TextView tvAddWorkoutToolbarTitle, tvTotalExercise, tvTotalTime;
     private ProgressBar pbCardio, pbStrength, pbMobility;
     private ImageView ivChooseWorkoutIcon;
@@ -40,7 +40,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        openDetailsFragmentCallback = (OpenDetailsFragmentCallback) context;
+        addWorkoutActivityIntf = (AddWorkoutActivityIntf) context;
     }
 
     @Override
@@ -72,7 +72,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btn_add_exercise:
-                openDetailsFragmentCallback.openFragment(AddExerciseFragment.newInstance(),"addexercise");
+                addWorkoutActivityIntf.openFragment(AddExerciseFragment.newInstance(),"addexercise");
                 break;
         }
     }

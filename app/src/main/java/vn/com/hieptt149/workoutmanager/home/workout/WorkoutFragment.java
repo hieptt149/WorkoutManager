@@ -6,22 +6,41 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+
 import vn.com.hieptt149.workoutmanager.R;
+import vn.com.hieptt149.workoutmanager.adapter.WorkoutPreviewAdapter;
 import vn.com.hieptt149.workoutmanager.addworkout.AddWorkoutActivity;
+import vn.com.hieptt149.workoutmanager.home.MainActivity;
+import vn.com.hieptt149.workoutmanager.home.MainActivityIntf;
+import vn.com.hieptt149.workoutmanager.model.User;
+import vn.com.hieptt149.workoutmanager.model.Workout;
+import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WorkoutFragment extends Fragment implements View.OnClickListener {
+public class WorkoutFragment extends Fragment implements View.OnClickListener{
 
     private RecyclerView rvPreviewWorkout;
     private FloatingActionButton fabAddWorkout;
+    private WorkoutPreviewAdapter workoutPreviewAdapter;
+    private ArrayList<Workout> lstUsersWorkout;
+    private DatabaseReference usersWorkoutRef;
+    private MainActivity mainActivity;
 
     public WorkoutFragment() {
     }
@@ -43,8 +62,34 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView(view);
+        mainActivity = (MainActivity) getActivity();
+        lstUsersWorkout = new ArrayList<>();
+        rvPreviewWorkout.setHasFixedSize(true);
+        rvPreviewWorkout.setLayoutManager(new GridLayoutManager(getContext(),DisplayView.calculateNoOfColumns(getContext())));
+        mainActivity.setMainActivityIntf(new MainActivityIntf() {
+            @Override
+            public void sendCurrUserInfo(User currUser) {
+                usersWorkoutRef = FirebaseDatabase.getInstance().getReference().child("workout").child(Integer.toString(currUser.getId()));
+                usersWorkoutRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            Workout usersWorkout = snapshot.getValue(Workout.class);
+                            usersWorkout.setId(Integer.parseInt(snapshot.getKey()));
+                            lstUsersWorkout.add(usersWorkout);
+                        }
+                        workoutPreviewAdapter = new WorkoutPreviewAdapter(getContext(),lstUsersWorkout);
+                        rvPreviewWorkout.setAdapter(workoutPreviewAdapter);
+                        DisplayView.dismissProgressDialog();
+                    }
 
-
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        DisplayView.dismissProgressDialog();
+                    }
+                });
+            }
+        });
     }
 
     @Override

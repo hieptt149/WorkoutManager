@@ -90,7 +90,8 @@
             android:layout_width="@dimen/workout_details_image_view_width"
             android:layout_height="0dp"
             android:layout_weight="6"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:src="@drawable/proteins"/>
         <EditText
             android:id="@+id/edt_title"
             android:layout_width="@dimen/workout_details_image_view_width"
