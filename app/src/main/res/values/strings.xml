@@ -25,6 +25,7 @@
     <string name="total_exercise">Total exercise</string>
     <string name="total_time">Total time</string>
     <string name="add_workout">Add Workout</string>
+    <string name="click_iv_to_choose">(click on icon to choose another)</string>
 
     <!--Add Exercise Fragment-->
 

@@ -34,7 +34,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="3"
-                style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:max="100"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="0dp"
@@ -55,7 +56,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="3"
-                style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:max="100"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="0dp"
@@ -76,7 +78,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="3"
-                style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:max="100"/>
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
@@ -84,7 +87,8 @@
         android:layout_height="0dp"
         android:layout_weight="5"
         android:orientation="vertical"
-        android:weightSum="10">
+        android:weightSum="10"
+        android:layout_marginTop="@dimen/medium_space">
         <ImageView
             android:id="@+id/iv_choose_icon"
             android:layout_width="@dimen/workout_details_image_view_width"
@@ -92,12 +96,23 @@
             android:layout_weight="6"
             android:layout_gravity="center"
             android:src="@drawable/proteins"/>
+        <TextView
+            android:id="@+id/tv_click_to_choose"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_space"
+            android:gravity="center"
+            android:text="@string/click_iv_to_choose"
+            android:textStyle="italic"
+            android:visibility="gone"/>
         <EditText
             android:id="@+id/edt_title"
             android:layout_width="@dimen/workout_details_image_view_width"
-            android:layout_height="0dp"
-            android:layout_weight="2"
-            android:layout_gravity="center"/>
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:backgroundTint="@android:color/transparent"
+            android:hint="Workout Name"/>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"

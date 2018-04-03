@@ -16,12 +16,12 @@ public class History implements Serializable {
     @PropertyName("datetime")
     public long datetime;
     @PropertyName("time_workout")
-    public int timeWorkout;
+    public long timeWorkout;
 
     public History() {
     }
 
-    public History(int id, int userId, int workoutId, long datetime, int timeWorkout) {
+    public History(int id, int userId, int workoutId, long datetime, long timeWorkout) {
         this.id = id;
         this.userId = userId;
         this.workoutId = workoutId;
@@ -61,11 +61,11 @@ public class History implements Serializable {
         this.datetime = datetime;
     }
 
-    public int getTimeWorkout() {
+    public long getTimeWorkout() {
         return timeWorkout;
     }
 
-    public void setTimeWorkout(int timeWorkout) {
+    public void setTimeWorkout(long timeWorkout) {
         this.timeWorkout = timeWorkout;
     }
 }

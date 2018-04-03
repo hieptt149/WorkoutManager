@@ -25,7 +25,7 @@ public class Exercise implements Serializable {
     @PropertyName("mobility_rate")
     public int mobilityRate;
     @PropertyName("practice_time")
-    public int praticeTime;
+    public long praticeTime;
     public boolean isAdded;
 
     public Exercise() {
@@ -98,11 +98,11 @@ public class Exercise implements Serializable {
         this.mobilityRate = mobility_rate;
     }
 
-    public int getPraticeTime() {
+    public long getPraticeTime() {
         return praticeTime;
     }
 
-    public void setPraticeTime(int praticeTime) {
+    public void setPraticeTime(long praticeTime) {
         this.praticeTime = praticeTime;
     }
 

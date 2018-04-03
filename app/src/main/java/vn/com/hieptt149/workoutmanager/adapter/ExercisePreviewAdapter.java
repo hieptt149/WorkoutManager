@@ -38,7 +38,7 @@ public class ExercisePreviewAdapter extends RecyclerView.Adapter<ExercisePreview
 
         public ViewHolder(View itemView) {
             super(itemView);
-            ivExercisePreview = itemView.findViewById(R.id.iv_item_preview);
+            ivExercisePreview = itemView.findViewById(R.id.iv_preview_item);
             tvExerciseName = itemView.findViewById(R.id.tv_item_title);
         }
     }

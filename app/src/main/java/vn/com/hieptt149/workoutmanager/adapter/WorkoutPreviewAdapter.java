@@ -1,18 +1,18 @@
 package vn.com.hieptt149.workoutmanager.adapter;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import vn.com.hieptt149.workoutmanager.R;
+import vn.com.hieptt149.workoutmanager.home.workout.WorkoutFragmentIntf;
 import vn.com.hieptt149.workoutmanager.model.Workout;
 
 /**
@@ -23,10 +23,12 @@ public class WorkoutPreviewAdapter extends RecyclerView.Adapter<WorkoutPreviewAd
 
     private Context context;
     private ArrayList<Workout> lstWorkouts;
+    private WorkoutFragmentIntf workoutFragmentIntf;
 
-    public WorkoutPreviewAdapter(Context context, ArrayList<Workout> lstWorkouts) {
+    public WorkoutPreviewAdapter(Context context, ArrayList<Workout> lstWorkouts, WorkoutFragmentIntf workoutFragmentIntf) {
         this.context = context;
         this.lstWorkouts = lstWorkouts;
+        this.workoutFragmentIntf = workoutFragmentIntf;
     }
 
     @Override
@@ -36,11 +38,17 @@ public class WorkoutPreviewAdapter extends RecyclerView.Adapter<WorkoutPreviewAd
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         Workout workout = lstWorkouts.get(position);
         int imgRes = context.getResources().getIdentifier(workout.getIcon(), "drawable", context.getPackageName());
         holder.ivWorkoutIcon.setImageResource(imgRes);
         holder.tvWorkoutTitle.setText(workout.getTitle());
+        holder.lnWorkoutItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                workoutFragmentIntf.openWorkoutDetails(position);
+            }
+        });
     }
 
     @Override
@@ -49,12 +57,15 @@ public class WorkoutPreviewAdapter extends RecyclerView.Adapter<WorkoutPreviewAd
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+
+        private LinearLayout lnWorkoutItem;
         private ImageView ivWorkoutIcon;
         private TextView tvWorkoutTitle;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            ivWorkoutIcon = itemView.findViewById(R.id.iv_item_preview);
+            lnWorkoutItem = itemView.findViewById(R.id.ln_preview_item);
+            ivWorkoutIcon = itemView.findViewById(R.id.iv_preview_item);
             tvWorkoutTitle = itemView.findViewById(R.id.tv_item_title);
         }
     }

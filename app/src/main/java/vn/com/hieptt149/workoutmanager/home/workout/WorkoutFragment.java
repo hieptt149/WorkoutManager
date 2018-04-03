@@ -33,7 +33,7 @@ import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WorkoutFragment extends Fragment implements View.OnClickListener{
+public class WorkoutFragment extends Fragment implements View.OnClickListener, WorkoutFragmentIntf {
 
     private RecyclerView rvPreviewWorkout;
     private FloatingActionButton fabAddWorkout;
@@ -65,7 +65,7 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener{
         mainActivity = (MainActivity) getActivity();
         lstUsersWorkout = new ArrayList<>();
         rvPreviewWorkout.setHasFixedSize(true);
-        rvPreviewWorkout.setLayoutManager(new GridLayoutManager(getContext(),DisplayView.calculateNoOfColumns(getContext())));
+        rvPreviewWorkout.setLayoutManager(new GridLayoutManager(getContext(), DisplayView.calculateNoOfColumns(getContext())));
         mainActivity.setMainActivityIntf(new MainActivityIntf() {
             @Override
             public void sendCurrUserInfo(User currUser) {
@@ -78,7 +78,7 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener{
                             usersWorkout.setId(Integer.parseInt(snapshot.getKey()));
                             lstUsersWorkout.add(usersWorkout);
                         }
-                        workoutPreviewAdapter = new WorkoutPreviewAdapter(getContext(),lstUsersWorkout);
+                        workoutPreviewAdapter = new WorkoutPreviewAdapter(getContext(), lstUsersWorkout, WorkoutFragment.this);
                         rvPreviewWorkout.setAdapter(workoutPreviewAdapter);
                         DisplayView.dismissProgressDialog();
                     }
@@ -95,6 +95,13 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View view) {
         startActivity(new Intent(getActivity(), AddWorkoutActivity.class));
+    }
+
+    @Override
+    public void openWorkoutDetails(int position) {
+        Intent i = new Intent(getActivity(),AddWorkoutActivity.class);
+        i.putExtra("workout",lstUsersWorkout.get(position));
+        startActivity(i);
     }
 
     private void initView(View view) {

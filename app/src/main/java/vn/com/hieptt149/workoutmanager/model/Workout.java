@@ -3,6 +3,7 @@ package vn.com.hieptt149.workoutmanager.model;
 import com.google.firebase.database.PropertyName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by Administrator on 04/01/2018.
@@ -17,9 +18,9 @@ public class Workout implements Serializable{
     @PropertyName("icon")
     public String icon;
     @PropertyName("exercises")
-    public String lstUsersExercises;
+    public ArrayList<Exercise> lstUsersExercises;
     @PropertyName("total_time")
-    public int totalTime;
+    public long totalTime;
     @PropertyName("cadio_rate")
     public int cadioRate;
     @PropertyName("strength_rate")
@@ -30,7 +31,7 @@ public class Workout implements Serializable{
     public Workout() {
     }
 
-    public Workout(int id, int userId, String title, String icon, String lstUsersExercises, int totalTime, int cadioRate, int strength_rate, int mobility_rate) {
+    public Workout(int id, int userId, String title, String icon, ArrayList<Exercise> lstUsersExercises, long totalTime, int cadioRate, int strength_rate, int mobility_rate) {
         this.id = id;
         this.userId = userId;
         this.title = title;
@@ -74,19 +75,19 @@ public class Workout implements Serializable{
         this.icon = icon;
     }
 
-    public String getLstUsersExercises() {
+    public ArrayList<Exercise> getLstUsersExercises() {
         return lstUsersExercises;
     }
 
-    public void setLstUsersExercises(String lstUsersExercises) {
+    public void setLstUsersExercises(ArrayList<Exercise> lstUsersExercises) {
         this.lstUsersExercises = lstUsersExercises;
     }
 
-    public int getTotalTime() {
+    public long getTotalTime() {
         return totalTime;
     }
 
-    public void setTotalTime(int totalTime) {
+    public void setTotalTime(long totalTime) {
         this.totalTime = totalTime;
     }
 
@@ -98,19 +99,19 @@ public class Workout implements Serializable{
         this.cadioRate = cadioRate;
     }
 
-    public int getStrength_rate() {
+    public int getStrengthRate() {
         return strength_rate;
     }
 
-    public void setStrength_rate(int strength_rate) {
+    public void setStrengthRate(int strength_rate) {
         this.strength_rate = strength_rate;
     }
 
-    public int getMobility_rate() {
+    public int getMobilityRate() {
         return mobility_rate;
     }
 
-    public void setMobility_rate(int mobility_rate) {
+    public void setMobilityRate(int mobility_rate) {
         this.mobility_rate = mobility_rate;
     }
 }
