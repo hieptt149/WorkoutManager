@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import vn.com.hieptt149.workoutmanager.R;
+import vn.com.hieptt149.workoutmanager.adapter.ExercisePreviewAdapter;
 import vn.com.hieptt149.workoutmanager.model.Exercise;
 import vn.com.hieptt149.workoutmanager.model.Workout;
 import vn.com.hieptt149.workoutmanager.utils.TimeFormatter;
@@ -32,14 +34,15 @@ import vn.com.hieptt149.workoutmanager.utils.TimeFormatter;
 public class WorkoutDetailsFragment extends Fragment implements View.OnClickListener {
 
     private AddWorkoutActivityIntf addWorkoutActivityIntf;
-    private TextView tvAddWorkoutToolbarTitle, tvTotalExercise, tvTotalTime, tvClickToChoose;
+    private TextView tvAddWorkoutToolbarTitle, tvTotalExercise, tvTotalTime, tvClickToChoose,tvExerciseDescription;
     private ProgressBar pbCardio, pbStrength, pbMobility;
     private ImageView ivChooseWorkoutIcon;
     private EditText edtWorkoutTitle;
     private RecyclerView rvPreviewSelectedExercise;
     private Button btnAddExercise;
+    private ExercisePreviewAdapter exercisePreviewAdapter;
     private static Workout usersWorkoutDetails;
-
+    private ArrayList<Exercise> lstSelectedExercise;
 
     public static WorkoutDetailsFragment newInstance(Bundle bundle) {
         WorkoutDetailsFragment workoutDetailsFragment = new WorkoutDetailsFragment();
@@ -69,10 +72,18 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView(view);
+        lstSelectedExercise = new ArrayList<>();
+        rvPreviewSelectedExercise.setHasFixedSize(true);
+        rvPreviewSelectedExercise.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
+        //Trường hợp user xem chi tiết workout
         if (usersWorkoutDetails != null) {
+            lstSelectedExercise.addAll(usersWorkoutDetails.getLstUsersExercises());
             showUsersWorkoutDetails();
-        } else {
-
+        }
+        //Trường hợp tạo mới workout
+        else {
+            lstSelectedExercise = null;
+            tvClickToChoose.setVisibility(View.VISIBLE);
         }
     }
 
@@ -80,11 +91,16 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_add_exercise:
-                addWorkoutActivityIntf.openFragment(AddExerciseFragment.newInstance(), "addexercise");
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("lstselectedexercise",lstSelectedExercise);
+                addWorkoutActivityIntf.openFragment(AddExerciseFragment.newInstance(bundle), "addexercise");
                 break;
         }
     }
 
+    /**
+     * Hiển thị chi tiết workout
+     */
     private void showUsersWorkoutDetails() {
         pbCardio.setProgress(usersWorkoutDetails.getCadioRate());
         pbStrength.setProgress(usersWorkoutDetails.getStrengthRate());
@@ -92,8 +108,10 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         int imgRes = getResources().getIdentifier(usersWorkoutDetails.getIcon(), "drawable", getContext().getPackageName());
         ivChooseWorkoutIcon.setImageResource(imgRes);
         edtWorkoutTitle.setText(usersWorkoutDetails.getTitle());
-        tvTotalExercise.setText(usersWorkoutDetails.getLstUsersExercises().size() + "");
+        tvTotalExercise.setText(usersWorkoutDetails.getLstUsersExercises().size() + " exercise(s)");
         tvTotalTime.setText(TimeFormatter.msTimeFormatter(usersWorkoutDetails.getTotalTime()));
+        exercisePreviewAdapter = new ExercisePreviewAdapter(getContext(),lstSelectedExercise);
+        rvPreviewSelectedExercise.setAdapter(exercisePreviewAdapter);
     }
 
     private void initView(View view) {
@@ -107,6 +125,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         tvClickToChoose = view.findViewById(R.id.tv_click_to_choose);
         edtWorkoutTitle = view.findViewById(R.id.edt_title);
         rvPreviewSelectedExercise = view.findViewById(R.id.rv_preview_selected_exercise);
+        tvExerciseDescription = view.findViewById(R.id.tv_exercise_description);
         btnAddExercise = view.findViewById(R.id.btn_add_exercise);
         btnAddExercise.setOnClickListener(this);
         tvAddWorkoutToolbarTitle.setText(R.string.add_workout);

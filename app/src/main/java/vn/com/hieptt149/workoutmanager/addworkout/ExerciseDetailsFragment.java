@@ -24,14 +24,14 @@ import vn.com.hieptt149.workoutmanager.R;
 public class ExerciseDetailsFragment extends Fragment {
 
     private AddWorkoutActivityIntf addWorkoutActivityIntf;
-    private TextView tvAddWorkoutToolbarTitle, tvTotalExercise, tvTotalTime;
+    private TextView tvAddWorkoutToolbarTitle, tvTotalExercise, tvTotalTime, tvClickToChoose, tvExerciseDescription;
     private ProgressBar pbCardio, pbStrength, pbMobility;
     private ImageView ivChooseWorkoutIcon;
     private EditText edtWorkoutTitle;
     private RecyclerView rvPreviewSelectedExercise;
     private Button btnAddExercise;
 
-    public static ExerciseDetailsFragment newInstance(){
+    public static ExerciseDetailsFragment newInstance() {
         ExerciseDetailsFragment exerciseDetailsFragment = new ExerciseDetailsFragment();
         return exerciseDetailsFragment;
     }
@@ -45,12 +45,17 @@ public class ExerciseDetailsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_details,container,false);
+        return inflater.inflate(R.layout.fragment_details, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initView(view);
+//        tvAddWorkoutToolbarTitle.setText(R.string.add_workout);
+    }
+
+    private void initView(View view) {
         tvAddWorkoutToolbarTitle = getActivity().findViewById(R.id.tv_addworkout_toolbar_title);
         tvTotalExercise = view.findViewById(R.id.tv_total_exercise);
         tvTotalTime = view.findViewById(R.id.tv_total_time);
@@ -58,9 +63,10 @@ public class ExerciseDetailsFragment extends Fragment {
         pbStrength = view.findViewById(R.id.pb_strength);
         pbMobility = view.findViewById(R.id.pb_mobility);
         ivChooseWorkoutIcon = view.findViewById(R.id.iv_choose_icon);
+        tvClickToChoose = view.findViewById(R.id.tv_click_to_choose);
         edtWorkoutTitle = view.findViewById(R.id.edt_title);
         rvPreviewSelectedExercise = view.findViewById(R.id.rv_preview_selected_exercise);
+        tvExerciseDescription = view.findViewById(R.id.tv_exercise_description);
         btnAddExercise = view.findViewById(R.id.btn_add_exercise);
-//        tvAddWorkoutToolbarTitle.setText(R.string.add_workout);
     }
 }

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +46,18 @@ public class ExerciseListAdapter extends RecyclerView.Adapter<ExerciseListAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Exercise exercise = lstExercises.get(position);
+        holder.lnItemExercise.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         holder.tvExerciseName.setText(exercise.getName());
+        if (exercise.isAdded() == true){
+            holder.ivSelectExercise.setImageLevel(1);
+        } else {
+            holder.ivSelectExercise.setImageLevel(0);
+        }
         holder.ivSelectExercise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -61,11 +73,13 @@ public class ExerciseListAdapter extends RecyclerView.Adapter<ExerciseListAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
+        private LinearLayout lnItemExercise;
         private ImageView ivSelectExercise;
         private TextView tvExerciseName;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            lnItemExercise = itemView.findViewById(R.id.ln_item_exercise);
             ivSelectExercise = itemView.findViewById(R.id.iv_select_exercise);
             tvExerciseName = itemView.findViewById(R.id.tv_exercise_name);
         }

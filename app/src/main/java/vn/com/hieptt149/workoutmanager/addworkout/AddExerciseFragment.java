@@ -36,13 +36,19 @@ public class AddExerciseFragment extends Fragment {
     private ExerciseListAdapter exerciseListAdapter;
     private LinearLayoutManager linearLayoutManager;
     private DividerItemDecoration dividerItemDecoration;
+    private static ArrayList<Exercise> lstSelectedExercises;
     private ArrayList<Exercise> lstExercises;
 
     public AddExerciseFragment() {
     }
 
-    public static AddExerciseFragment newInstance() {
+    public static AddExerciseFragment newInstance(Bundle bundle) {
         AddExerciseFragment addExerciseFragment = new AddExerciseFragment();
+        if (bundle != null) {
+            lstSelectedExercises = (ArrayList<Exercise>) bundle.getSerializable("lstselectedexercise");
+        } else {
+            lstSelectedExercises = null;
+        }
         return addExerciseFragment;
     }
 
@@ -57,17 +63,21 @@ public class AddExerciseFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView(view);
-        DisplayView.showProgressDialog(getContext());
         exercisesRef = FirebaseDatabase.getInstance().getReference().child("exercise");
         tvAddWorkoutToolBarTitle.setText(R.string.add_exercise);
-//        exerciseListAdapter = new ExerciseListAdapter(lstExercises);
         linearLayoutManager = new LinearLayoutManager(getContext());
-        dividerItemDecoration = new DividerItemDecoration(getContext(),linearLayoutManager.getOrientation());
+        dividerItemDecoration = new DividerItemDecoration(getContext(), linearLayoutManager.getOrientation());
         rvExercise.setHasFixedSize(true);
         rvExercise.setLayoutManager(linearLayoutManager);
         rvExercise.addItemDecoration(dividerItemDecoration);
-        getNewExerciseList();
-//        rvExercise.setAdapter(exerciseListAdapter);
+        //Trường hợp user muốn thêm mới exercise vào workout
+        if (lstSelectedExercises != null) {
+            mergeSelectedExsWithDefaultExs();
+        }
+        //Trường hợp tạo mới workout lần đầu
+        else {
+            getNewExerciseList();
+        }
     }
 
     private void initView(View view) {
@@ -75,13 +85,49 @@ public class AddExerciseFragment extends Fragment {
         rvExercise = view.findViewById(R.id.rv_exercise);
     }
 
+    /**
+     * Lấy danh sách exercise từ Firebase và đổ vào recyclerview
+     */
     private void getNewExerciseList() {
+        DisplayView.showProgressDialog(getContext());
         exercisesRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 lstExercises = new ArrayList<>();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     lstExercises.add(snapshot.getValue(Exercise.class));
+                }
+                exerciseListAdapter = new ExerciseListAdapter(lstExercises);
+                rvExercise.setAdapter(exerciseListAdapter);
+                DisplayView.dismissProgressDialog();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                DisplayView.dismissProgressDialog();
+            }
+        });
+    }
+
+    /**
+     * Xác định những exercise đã được người dùng chọn trong danh sách exercise lấy từ firebase
+     */
+    private void mergeSelectedExsWithDefaultExs() {
+        DisplayView.showProgressDialog(getContext());
+        exercisesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                lstExercises = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    lstExercises.add(snapshot.getValue(Exercise.class));
+                }
+                for (int i = 0; i < lstSelectedExercises.size(); i++) {
+                    for (int j = 0; j < lstExercises.size(); j++) {
+                        if (lstExercises.get(j).getId() == lstSelectedExercises.get(i).getId()){
+                            lstExercises.get(j).setAdded(lstSelectedExercises.get(i).isAdded());
+                            lstExercises.get(j).setPraticeTime(lstSelectedExercises.get(i).getPraticeTime());
+                        }
+                    }
                 }
                 exerciseListAdapter = new ExerciseListAdapter(lstExercises);
                 rvExercise.setAdapter(exerciseListAdapter);
