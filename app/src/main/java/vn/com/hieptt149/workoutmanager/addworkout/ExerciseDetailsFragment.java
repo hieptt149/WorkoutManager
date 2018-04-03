@@ -1,6 +1,7 @@
 package vn.com.hieptt149.workoutmanager.addworkout;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,10 +20,15 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.model.Exercise;
+import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 
 /**
  * Created by Administrator on 03/28/2018.
@@ -72,6 +78,7 @@ public class ExerciseDetailsFragment extends Fragment {
     }
 
     private void showExerciseDetails() {
+        DisplayView.showProgressDialog(getContext());
         lnExercisesInfo.setVisibility(View.GONE);
         svDescriptionContainer.setVisibility(View.VISIBLE);
         edtWorkoutTitle.setVisibility(View.GONE);
@@ -81,10 +88,22 @@ public class ExerciseDetailsFragment extends Fragment {
         pbStrength.setProgress(selectedExercise.getStrengthRate());
         pbMobility.setProgress(selectedExercise.getMobilityRate());
         RequestOptions options = new RequestOptions();
-        options.placeholder(R.drawable.no_image)
-                .error(R.drawable.no_connection);
+        options.error(R.drawable.no_connection);
         Glide.with(getContext())
                 .load(selectedExercise.getUrl())
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        DisplayView.dismissProgressDialog();
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        DisplayView.dismissProgressDialog();
+                        return false;
+                    }
+                })
                 .apply(options)
                 .into(ivExercisePreview);
         tvExerciseDescription.setText(selectedExercise.getDescription());

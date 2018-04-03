@@ -29,6 +29,7 @@ import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.adapter.ExercisePreviewAdapter;
 import vn.com.hieptt149.workoutmanager.model.Exercise;
 import vn.com.hieptt149.workoutmanager.model.Workout;
+import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 import vn.com.hieptt149.workoutmanager.utils.TimeFormatter;
 
 /**
@@ -83,11 +84,13 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         rvPreviewSelectedExercise.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
         //Trường hợp user xem chi tiết workout
         if (usersWorkoutDetails != null) {
+            tvAddWorkoutToolbarTitle.setText(R.string.workout_details);
             lstSelectedExercise.addAll(usersWorkoutDetails.getLstUsersExercises());
             showUsersWorkoutDetails();
         }
         //Trường hợp tạo mới workout
         else {
+            tvAddWorkoutToolbarTitle.setText(R.string.add_workout);
             lstSelectedExercise = null;
             tvClickToChoose.setVisibility(View.VISIBLE);
         }
@@ -115,6 +118,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
      * Hiển thị chi tiết workout
      */
     private void showUsersWorkoutDetails() {
+        DisplayView.showProgressDialog(getContext());
         pbCardio.setProgress(usersWorkoutDetails.getCadioRate());
         pbStrength.setProgress(usersWorkoutDetails.getStrengthRate());
         pbMobility.setProgress(usersWorkoutDetails.getMobilityRate());
@@ -144,6 +148,5 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         rlBtnAddExerciseContainer = view.findViewById(R.id.rl_btn_add_exercise_container);
         btnAddExercise = view.findViewById(R.id.btn_add_exercise);
         btnAddExercise.setOnClickListener(this);
-        tvAddWorkoutToolbarTitle.setText(R.string.add_workout);
     }
 }
