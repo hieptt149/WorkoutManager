@@ -15,6 +15,7 @@ import com.bumptech.glide.request.RequestOptions;
 import java.util.ArrayList;
 
 import vn.com.hieptt149.workoutmanager.R;
+import vn.com.hieptt149.workoutmanager.addworkout.WorkoutDetailsFragmentIntf;
 import vn.com.hieptt149.workoutmanager.model.Exercise;
 
 /**
@@ -25,10 +26,12 @@ public class ExercisePreviewAdapter extends RecyclerView.Adapter<ExercisePreview
 
     private Context context;
     private ArrayList<Exercise> lstExercises;
+    private WorkoutDetailsFragmentIntf workoutDetailsFragmentIntf;
 
-    public ExercisePreviewAdapter(Context context, ArrayList<Exercise> lstExercises) {
+    public ExercisePreviewAdapter(Context context, ArrayList<Exercise> lstExercises, WorkoutDetailsFragmentIntf workoutDetailsFragmentIntf) {
         this.context = context;
         this.lstExercises = lstExercises;
+        this.workoutDetailsFragmentIntf = workoutDetailsFragmentIntf;
     }
 
     @Override
@@ -39,11 +42,11 @@ public class ExercisePreviewAdapter extends RecyclerView.Adapter<ExercisePreview
 
     @Override
     public void onBindViewHolder(ExercisePreviewAdapter.ViewHolder holder, int position) {
-        Exercise exercise = lstExercises.get(position);
+        final Exercise exercise = lstExercises.get(position);
         holder.lnExerciseItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                workoutDetailsFragmentIntf.onExerciseItemClick(exercise);
             }
         });
         RequestOptions options = new RequestOptions();

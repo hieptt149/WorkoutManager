@@ -22,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import vn.com.hieptt149.workoutmanager.R;
+import vn.com.hieptt149.workoutmanager.addworkout.AddExerciseFragmentIntf;
 import vn.com.hieptt149.workoutmanager.model.Exercise;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 
@@ -32,9 +33,11 @@ import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 public class ExerciseListAdapter extends RecyclerView.Adapter<ExerciseListAdapter.ViewHolder> {
 
     private ArrayList<Exercise> lstExercises;
+    private AddExerciseFragmentIntf addExerciseFragmentIntf;
 
-    public ExerciseListAdapter(ArrayList<Exercise> lstExercises) {
+    public ExerciseListAdapter(ArrayList<Exercise> lstExercises,AddExerciseFragmentIntf addExerciseFragmentIntf) {
         this.lstExercises = lstExercises;
+        this.addExerciseFragmentIntf = addExerciseFragmentIntf;
     }
 
     @Override
@@ -45,14 +48,14 @@ public class ExerciseListAdapter extends RecyclerView.Adapter<ExerciseListAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Exercise exercise = lstExercises.get(position);
-        holder.lnItemExercise.setOnClickListener(new View.OnClickListener() {
+        final Exercise exercise = lstExercises.get(position);
+        holder.tvExerciseName.setText(exercise.getName());
+        holder.tvExerciseName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                addExerciseFragmentIntf.onExerciseItemClick(exercise);
             }
         });
-        holder.tvExerciseName.setText(exercise.getName());
         if (exercise.isAdded() == true){
             holder.ivSelectExercise.setImageLevel(1);
         } else {
@@ -73,13 +76,11 @@ public class ExerciseListAdapter extends RecyclerView.Adapter<ExerciseListAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private LinearLayout lnItemExercise;
         private ImageView ivSelectExercise;
         private TextView tvExerciseName;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            lnItemExercise = itemView.findViewById(R.id.ln_item_exercise);
             ivSelectExercise = itemView.findViewById(R.id.iv_select_exercise);
             tvExerciseName = itemView.findViewById(R.id.tv_exercise_name);
         }

@@ -13,7 +13,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -31,14 +34,17 @@ import vn.com.hieptt149.workoutmanager.utils.TimeFormatter;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WorkoutDetailsFragment extends Fragment implements View.OnClickListener {
+public class WorkoutDetailsFragment extends Fragment implements View.OnClickListener,WorkoutDetailsFragmentIntf {
 
     private AddWorkoutActivityIntf addWorkoutActivityIntf;
     private TextView tvAddWorkoutToolbarTitle, tvTotalExercise, tvTotalTime, tvClickToChoose,tvExerciseDescription;
     private ProgressBar pbCardio, pbStrength, pbMobility;
     private ImageView ivChooseWorkoutIcon;
     private EditText edtWorkoutTitle;
+    private LinearLayout lnExercisesInfo;
     private RecyclerView rvPreviewSelectedExercise;
+    private ScrollView svDescriptionContainer;
+    private RelativeLayout rlBtnAddExerciseContainer;
     private Button btnAddExercise;
     private ExercisePreviewAdapter exercisePreviewAdapter;
     private static Workout usersWorkoutDetails;
@@ -98,6 +104,13 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         }
     }
 
+    @Override
+    public void onExerciseItemClick(Exercise selectedExercise) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("selectedexercise",selectedExercise);
+        addWorkoutActivityIntf.openFragment(ExerciseDetailsFragment.newInstance(bundle), "exercisedetails");
+    }
+
     /**
      * Hiển thị chi tiết workout
      */
@@ -110,7 +123,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         edtWorkoutTitle.setText(usersWorkoutDetails.getTitle());
         tvTotalExercise.setText(usersWorkoutDetails.getLstUsersExercises().size() + " exercise(s)");
         tvTotalTime.setText(TimeFormatter.msTimeFormatter(usersWorkoutDetails.getTotalTime()));
-        exercisePreviewAdapter = new ExercisePreviewAdapter(getContext(),lstSelectedExercise);
+        exercisePreviewAdapter = new ExercisePreviewAdapter(getContext(),lstSelectedExercise,this);
         rvPreviewSelectedExercise.setAdapter(exercisePreviewAdapter);
     }
 
@@ -124,8 +137,11 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         ivChooseWorkoutIcon = view.findViewById(R.id.iv_choose_icon);
         tvClickToChoose = view.findViewById(R.id.tv_click_to_choose);
         edtWorkoutTitle = view.findViewById(R.id.edt_title);
+        lnExercisesInfo = view.findViewById(R.id.ln_exercises_info);
         rvPreviewSelectedExercise = view.findViewById(R.id.rv_preview_selected_exercise);
+        svDescriptionContainer = view.findViewById(R.id.sv_description_container);
         tvExerciseDescription = view.findViewById(R.id.tv_exercise_description);
+        rlBtnAddExerciseContainer = view.findViewById(R.id.rl_btn_add_exercise_container);
         btnAddExercise = view.findViewById(R.id.btn_add_exercise);
         btnAddExercise.setOnClickListener(this);
         tvAddWorkoutToolbarTitle.setText(R.string.add_workout);

@@ -1,6 +1,7 @@
 package vn.com.hieptt149.workoutmanager.addworkout;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -28,8 +29,9 @@ import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AddExerciseFragment extends Fragment {
+public class AddExerciseFragment extends Fragment implements AddExerciseFragmentIntf {
 
+    private AddWorkoutActivityIntf addWorkoutActivityIntf;
     private TextView tvAddWorkoutToolBarTitle;
     private RecyclerView rvExercise;
     private DatabaseReference exercisesRef;
@@ -50,6 +52,12 @@ public class AddExerciseFragment extends Fragment {
             lstSelectedExercises = null;
         }
         return addExerciseFragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        addWorkoutActivityIntf = (AddWorkoutActivityIntf) context;
     }
 
     @Override
@@ -80,6 +88,13 @@ public class AddExerciseFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onExerciseItemClick(Exercise selectedExercise) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("selectedexercise",selectedExercise);
+        addWorkoutActivityIntf.openFragment(ExerciseDetailsFragment.newInstance(bundle), "exercisedetails");
+    }
+
     private void initView(View view) {
         tvAddWorkoutToolBarTitle = getActivity().findViewById(R.id.tv_addworkout_toolbar_title);
         rvExercise = view.findViewById(R.id.rv_exercise);
@@ -97,7 +112,7 @@ public class AddExerciseFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     lstExercises.add(snapshot.getValue(Exercise.class));
                 }
-                exerciseListAdapter = new ExerciseListAdapter(lstExercises);
+                exerciseListAdapter = new ExerciseListAdapter(lstExercises,AddExerciseFragment.this);
                 rvExercise.setAdapter(exerciseListAdapter);
                 DisplayView.dismissProgressDialog();
             }
@@ -123,13 +138,13 @@ public class AddExerciseFragment extends Fragment {
                 }
                 for (int i = 0; i < lstSelectedExercises.size(); i++) {
                     for (int j = 0; j < lstExercises.size(); j++) {
-                        if (lstExercises.get(j).getId() == lstSelectedExercises.get(i).getId()){
+                        if (lstExercises.get(j).getId() == lstSelectedExercises.get(i).getId()) {
                             lstExercises.get(j).setAdded(lstSelectedExercises.get(i).isAdded());
                             lstExercises.get(j).setPraticeTime(lstSelectedExercises.get(i).getPraticeTime());
                         }
                     }
                 }
-                exerciseListAdapter = new ExerciseListAdapter(lstExercises);
+                exerciseListAdapter = new ExerciseListAdapter(lstExercises, AddExerciseFragment.this);
                 rvExercise.setAdapter(exerciseListAdapter);
                 DisplayView.dismissProgressDialog();
             }
