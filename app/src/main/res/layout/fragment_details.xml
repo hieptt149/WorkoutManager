@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:padding="@dimen/medium_space"
     android:weightSum="10"
-    tools:context="vn.com.hieptt149.workoutmanager.addworkout.WorkoutDetailsFragment">
+    tools:context="vn.com.hieptt149.workoutmanager.addworkout.fragment.WorkoutDetailsFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

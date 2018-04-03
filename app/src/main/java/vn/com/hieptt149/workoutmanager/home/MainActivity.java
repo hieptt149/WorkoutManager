@@ -1,6 +1,5 @@
 package vn.com.hieptt149.workoutmanager.home;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -20,11 +19,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import vn.com.hieptt149.workoutmanager.R;
-import vn.com.hieptt149.workoutmanager.home.profile.ProfileFragment;
-import vn.com.hieptt149.workoutmanager.home.settings.SettingsFragment;
+import vn.com.hieptt149.workoutmanager.home.fragment.ProfileFragment;
+import vn.com.hieptt149.workoutmanager.home.fragment.SettingsFragment;
 import vn.com.hieptt149.workoutmanager.model.User;
 import vn.com.hieptt149.workoutmanager.utils.CustomViewPager;
-import vn.com.hieptt149.workoutmanager.home.workout.WorkoutFragment;
+import vn.com.hieptt149.workoutmanager.home.fragment.WorkoutFragment;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {

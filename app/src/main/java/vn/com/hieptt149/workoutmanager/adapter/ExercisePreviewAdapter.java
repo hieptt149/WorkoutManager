@@ -21,7 +21,7 @@ import com.bumptech.glide.request.target.Target;
 import java.util.ArrayList;
 
 import vn.com.hieptt149.workoutmanager.R;
-import vn.com.hieptt149.workoutmanager.addworkout.WorkoutDetailsFragmentIntf;
+import vn.com.hieptt149.workoutmanager.addworkout.fragment.WorkoutDetailsFragmentIntf;
 import vn.com.hieptt149.workoutmanager.model.Exercise;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 

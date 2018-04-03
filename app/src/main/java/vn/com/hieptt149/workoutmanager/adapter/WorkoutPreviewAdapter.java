@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import vn.com.hieptt149.workoutmanager.R;
-import vn.com.hieptt149.workoutmanager.home.workout.WorkoutFragmentIntf;
+import vn.com.hieptt149.workoutmanager.home.fragment.WorkoutFragmentIntf;
 import vn.com.hieptt149.workoutmanager.model.Workout;
 
 /**

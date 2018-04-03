@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import vn.com.hieptt149.workoutmanager.R;
+import vn.com.hieptt149.workoutmanager.addworkout.fragment.WorkoutDetailsFragment;
 import vn.com.hieptt149.workoutmanager.model.Workout;
 
 public class AddWorkoutActivity extends AppCompatActivity implements View.OnClickListener,AddWorkoutActivityIntf {

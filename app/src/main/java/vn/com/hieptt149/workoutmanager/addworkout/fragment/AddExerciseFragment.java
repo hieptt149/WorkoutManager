@@ -1,4 +1,4 @@
-package vn.com.hieptt149.workoutmanager.addworkout;
+package vn.com.hieptt149.workoutmanager.addworkout.fragment;
 
 
 import android.content.Context;
@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.adapter.ExerciseListAdapter;
+import vn.com.hieptt149.workoutmanager.addworkout.AddWorkoutActivityIntf;
 import vn.com.hieptt149.workoutmanager.model.Exercise;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 

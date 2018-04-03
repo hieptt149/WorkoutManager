@@ -1,4 +1,4 @@
-package vn.com.hieptt149.workoutmanager.addworkout;
+package vn.com.hieptt149.workoutmanager.addworkout.fragment;
 
 
 import android.content.Context;
@@ -19,14 +19,11 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.adapter.ExercisePreviewAdapter;
+import vn.com.hieptt149.workoutmanager.addworkout.AddWorkoutActivityIntf;
 import vn.com.hieptt149.workoutmanager.model.Exercise;
 import vn.com.hieptt149.workoutmanager.model.Workout;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;

@@ -1,4 +1,4 @@
-package vn.com.hieptt149.workoutmanager.home.workout;
+package vn.com.hieptt149.workoutmanager.home.fragment;
 
 /**
  * Created by Administrator on 04/03/2018.

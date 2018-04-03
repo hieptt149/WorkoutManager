@@ -1,4 +1,4 @@
-package vn.com.hieptt149.workoutmanager.addworkout;
+package vn.com.hieptt149.workoutmanager.addworkout.fragment;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -27,6 +27,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 
 import vn.com.hieptt149.workoutmanager.R;
+import vn.com.hieptt149.workoutmanager.addworkout.AddWorkoutActivityIntf;
 import vn.com.hieptt149.workoutmanager.model.Exercise;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 

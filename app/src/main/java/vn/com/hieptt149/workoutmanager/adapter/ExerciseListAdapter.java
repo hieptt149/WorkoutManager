@@ -1,30 +1,17 @@
 package vn.com.hieptt149.workoutmanager.adapter;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 import vn.com.hieptt149.workoutmanager.R;
-import vn.com.hieptt149.workoutmanager.addworkout.AddExerciseFragmentIntf;
+import vn.com.hieptt149.workoutmanager.addworkout.fragment.AddExerciseFragmentIntf;
 import vn.com.hieptt149.workoutmanager.model.Exercise;
-import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 
 /**
  * Created by Administrator on 03/28/2018.

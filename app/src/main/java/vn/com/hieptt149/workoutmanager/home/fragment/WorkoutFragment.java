@@ -1,4 +1,4 @@
-package vn.com.hieptt149.workoutmanager.home.workout;
+package vn.com.hieptt149.workoutmanager.home.fragment;
 
 
 import android.content.Intent;
