@@ -92,13 +92,8 @@ public class AddExerciseFragment extends Fragment implements AddExerciseFragment
     @Override
     public void onExerciseItemClick(Exercise selectedExercise) {
         Bundle bundle = new Bundle();
-        bundle.putSerializable("selectedexercise",selectedExercise);
+        bundle.putSerializable("selectedexercise", selectedExercise);
         addWorkoutActivityIntf.openFragment(ExerciseDetailsFragment.newInstance(bundle), "exercisedetails");
-    }
-
-    private void initView(View view) {
-        tvAddWorkoutToolBarTitle = getActivity().findViewById(R.id.tv_addworkout_toolbar_title);
-        rvExercise = view.findViewById(R.id.rv_exercise);
     }
 
     /**
@@ -113,7 +108,7 @@ public class AddExerciseFragment extends Fragment implements AddExerciseFragment
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     lstExercises.add(snapshot.getValue(Exercise.class));
                 }
-                exerciseListAdapter = new ExerciseListAdapter(lstExercises,AddExerciseFragment.this);
+                exerciseListAdapter = new ExerciseListAdapter(lstExercises, AddExerciseFragment.this);
                 rvExercise.setAdapter(exerciseListAdapter);
                 DisplayView.dismissProgressDialog();
             }
@@ -155,5 +150,10 @@ public class AddExerciseFragment extends Fragment implements AddExerciseFragment
                 DisplayView.dismissProgressDialog();
             }
         });
+    }
+
+    private void initView(View view) {
+        tvAddWorkoutToolBarTitle = getActivity().findViewById(R.id.tv_addworkout_toolbar_title);
+        rvExercise = view.findViewById(R.id.rv_exercise);
     }
 }

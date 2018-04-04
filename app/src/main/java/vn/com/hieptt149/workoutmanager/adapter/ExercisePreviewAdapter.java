@@ -60,19 +60,6 @@ public class ExercisePreviewAdapter extends RecyclerView.Adapter<ExercisePreview
         options.error(R.drawable.no_connection);
         Glide.with(context)
                 .load(exercise.getUrl())
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        DisplayView.dismissProgressDialog();
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        DisplayView.dismissProgressDialog();
-                        return false;
-                    }
-                })
                 .apply(options)
                 .into(holder.ivExercisePreview);
         holder.tvExerciseName.setText(exercise.getName());

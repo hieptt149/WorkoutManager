@@ -115,7 +115,6 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
      * Hiển thị chi tiết workout
      */
     private void showUsersWorkoutDetails() {
-        DisplayView.showProgressDialog(getContext());
         pbCardio.setProgress(usersWorkoutDetails.getCadioRate());
         pbStrength.setProgress(usersWorkoutDetails.getStrengthRate());
         pbMobility.setProgress(usersWorkoutDetails.getMobilityRate());

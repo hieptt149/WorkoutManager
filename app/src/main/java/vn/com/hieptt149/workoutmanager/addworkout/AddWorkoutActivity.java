@@ -19,7 +19,6 @@ public class AddWorkoutActivity extends AppCompatActivity implements View.OnClic
     private LinearLayout lnAddWorkoutContainer;
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
-    private Workout usersWorkout;
     private Bundle bundle;
 
     @Override

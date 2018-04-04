@@ -29,7 +29,6 @@
     <string name="workout_details">Workout Details</string>
 
     <!--Add Exercise Fragment-->
-
     <string name="add_exercise">Add Exercise</string>
     <string name="exercise_name">Exercise name</string>
 </resources>

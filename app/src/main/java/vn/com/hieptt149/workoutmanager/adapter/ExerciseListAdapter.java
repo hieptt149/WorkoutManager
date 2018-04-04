@@ -1,5 +1,6 @@
 package vn.com.hieptt149.workoutmanager.adapter;
 
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import vn.com.hieptt149.workoutmanager.R;
+import vn.com.hieptt149.workoutmanager.addworkout.fragment.AddExerciseFragment;
 import vn.com.hieptt149.workoutmanager.addworkout.fragment.AddExerciseFragmentIntf;
 import vn.com.hieptt149.workoutmanager.model.Exercise;
 
@@ -51,7 +53,12 @@ public class ExerciseListAdapter extends RecyclerView.Adapter<ExerciseListAdapte
         holder.ivSelectExercise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if (exercise.isAdded() == true){
+                    exercise.setAdded(false);
+                } else {
+                    exercise.setAdded(true);
+                }
+                notifyDataSetChanged();
             }
         });
     }
