@@ -8,4 +8,6 @@ import vn.com.hieptt149.workoutmanager.model.Exercise;
 
 public interface AddExerciseFragmentIntf {
     void onExerciseItemClick(Exercise selectedExercise);
+    void addExercise(Exercise exercise);
+    void removeExercise(Exercise exercise);
 }

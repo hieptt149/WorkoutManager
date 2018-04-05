@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.addworkout.fragment.WorkoutDetailsFragment;
+import vn.com.hieptt149.workoutmanager.model.ConstantValue;
+import vn.com.hieptt149.workoutmanager.model.Exercise;
 import vn.com.hieptt149.workoutmanager.model.Workout;
 
 public class AddWorkoutActivity extends AppCompatActivity implements View.OnClickListener,AddWorkoutActivityIntf {
@@ -29,7 +31,7 @@ public class AddWorkoutActivity extends AppCompatActivity implements View.OnClic
         bundle = getIntent().getExtras();
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.ln_addworkout_container, WorkoutDetailsFragment.newInstance(bundle));
+        fragmentTransaction.add(R.id.ln_addworkout_container, WorkoutDetailsFragment.newInstance(bundle),ConstantValue.WORKOUT_DETAILS);
         fragmentTransaction.commit();
     }
 
@@ -48,6 +50,18 @@ public class AddWorkoutActivity extends AppCompatActivity implements View.OnClic
         fragmentTransaction.replace(R.id.ln_addworkout_container,fragment);
         fragmentTransaction.addToBackStack(tag);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void addSelectedExercise(Exercise exercise) {
+        WorkoutDetailsFragment workoutDetailsFragment = (WorkoutDetailsFragment) fragmentManager.findFragmentByTag(ConstantValue.WORKOUT_DETAILS);
+        workoutDetailsFragment.addSelectedExercise(exercise);
+    }
+
+    @Override
+    public void removeSelectedExercise(Exercise exercise) {
+        WorkoutDetailsFragment workoutDetailsFragment = (WorkoutDetailsFragment) fragmentManager.findFragmentByTag(ConstantValue.WORKOUT_DETAILS);
+        workoutDetailsFragment.removeSelectedExercise(exercise);
     }
 
     @Override

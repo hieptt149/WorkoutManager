@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,18 +25,18 @@ import java.util.ArrayList;
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.adapter.ExercisePreviewAdapter;
 import vn.com.hieptt149.workoutmanager.addworkout.AddWorkoutActivityIntf;
+import vn.com.hieptt149.workoutmanager.model.ConstantValue;
 import vn.com.hieptt149.workoutmanager.model.Exercise;
 import vn.com.hieptt149.workoutmanager.model.Workout;
-import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 import vn.com.hieptt149.workoutmanager.utils.TimeFormatter;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WorkoutDetailsFragment extends Fragment implements View.OnClickListener,WorkoutDetailsFragmentIntf {
+public class WorkoutDetailsFragment extends Fragment implements View.OnClickListener, WorkoutDetailsFragmentIntf {
 
     private AddWorkoutActivityIntf addWorkoutActivityIntf;
-    private TextView tvAddWorkoutToolbarTitle, tvTotalExercise, tvTotalTime, tvClickToChoose,tvExerciseDescription;
+    private TextView tvAddWorkoutToolbarTitle, tvTotalExercise, tvTotalTime, tvClickToChoose, tvExerciseDescription;
     private ProgressBar pbCardio, pbStrength, pbMobility;
     private ImageView ivChooseWorkoutIcon;
     private EditText edtWorkoutTitle;
@@ -45,16 +46,19 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     private RelativeLayout rlBtnAddExerciseContainer;
     private Button btnAddExercise;
     private ExercisePreviewAdapter exercisePreviewAdapter;
+    private ArrayList<Exercise> lstSelectedExercise = new ArrayList<>();;
+    private long totalTime;
+    private int totalExercise, cadioRate = 0, strengthRate = 0, mobilityRate = 0;
+
     private static Workout usersWorkoutDetails;
-    private ArrayList<Exercise> lstSelectedExercise;
+    private static String tag;
 
     public static WorkoutDetailsFragment newInstance(Bundle bundle) {
         WorkoutDetailsFragment workoutDetailsFragment = new WorkoutDetailsFragment();
         if (bundle != null) {
             workoutDetailsFragment.setArguments(bundle);
             usersWorkoutDetails = (Workout) bundle.getSerializable("workout");
-        } else {
-            usersWorkoutDetails = null;
+            tag = bundle.getString("tag");
         }
         return workoutDetailsFragment;
     }
@@ -76,21 +80,37 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView(view);
-        lstSelectedExercise = new ArrayList<>();
-        rvPreviewSelectedExercise.setHasFixedSize(true);
-        rvPreviewSelectedExercise.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
         //Trường hợp user xem chi tiết workout
-        if (usersWorkoutDetails != null) {
+        if (tag.equals(ConstantValue.WORKOUT_DETAILS)) {
             tvAddWorkoutToolbarTitle.setText(R.string.workout_details);
             lstSelectedExercise.addAll(usersWorkoutDetails.getLstUsersExercises());
+            totalTime = usersWorkoutDetails.getTotalTime();
+            totalExercise = usersWorkoutDetails.getLstUsersExercises().size();
+            for (int i = 0; i < lstSelectedExercise.size(); i++) {
+                cadioRate += lstSelectedExercise.get(i).getCadioRate();
+                strengthRate += lstSelectedExercise.get(i).getStrengthRate();
+                mobilityRate += lstSelectedExercise.get(i).getMobilityRate();
+            }
+            cadioRate = cadioRate / (lstSelectedExercise.size());
+            strengthRate = strengthRate / (lstSelectedExercise.size());
+            mobilityRate = mobilityRate / (lstSelectedExercise.size());
             showUsersWorkoutDetails();
         }
         //Trường hợp tạo mới workout
-        else {
+        else if (tag.equals(ConstantValue.ADD_WORKOUT)) {
             tvAddWorkoutToolbarTitle.setText(R.string.add_workout);
-            lstSelectedExercise = null;
+//            lstSelectedExercise = null;
             tvClickToChoose.setVisibility(View.VISIBLE);
         }
+        rvPreviewSelectedExercise.setHasFixedSize(true);
+        rvPreviewSelectedExercise.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        exercisePreviewAdapter = new ExercisePreviewAdapter(getContext(), lstSelectedExercise, this);
+        rvPreviewSelectedExercise.setAdapter(exercisePreviewAdapter);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -98,8 +118,8 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         switch (view.getId()) {
             case R.id.btn_add_exercise:
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("lstselectedexercise",lstSelectedExercise);
-                addWorkoutActivityIntf.openFragment(AddExerciseFragment.newInstance(bundle), "addexercise");
+                bundle.putSerializable("lstselectedexercise", lstSelectedExercise);
+                addWorkoutActivityIntf.openFragment(AddExerciseFragment.newInstance(bundle), ConstantValue.ADD_EXERCISE);
                 break;
         }
     }
@@ -107,24 +127,32 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     @Override
     public void onExerciseItemClick(Exercise selectedExercise) {
         Bundle bundle = new Bundle();
-        bundle.putSerializable("selectedexercise",selectedExercise);
-        addWorkoutActivityIntf.openFragment(ExerciseDetailsFragment.newInstance(bundle), "exercisedetails");
+        bundle.putSerializable("selectedexercise", selectedExercise);
+        addWorkoutActivityIntf.openFragment(ExerciseDetailsFragment.newInstance(bundle), ConstantValue.EXERCISE_DETAILS);
     }
 
     /**
      * Hiển thị chi tiết workout
      */
     private void showUsersWorkoutDetails() {
-        pbCardio.setProgress(usersWorkoutDetails.getCadioRate());
-        pbStrength.setProgress(usersWorkoutDetails.getStrengthRate());
-        pbMobility.setProgress(usersWorkoutDetails.getMobilityRate());
+        pbCardio.setProgress(cadioRate);
+        pbStrength.setProgress(strengthRate);
+        pbMobility.setProgress(mobilityRate);
         int imgRes = getResources().getIdentifier(usersWorkoutDetails.getIcon(), "drawable", getContext().getPackageName());
         ivChooseWorkoutIcon.setImageResource(imgRes);
         edtWorkoutTitle.setText(usersWorkoutDetails.getTitle());
-        tvTotalExercise.setText(usersWorkoutDetails.getLstUsersExercises().size() + " exercise(s)");
-        tvTotalTime.setText(TimeFormatter.msTimeFormatter(usersWorkoutDetails.getTotalTime()));
-        exercisePreviewAdapter = new ExercisePreviewAdapter(getContext(),lstSelectedExercise,this);
-        rvPreviewSelectedExercise.setAdapter(exercisePreviewAdapter);
+        tvTotalExercise.setText(totalExercise + " exercise(s)");
+        tvTotalTime.setText(TimeFormatter.msTimeFormatter(totalTime));
+    }
+
+    public void addSelectedExercise(Exercise exercise) {
+        Log.d("add", exercise.toString());
+        lstSelectedExercise.add(exercise);
+    }
+
+    public void removeSelectedExercise(Exercise exercise) {
+        Log.d("remove", exercise.toString());
+        lstSelectedExercise.remove(exercise);
     }
 
     private void initView(View view) {

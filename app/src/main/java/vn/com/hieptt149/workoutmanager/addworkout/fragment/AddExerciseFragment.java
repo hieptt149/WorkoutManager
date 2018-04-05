@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.adapter.ExerciseListAdapter;
 import vn.com.hieptt149.workoutmanager.addworkout.AddWorkoutActivityIntf;
+import vn.com.hieptt149.workoutmanager.model.ConstantValue;
 import vn.com.hieptt149.workoutmanager.model.Exercise;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 
@@ -33,6 +34,7 @@ import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 public class AddExerciseFragment extends Fragment implements AddExerciseFragmentIntf {
 
     private AddWorkoutActivityIntf addWorkoutActivityIntf;
+    private WorkoutDetailsFragmentIntf workoutDetailsFragmentIntf;
     private TextView tvAddWorkoutToolBarTitle;
     private RecyclerView rvExercise;
     private DatabaseReference exercisesRef;
@@ -49,8 +51,6 @@ public class AddExerciseFragment extends Fragment implements AddExerciseFragment
         AddExerciseFragment addExerciseFragment = new AddExerciseFragment();
         if (bundle != null) {
             lstSelectedExercises = (ArrayList<Exercise>) bundle.getSerializable("lstselectedexercise");
-        } else {
-            lstSelectedExercises = null;
         }
         return addExerciseFragment;
     }
@@ -79,12 +79,18 @@ public class AddExerciseFragment extends Fragment implements AddExerciseFragment
         rvExercise.setHasFixedSize(true);
         rvExercise.setLayoutManager(linearLayoutManager);
         rvExercise.addItemDecoration(dividerItemDecoration);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         //Trường hợp user muốn thêm mới exercise vào workout
         if (lstSelectedExercises != null) {
             mergeSelectedExsWithDefaultExs();
         }
         //Trường hợp tạo mới workout lần đầu
         else {
+            lstSelectedExercises = new ArrayList<>();
             getNewExerciseList();
         }
     }
@@ -93,7 +99,17 @@ public class AddExerciseFragment extends Fragment implements AddExerciseFragment
     public void onExerciseItemClick(Exercise selectedExercise) {
         Bundle bundle = new Bundle();
         bundle.putSerializable("selectedexercise", selectedExercise);
-        addWorkoutActivityIntf.openFragment(ExerciseDetailsFragment.newInstance(bundle), "exercisedetails");
+        addWorkoutActivityIntf.openFragment(ExerciseDetailsFragment.newInstance(bundle), ConstantValue.EXERCISE_DETAILS);
+    }
+
+    @Override
+    public void addExercise(Exercise exercise) {
+        addWorkoutActivityIntf.addSelectedExercise(exercise);
+    }
+
+    @Override
+    public void removeExercise(Exercise exercise) {
+        addWorkoutActivityIntf.removeSelectedExercise(exercise);
     }
 
     /**

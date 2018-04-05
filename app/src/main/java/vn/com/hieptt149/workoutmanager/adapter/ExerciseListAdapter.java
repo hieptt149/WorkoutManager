@@ -54,9 +54,11 @@ public class ExerciseListAdapter extends RecyclerView.Adapter<ExerciseListAdapte
             @Override
             public void onClick(View view) {
                 if (exercise.isAdded() == true){
+                    addExerciseFragmentIntf.removeExercise(exercise);
                     exercise.setAdded(false);
                 } else {
                     exercise.setAdded(true);
+                    addExerciseFragmentIntf.addExercise(exercise);
                 }
                 notifyDataSetChanged();
             }

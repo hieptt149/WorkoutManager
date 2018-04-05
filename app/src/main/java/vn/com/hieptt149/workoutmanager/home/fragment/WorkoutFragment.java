@@ -26,6 +26,7 @@ import vn.com.hieptt149.workoutmanager.adapter.WorkoutPreviewAdapter;
 import vn.com.hieptt149.workoutmanager.addworkout.AddWorkoutActivity;
 import vn.com.hieptt149.workoutmanager.home.MainActivity;
 import vn.com.hieptt149.workoutmanager.home.MainActivityIntf;
+import vn.com.hieptt149.workoutmanager.model.ConstantValue;
 import vn.com.hieptt149.workoutmanager.model.User;
 import vn.com.hieptt149.workoutmanager.model.Workout;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;
@@ -94,13 +95,16 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener, W
 
     @Override
     public void onClick(View view) {
-        startActivity(new Intent(getActivity(), AddWorkoutActivity.class));
+        Intent i = new Intent(getActivity(), AddWorkoutActivity.class);
+        i.putExtra("tag", ConstantValue.ADD_WORKOUT);
+        startActivity(i);
     }
 
     @Override
     public void openWorkoutDetails(int position) {
         Intent i = new Intent(getActivity(),AddWorkoutActivity.class);
         i.putExtra("workout",lstUsersWorkout.get(position));
+        i.putExtra("tag",ConstantValue.WORKOUT_DETAILS);
         startActivity(i);
     }
 
