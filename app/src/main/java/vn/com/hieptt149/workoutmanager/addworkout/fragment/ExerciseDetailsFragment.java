@@ -80,11 +80,13 @@ public class ExerciseDetailsFragment extends Fragment {
 
     private void showExerciseDetails() {
         DisplayView.showProgressDialog(getContext());
+        tvAddWorkoutToolbarTitle.setText(selectedExercise.getName());
         lnExercisesInfo.setVisibility(View.GONE);
         svDescriptionContainer.setVisibility(View.VISIBLE);
-        edtWorkoutTitle.setVisibility(View.GONE);
         rlBtnAddExerciseContainer.setVisibility(View.GONE);
-        tvAddWorkoutToolbarTitle.setText(selectedExercise.getName());
+        tvClickToChoose.setVisibility(View.GONE);
+        edtWorkoutTitle.setEnabled(false);
+        edtWorkoutTitle.setText(selectedExercise.getName());
         pbCardio.setProgress(selectedExercise.getCadioRate());
         pbStrength.setProgress(selectedExercise.getStrengthRate());
         pbMobility.setProgress(selectedExercise.getMobilityRate());

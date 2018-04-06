@@ -43,6 +43,7 @@ public class AddExerciseFragment extends Fragment implements AddExerciseFragment
     private DividerItemDecoration dividerItemDecoration;
     private static ArrayList<Exercise> lstSelectedExercises;
     private ArrayList<Exercise> lstExercises;
+    private int practiceTime = 60000;
 
     public AddExerciseFragment() {
     }
@@ -152,7 +153,6 @@ public class AddExerciseFragment extends Fragment implements AddExerciseFragment
                     for (int j = 0; j < lstExercises.size(); j++) {
                         if (lstExercises.get(j).getId() == lstSelectedExercises.get(i).getId()) {
                             lstExercises.get(j).setAdded(lstSelectedExercises.get(i).isAdded());
-                            lstExercises.get(j).setPraticeTime(lstSelectedExercises.get(i).getPraticeTime());
                         }
                     }
                 }

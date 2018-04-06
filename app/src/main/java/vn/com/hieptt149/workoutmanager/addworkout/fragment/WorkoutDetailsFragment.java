@@ -3,6 +3,7 @@ package vn.com.hieptt149.workoutmanager.addworkout.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -46,9 +47,9 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     private RelativeLayout rlBtnAddExerciseContainer;
     private Button btnAddExercise;
     private ExercisePreviewAdapter exercisePreviewAdapter;
-    private ArrayList<Exercise> lstSelectedExercise = new ArrayList<>();;
+    private ArrayList<Exercise> lstSelectedExercise = new ArrayList<>();
     private long totalTime;
-    private int totalExercise, cadioRate = 0, strengthRate = 0, mobilityRate = 0;
+    private int totalExercise, cadioRate = 0, strengthRate = 0, mobilityRate = 0, practiceTime = 60000;
 
     private static Workout usersWorkoutDetails;
     private static String tag;
@@ -82,35 +83,22 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         initView(view);
         //Trường hợp user xem chi tiết workout
         if (tag.equals(ConstantValue.WORKOUT_DETAILS)) {
-            tvAddWorkoutToolbarTitle.setText(R.string.workout_details);
+            tvAddWorkoutToolbarTitle.setText(usersWorkoutDetails.getTitle());
             lstSelectedExercise.addAll(usersWorkoutDetails.getLstUsersExercises());
-            totalTime = usersWorkoutDetails.getTotalTime();
-            totalExercise = usersWorkoutDetails.getLstUsersExercises().size();
-            for (int i = 0; i < lstSelectedExercise.size(); i++) {
-                cadioRate += lstSelectedExercise.get(i).getCadioRate();
-                strengthRate += lstSelectedExercise.get(i).getStrengthRate();
-                mobilityRate += lstSelectedExercise.get(i).getMobilityRate();
-            }
-            cadioRate = cadioRate / (lstSelectedExercise.size());
-            strengthRate = strengthRate / (lstSelectedExercise.size());
-            mobilityRate = mobilityRate / (lstSelectedExercise.size());
             showUsersWorkoutDetails();
         }
         //Trường hợp tạo mới workout
         else if (tag.equals(ConstantValue.ADD_WORKOUT)) {
             tvAddWorkoutToolbarTitle.setText(R.string.add_workout);
-//            lstSelectedExercise = null;
-            tvClickToChoose.setVisibility(View.VISIBLE);
+            //Nếu người dùng đã thêm exercise
+            if (lstSelectedExercise.size() != 0) {
+                showUsersWorkoutDetails();
+            }
         }
         rvPreviewSelectedExercise.setHasFixedSize(true);
         rvPreviewSelectedExercise.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         exercisePreviewAdapter = new ExercisePreviewAdapter(getContext(), lstSelectedExercise, this);
         rvPreviewSelectedExercise.setAdapter(exercisePreviewAdapter);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -135,14 +123,31 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
      * Hiển thị chi tiết workout
      */
     private void showUsersWorkoutDetails() {
-        pbCardio.setProgress(cadioRate);
-        pbStrength.setProgress(strengthRate);
-        pbMobility.setProgress(mobilityRate);
-        int imgRes = getResources().getIdentifier(usersWorkoutDetails.getIcon(), "drawable", getContext().getPackageName());
-        ivChooseWorkoutIcon.setImageResource(imgRes);
-        edtWorkoutTitle.setText(usersWorkoutDetails.getTitle());
+        for (int i = 0; i < lstSelectedExercise.size(); i++) {
+            totalTime += practiceTime;
+            cadioRate += lstSelectedExercise.get(i).getCadioRate();
+            strengthRate += lstSelectedExercise.get(i).getStrengthRate();
+            mobilityRate += lstSelectedExercise.get(i).getMobilityRate();
+        }
+        totalExercise = lstSelectedExercise.size();
+        cadioRate = cadioRate / (lstSelectedExercise.size());
+        strengthRate = strengthRate / (lstSelectedExercise.size());
+        mobilityRate = mobilityRate / (lstSelectedExercise.size());
+        pbCardio.post(new Runnable() {
+            @Override
+            public void run() {
+                pbCardio.setProgress(cadioRate);
+                pbStrength.setProgress(strengthRate);
+                pbMobility.setProgress(mobilityRate);
+            }
+        });
         tvTotalExercise.setText(totalExercise + " exercise(s)");
         tvTotalTime.setText(TimeFormatter.msTimeFormatter(totalTime));
+        if (usersWorkoutDetails != null) {
+            int imgRes = getResources().getIdentifier(usersWorkoutDetails.getIcon(), "drawable", getContext().getPackageName());
+            ivChooseWorkoutIcon.setImageResource(imgRes);
+            edtWorkoutTitle.setText(usersWorkoutDetails.getTitle());
+        }
     }
 
     public void addSelectedExercise(Exercise exercise) {
@@ -152,7 +157,13 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
 
     public void removeSelectedExercise(Exercise exercise) {
         Log.d("remove", exercise.toString());
-        lstSelectedExercise.remove(exercise);
+        int tmpId = -1;
+        for (int i = 0; i < lstSelectedExercise.size(); i++) {
+            if (lstSelectedExercise.get(i).getId() == exercise.getId()) {
+                tmpId = i;
+            }
+        }
+        lstSelectedExercise.remove(tmpId);
     }
 
     private void initView(View view) {

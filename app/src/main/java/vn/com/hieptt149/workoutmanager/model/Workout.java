@@ -19,8 +19,6 @@ public class Workout implements Serializable{
     public String icon;
     @PropertyName("exercises")
     public ArrayList<Exercise> lstUsersExercises;
-    @PropertyName("total_time")
-    public long totalTime;
     @PropertyName("cadio_rate")
     public int cadioRate;
     @PropertyName("strength_rate")
@@ -31,13 +29,12 @@ public class Workout implements Serializable{
     public Workout() {
     }
 
-    public Workout(int id, int userId, String title, String icon, ArrayList<Exercise> lstUsersExercises, long totalTime, int cadioRate, int strength_rate, int mobility_rate) {
+    public Workout(int id, int userId, String title, String icon, ArrayList<Exercise> lstUsersExercises, int cadioRate, int strength_rate, int mobility_rate) {
         this.id = id;
         this.userId = userId;
         this.title = title;
         this.icon = icon;
         this.lstUsersExercises = lstUsersExercises;
-        this.totalTime = totalTime;
         this.cadioRate = cadioRate;
         this.strength_rate = strength_rate;
         this.mobility_rate = mobility_rate;
@@ -81,14 +78,6 @@ public class Workout implements Serializable{
 
     public void setLstUsersExercises(ArrayList<Exercise> lstUsersExercises) {
         this.lstUsersExercises = lstUsersExercises;
-    }
-
-    public long getTotalTime() {
-        return totalTime;
-    }
-
-    public void setTotalTime(long totalTime) {
-        this.totalTime = totalTime;
     }
 
     public int getCadioRate() {
