@@ -1,5 +1,6 @@
 package vn.com.hieptt149.workoutmanager.adapter;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 
@@ -21,10 +25,12 @@ import vn.com.hieptt149.workoutmanager.model.Exercise;
 
 public class ExerciseListAdapter extends RecyclerView.Adapter<ExerciseListAdapter.ViewHolder> {
 
+    private Context context;
     private ArrayList<Exercise> lstExercises;
     private AddExerciseFragmentIntf addExerciseFragmentIntf;
 
-    public ExerciseListAdapter(ArrayList<Exercise> lstExercises,AddExerciseFragmentIntf addExerciseFragmentIntf) {
+    public ExerciseListAdapter(Context context, ArrayList<Exercise> lstExercises, AddExerciseFragmentIntf addExerciseFragmentIntf) {
+        this.context = context;
         this.lstExercises = lstExercises;
         this.addExerciseFragmentIntf = addExerciseFragmentIntf;
     }
@@ -45,15 +51,22 @@ public class ExerciseListAdapter extends RecyclerView.Adapter<ExerciseListAdapte
                 addExerciseFragmentIntf.onExerciseItemClick(exercise);
             }
         });
-        if (exercise.isAdded() == true){
+        if (exercise.isAdded() == true) {
             holder.ivSelectExercise.setImageLevel(1);
         } else {
             holder.ivSelectExercise.setImageLevel(0);
         }
+        RequestOptions options = new RequestOptions();
+        options.error(R.drawable.no_connection);
+        Glide.with(context)
+                .asBitmap()
+                .load(exercise.getUrl())
+                .apply(options)
+                .into(holder.ivExerciseIcon);
         holder.ivSelectExercise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (exercise.isAdded() == true){
+                if (exercise.isAdded() == true) {
                     addExerciseFragmentIntf.removeExercise(exercise);
                     exercise.setAdded(false);
                 } else {
@@ -72,11 +85,12 @@ public class ExerciseListAdapter extends RecyclerView.Adapter<ExerciseListAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView ivSelectExercise;
+        private ImageView ivExerciseIcon, ivSelectExercise;
         private TextView tvExerciseName;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            ivExerciseIcon = itemView.findViewById(R.id.iv_exercise_icon);
             ivSelectExercise = itemView.findViewById(R.id.iv_select_exercise);
             tvExerciseName = itemView.findViewById(R.id.tv_exercise_name);
         }

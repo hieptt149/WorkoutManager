@@ -125,7 +125,7 @@ public class AddExerciseFragment extends Fragment implements AddExerciseFragment
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     lstExercises.add(snapshot.getValue(Exercise.class));
                 }
-                exerciseListAdapter = new ExerciseListAdapter(lstExercises, AddExerciseFragment.this);
+                exerciseListAdapter = new ExerciseListAdapter(getContext(),lstExercises, AddExerciseFragment.this);
                 rvExercise.setAdapter(exerciseListAdapter);
                 DisplayView.dismissProgressDialog();
             }
@@ -156,7 +156,7 @@ public class AddExerciseFragment extends Fragment implements AddExerciseFragment
                         }
                     }
                 }
-                exerciseListAdapter = new ExerciseListAdapter(lstExercises, AddExerciseFragment.this);
+                exerciseListAdapter = new ExerciseListAdapter(getContext(),lstExercises, AddExerciseFragment.this);
                 rvExercise.setAdapter(exerciseListAdapter);
                 DisplayView.dismissProgressDialog();
             }

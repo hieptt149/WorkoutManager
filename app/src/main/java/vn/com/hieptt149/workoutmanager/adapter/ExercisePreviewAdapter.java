@@ -59,6 +59,7 @@ public class ExercisePreviewAdapter extends RecyclerView.Adapter<ExercisePreview
         RequestOptions options = new RequestOptions();
         options.error(R.drawable.no_connection);
         Glide.with(context)
+                .asBitmap()
                 .load(exercise.getUrl())
                 .apply(options)
                 .into(holder.ivExercisePreview);

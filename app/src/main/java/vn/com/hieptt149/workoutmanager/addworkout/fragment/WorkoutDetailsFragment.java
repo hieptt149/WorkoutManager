@@ -50,6 +50,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     private ArrayList<Exercise> lstSelectedExercise = new ArrayList<>();
     private long totalTime;
     private int totalExercise, cadioRate = 0, strengthRate = 0, mobilityRate = 0, practiceTime = 60000;
+    private boolean isFirstTime = true;
 
     private static Workout usersWorkoutDetails;
     private static String tag;
@@ -84,14 +85,17 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         //Trường hợp user xem chi tiết workout
         if (tag.equals(ConstantValue.WORKOUT_DETAILS)) {
             tvAddWorkoutToolbarTitle.setText(usersWorkoutDetails.getTitle());
-            lstSelectedExercise.addAll(usersWorkoutDetails.getLstUsersExercises());
+            //Nếu người dùng mới mở màn hình chi tiết lần đầu
+            if (isFirstTime){
+                lstSelectedExercise.addAll(usersWorkoutDetails.getLstUsersExercises());
+            }
             showUsersWorkoutDetails();
         }
         //Trường hợp tạo mới workout
         else if (tag.equals(ConstantValue.ADD_WORKOUT)) {
             tvAddWorkoutToolbarTitle.setText(R.string.add_workout);
             //Nếu người dùng đã thêm exercise
-            if (lstSelectedExercise.size() != 0) {
+            if (!isFirstTime) {
                 showUsersWorkoutDetails();
             }
         }
@@ -123,16 +127,23 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
      * Hiển thị chi tiết workout
      */
     private void showUsersWorkoutDetails() {
+        totalExercise = 0;
+        totalTime = 0;
+        cadioRate = 0;
+        strengthRate = 0;
+        mobilityRate = 0;
         for (int i = 0; i < lstSelectedExercise.size(); i++) {
             totalTime += practiceTime;
             cadioRate += lstSelectedExercise.get(i).getCadioRate();
             strengthRate += lstSelectedExercise.get(i).getStrengthRate();
             mobilityRate += lstSelectedExercise.get(i).getMobilityRate();
         }
-        totalExercise = lstSelectedExercise.size();
-        cadioRate = cadioRate / (lstSelectedExercise.size());
-        strengthRate = strengthRate / (lstSelectedExercise.size());
-        mobilityRate = mobilityRate / (lstSelectedExercise.size());
+        if (lstSelectedExercise.size() != 0){
+            totalExercise = lstSelectedExercise.size();
+            cadioRate = cadioRate / (lstSelectedExercise.size());
+            strengthRate = strengthRate / (lstSelectedExercise.size());
+            mobilityRate = mobilityRate / (lstSelectedExercise.size());
+        }
         pbCardio.post(new Runnable() {
             @Override
             public void run() {
@@ -141,7 +152,11 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
                 pbMobility.setProgress(mobilityRate);
             }
         });
-        tvTotalExercise.setText(totalExercise + " exercise(s)");
+        if (totalExercise > 1){
+            tvTotalExercise.setText(totalExercise + " exercises");
+        } else {
+            tvTotalExercise.setText(totalExercise + " exercise");
+        }
         tvTotalTime.setText(TimeFormatter.msTimeFormatter(totalTime));
         if (usersWorkoutDetails != null) {
             int imgRes = getResources().getIdentifier(usersWorkoutDetails.getIcon(), "drawable", getContext().getPackageName());
@@ -151,12 +166,11 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     }
 
     public void addSelectedExercise(Exercise exercise) {
-        Log.d("add", exercise.toString());
         lstSelectedExercise.add(exercise);
+        isFirstTime = false;
     }
 
     public void removeSelectedExercise(Exercise exercise) {
-        Log.d("remove", exercise.toString());
         int tmpId = -1;
         for (int i = 0; i < lstSelectedExercise.size(); i++) {
             if (lstSelectedExercise.get(i).getId() == exercise.getId()) {
@@ -164,6 +178,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
             }
         }
         lstSelectedExercise.remove(tmpId);
+        isFirstTime = false;
     }
 
     private void initView(View view) {
