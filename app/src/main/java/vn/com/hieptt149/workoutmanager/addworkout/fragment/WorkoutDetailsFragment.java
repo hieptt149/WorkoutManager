@@ -39,7 +39,7 @@ import vn.com.hieptt149.workoutmanager.utils.TimeFormatter;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WorkoutDetailsFragment extends Fragment implements View.OnClickListener, WorkoutDetailsFragmentIntf,SelectIconDialogFragment.SelectIconDialogListener {
+public class WorkoutDetailsFragment extends Fragment implements View.OnClickListener, WorkoutDetailsFragmentIntf, SelectIconDialogFragment.SelectIconDialogListener {
 
     private AddWorkoutActivityIntf addWorkoutActivityIntf;
     private DatabaseReference currUsersWorkoutRef;
@@ -61,6 +61,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     private static Workout usersWorkoutDetails;
     private static String userId;
     private static String tag;
+    private static String imgTag;
 
     public static WorkoutDetailsFragment newInstance(Bundle bundle) {
         WorkoutDetailsFragment workoutDetailsFragment = new WorkoutDetailsFragment();
@@ -96,6 +97,8 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
             ivDelete.setVisibility(View.VISIBLE);
             //Nếu người dùng mới mở màn hình chi tiết lần đầu
             if (isFirstTime) {
+                edtWorkoutTitle.setText(usersWorkoutDetails.getTitle());
+                imgTag = usersWorkoutDetails.getIcon();
                 lstSelectedExercise.addAll(usersWorkoutDetails.getLstUsersExercises());
             }
             if (lstSelectedExercise.size() != 0) {
@@ -163,7 +166,8 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     @Override
     public void onIconItemClick(String tag) {
         int imgRes = getResources().getIdentifier(tag, "drawable", getContext().getPackageName());
-        ivChooseWorkoutIcon.setTag(tag);
+        imgTag = tag;
+        ivChooseWorkoutIcon.setTag(imgTag);
         ivChooseWorkoutIcon.setImageResource(imgRes);
     }
 
@@ -214,11 +218,10 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
             tvTotalExercise.setText(totalExercise + " exercise");
         }
         tvTotalTime.setText(TimeFormatter.msTimeFormatter(totalTime));
-        if (usersWorkoutDetails != null) {
-            int imgRes = getResources().getIdentifier(usersWorkoutDetails.getIcon(), "drawable", getContext().getPackageName());
-            ivChooseWorkoutIcon.setTag(usersWorkoutDetails.getIcon());
+        if (imgTag != null) {
+            int imgRes = getResources().getIdentifier(imgTag, "drawable", getContext().getPackageName());
+            ivChooseWorkoutIcon.setTag(imgTag);
             ivChooseWorkoutIcon.setImageResource(imgRes);
-            edtWorkoutTitle.setText(usersWorkoutDetails.getTitle());
         }
     }
 

@@ -109,7 +109,7 @@
             android:layout_height="0dp"
             android:layout_gravity="center"
             android:layout_weight="5"
-            android:src="@drawable/proteins" />
+            android:src="@drawable/no_image"/>
 
         <TextView
             android:id="@+id/tv_click_to_choose"
@@ -128,7 +128,8 @@
             android:layout_gravity="center"
             android:backgroundTint="@android:color/transparent"
             android:gravity="center"
-            android:hint="Workout Name" />
+            android:hint="Workout Name"
+            android:singleLine="true"/>
         <LinearLayout
             android:id="@+id/ln_btn_save_delete"
             android:layout_width="match_parent"
