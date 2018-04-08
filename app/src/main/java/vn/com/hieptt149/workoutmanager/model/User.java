@@ -10,13 +10,10 @@ import java.io.Serializable;
 
 public class User implements Serializable {
 
-    public String id;
-    @PropertyName("name")
-    public String name;
-    @PropertyName("height")
-    public float height;
-    @PropertyName("weight")
-    public float weight;
+    private String id;
+    private String name;
+    private float height;
+    private float weight;
 
     public User() {
     }
@@ -36,26 +33,32 @@ public class User implements Serializable {
         this.id = id;
     }
 
+    @PropertyName("name")
     public String getName() {
         return name;
     }
 
+    @PropertyName("name")
     public void setName(String name) {
         this.name = name;
     }
 
+    @PropertyName("height")
     public float getHeight() {
         return height;
     }
 
+    @PropertyName("height")
     public void setHeight(float height) {
         this.height = height;
     }
 
+    @PropertyName("weight")
     public float getWeight() {
         return weight;
     }
 
+    @PropertyName("weight")
     public void setWeight(float weight) {
         this.weight = weight;
     }

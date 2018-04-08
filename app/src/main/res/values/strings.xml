@@ -29,6 +29,8 @@
     <string name="workout_details">Workout Details</string>
     <string name="positive_btn">OK</string>
     <string name="negative_btn">Cancel</string>
+    <string name="confirm_save">Are you sure you want to save?</string>
+    <string name="confirm_delete">Are you sure you want to delete this workout?</string>
 
     <!--Add Exercise Fragment-->
     <string name="add_exercise">Add Exercise</string>

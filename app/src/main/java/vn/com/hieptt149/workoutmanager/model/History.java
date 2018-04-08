@@ -10,13 +10,11 @@ import java.io.Serializable;
 
 public class History implements Serializable {
 
-    public String id;
-    public String userId;
-    public String workoutId;
-    @PropertyName("datetime")
-    public long datetime;
-    @PropertyName("time_workout")
-    public long timeWorkout;
+    private String id;
+    private String userId;
+    private String workoutId;
+    private long datetime;
+    private long timeWorkout;
 
     public History() {
     }
@@ -53,18 +51,22 @@ public class History implements Serializable {
         this.workoutId = workoutId;
     }
 
+    @PropertyName("datetime")
     public long getDatetime() {
         return datetime;
     }
 
+    @PropertyName("datetime")
     public void setDatetime(long datetime) {
         this.datetime = datetime;
     }
 
+    @PropertyName("time_workout")
     public long getTimeWorkout() {
         return timeWorkout;
     }
 
+    @PropertyName("time_workout")
     public void setTimeWorkout(long timeWorkout) {
         this.timeWorkout = timeWorkout;
     }

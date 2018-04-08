@@ -11,20 +11,14 @@ import java.util.ArrayList;
 
 public class Workout implements Serializable{
 
-    public String id;
-    public String userId;
-    @PropertyName("title")
-    public String title;
-    @PropertyName("icon")
-    public String icon;
-    @PropertyName("exercises")
-    public ArrayList<Exercise> lstUsersExercises;
-    @PropertyName("cadio_rate")
-    public int cadioRate;
-    @PropertyName("strength_rate")
-    public int strength_rate;
-    @PropertyName("mobility_rate")
-    public int mobility_rate;
+    private String id;
+    private String userId;
+    private String title;
+    private String icon;
+    private ArrayList<Exercise> lstUsersExercises;
+    private int cadioRate;
+    private int strength_rate;
+    private int mobility_rate;
 
     public Workout() {
     }
@@ -65,50 +59,62 @@ public class Workout implements Serializable{
         this.userId = userId;
     }
 
+    @PropertyName("title")
     public String getTitle() {
         return title;
     }
 
+    @PropertyName("title")
     public void setTitle(String title) {
         this.title = title;
     }
 
+    @PropertyName("icon")
     public String getIcon() {
         return icon;
     }
 
+    @PropertyName("icon")
     public void setIcon(String icon) {
         this.icon = icon;
     }
 
+    @PropertyName("exercises")
     public ArrayList<Exercise> getLstUsersExercises() {
         return lstUsersExercises;
     }
 
+    @PropertyName("exercises")
     public void setLstUsersExercises(ArrayList<Exercise> lstUsersExercises) {
         this.lstUsersExercises = lstUsersExercises;
     }
 
+    @PropertyName("cadio_rate")
     public int getCadioRate() {
         return cadioRate;
     }
 
+    @PropertyName("cadio_rate")
     public void setCadioRate(int cadioRate) {
         this.cadioRate = cadioRate;
     }
 
+    @PropertyName("strength_rate")
     public int getStrengthRate() {
         return strength_rate;
     }
 
+    @PropertyName("strength_rate")
     public void setStrengthRate(int strength_rate) {
         this.strength_rate = strength_rate;
     }
 
+    @PropertyName("mobility_rate")
     public int getMobilityRate() {
         return mobility_rate;
     }
 
+    @PropertyName("mobility_rate")
     public void setMobilityRate(int mobility_rate) {
         this.mobility_rate = mobility_rate;
     }

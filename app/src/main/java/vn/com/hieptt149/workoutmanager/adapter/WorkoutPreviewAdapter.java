@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,54 +20,86 @@ import vn.com.hieptt149.workoutmanager.model.Workout;
  * Created by Administrator on 03/23/2018.
  */
 
-public class WorkoutPreviewAdapter extends RecyclerView.Adapter<WorkoutPreviewAdapter.ViewHolder> {
+public class WorkoutPreviewAdapter extends BaseAdapter {
 
     private Context context;
     private ArrayList<Workout> lstWorkouts;
-    private WorkoutFragmentIntf workoutFragmentIntf;
 
-    public WorkoutPreviewAdapter(Context context, ArrayList<Workout> lstWorkouts, WorkoutFragmentIntf workoutFragmentIntf) {
+    public WorkoutPreviewAdapter(Context context, ArrayList<Workout> lstWorkouts) {
         this.context = context;
         this.lstWorkouts = lstWorkouts;
-        this.workoutFragmentIntf = workoutFragmentIntf;
     }
 
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_preview, parent, false);
-        return new ViewHolder(view);
-    }
+    //    public WorkoutPreviewAdapter(Context context, ArrayList<Workout> lstWorkouts, WorkoutFragmentIntf workoutFragmentIntf) {
+//        this.context = context;
+//        this.lstWorkouts = lstWorkouts;
+//        this.workoutFragmentIntf = workoutFragmentIntf;
+//    }
+//
+//    @Override
+//    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+//        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_preview, parent, false);
+//        return new ViewHolder(view);
+//    }
+//
+//    @Override
+//    public void onBindViewHolder(ViewHolder holder, final int position) {
+//        Workout workout = lstWorkouts.get(position);
+//        int imgRes = context.getResources().getIdentifier(workout.getIcon(), "drawable", context.getPackageName());
+//        holder.ivWorkoutIcon.setImageResource(imgRes);
+//        holder.tvWorkoutTitle.setText(workout.getTitle());
+//        holder.lnWorkoutItem.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                workoutFragmentIntf.openWorkoutDetails(position);
+//            }
+//        });
+//    }
+//
+//    @Override
+//    public int getItemCount() {
+//        return lstWorkouts.size();
+//    }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
-        Workout workout = lstWorkouts.get(position);
-        int imgRes = context.getResources().getIdentifier(workout.getIcon(), "drawable", context.getPackageName());
-        holder.ivWorkoutIcon.setImageResource(imgRes);
-        holder.tvWorkoutTitle.setText(workout.getTitle());
-        holder.lnWorkoutItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                workoutFragmentIntf.openWorkoutDetails(position);
-            }
-        });
-    }
-
-    @Override
-    public int getItemCount() {
+    public int getCount() {
         return lstWorkouts.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public Object getItem(int i) {
+        return lstWorkouts.get(i);
+    }
 
+    @Override
+    public long getItemId(int i) {
+        return i;
+    }
+
+    @Override
+    public View getView(int i, View view, ViewGroup viewGroup) {
+        ViewHolder viewHolder = null;
+        if (view == null){
+            viewHolder = new ViewHolder();
+            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            view = layoutInflater.inflate(R.layout.item_preview,null);
+            viewHolder.lnWorkoutItem = view.findViewById(R.id.ln_preview_item);
+            viewHolder.ivWorkoutIcon = view.findViewById(R.id.iv_preview_item);
+            viewHolder.tvWorkoutTitle = view.findViewById(R.id.tv_item_title);
+            view.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) view.getTag();
+        }
+        Workout workout = lstWorkouts.get(i);
+        int imgRes = context.getResources().getIdentifier(workout.getIcon(), "drawable", context.getPackageName());
+        viewHolder.ivWorkoutIcon.setImageResource(imgRes);
+        viewHolder.tvWorkoutTitle.setText(workout.getTitle());
+        return view;
+    }
+
+    public class ViewHolder {
         private LinearLayout lnWorkoutItem;
         private ImageView ivWorkoutIcon;
         private TextView tvWorkoutTitle;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            lnWorkoutItem = itemView.findViewById(R.id.ln_preview_item);
-            ivWorkoutIcon = itemView.findViewById(R.id.iv_preview_item);
-            tvWorkoutTitle = itemView.findViewById(R.id.tv_item_title);
-        }
     }
 }

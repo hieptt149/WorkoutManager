@@ -46,7 +46,7 @@ public class DisplayView {
     public static int calculateNoOfColumns(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-        int noOfColumns = (int) (dpWidth / 180);
+        int noOfColumns = (int) (dpWidth / 125);
         return noOfColumns;
     }
 }

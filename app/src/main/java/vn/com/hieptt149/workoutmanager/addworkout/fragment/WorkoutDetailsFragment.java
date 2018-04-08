@@ -39,7 +39,8 @@ import vn.com.hieptt149.workoutmanager.utils.TimeFormatter;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WorkoutDetailsFragment extends Fragment implements View.OnClickListener, WorkoutDetailsFragmentIntf, SelectIconDialogFragment.SelectIconDialogListener {
+public class WorkoutDetailsFragment extends Fragment implements View.OnClickListener, WorkoutDetailsFragmentIntf,
+        SelectIconDialogFragment.SelectIconDialogListener {
 
     private AddWorkoutActivityIntf addWorkoutActivityIntf;
     private DatabaseReference currUsersWorkoutRef;
@@ -119,7 +120,8 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
             }
         }
         rvPreviewSelectedExercise.setHasFixedSize(true);
-        rvPreviewSelectedExercise.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        rvPreviewSelectedExercise.setLayoutManager(new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL, false));
         exercisePreviewAdapter = new ExercisePreviewAdapter(getContext(), lstSelectedExercise, this);
         rvPreviewSelectedExercise.setAdapter(exercisePreviewAdapter);
     }
@@ -134,24 +136,14 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
                 addWorkoutActivityIntf.openFragment(AddExerciseFragment.newInstance(bundle), ConstantValue.ADD_EXERCISE);
                 break;
             case R.id.iv_choose_icon:
-                addWorkoutActivityIntf.showDialogFragment(WorkoutDetailsFragment.this, SelectIconDialogFragment.newInstance(), ConstantValue.SELECT_ICON);
+                addWorkoutActivityIntf.showDialogFragment(WorkoutDetailsFragment.this,
+                        SelectIconDialogFragment.newInstance(), ConstantValue.SELECT_ICON);
                 break;
             case R.id.iv_save:
                 saveWorkout();
                 break;
             case R.id.iv_delete:
-                DisplayView.showAlertDialog(getContext(), "Are you sure you want to delete this workout?",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                            }
-                        }, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                            }
-                        });
+                deleteWorkout();
                 break;
         }
     }
@@ -175,12 +167,47 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
      * Lưu thông tin workout vào db
      */
     private void saveWorkout() {
-//        if (tag.equals(ConstantValue.ADD_WORKOUT)){
-//            currUsersWorkoutRef = FirebaseDatabase.getInstance().getReference().child("workout").child(userId);
-//        } else if (tag.equals(ConstantValue.WORKOUT_DETAILS)){
-//            currUsersWorkoutRef = FirebaseDatabase.getInstance().getReference().child("workout").child(usersWorkoutDetails.getUserId()).child(usersWorkoutDetails.getId());
-//        }
-//        Workout newWorkout = new Workout(edtWorkoutTitle.getText().toString(),getResources().getResourceName())
+        DisplayView.showAlertDialog(getContext(), getString(R.string.confirm_save),
+                new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Workout newWorkout = new Workout(edtWorkoutTitle.getText().toString(),
+                        (String) ivChooseWorkoutIcon.getTag(),lstSelectedExercise,cadioRate,strengthRate,mobilityRate);
+                if (tag.equals(ConstantValue.ADD_WORKOUT)){
+                    currUsersWorkoutRef = FirebaseDatabase.getInstance().getReference().child("workout").child(userId);
+                    currUsersWorkoutRef.push().setValue(newWorkout);
+                } else if (tag.equals(ConstantValue.WORKOUT_DETAILS)){
+                    currUsersWorkoutRef = FirebaseDatabase.getInstance().getReference().child("workout").
+                            child(usersWorkoutDetails.getUserId()).child(usersWorkoutDetails.getId());
+                    currUsersWorkoutRef.setValue(newWorkout);
+                }
+                dialogInterface.dismiss();
+                getActivity().onBackPressed();
+            }
+        }, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+    }
+
+    /**
+     * Xoá workout trong db
+     */
+    private void deleteWorkout() {
+        DisplayView.showAlertDialog(getContext(), getString(R.string.confirm_delete),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                }, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
     }
 
     /**

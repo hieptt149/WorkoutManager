@@ -7,10 +7,13 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.GridView;
 
 
 import com.google.firebase.database.DataSnapshot;
@@ -34,9 +37,9 @@ import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WorkoutFragment extends Fragment implements View.OnClickListener, WorkoutFragmentIntf {
+public class WorkoutFragment extends Fragment implements View.OnClickListener,AdapterView.OnItemClickListener{
 
-    private RecyclerView rvPreviewWorkout;
+    private GridView gvPreviewWorkout;
     private FloatingActionButton fabAddWorkout;
     private WorkoutPreviewAdapter workoutPreviewAdapter;
     private ArrayList<Workout> lstUsersWorkout;
@@ -66,24 +69,24 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener, W
         initView(view);
         mainActivity = (MainActivity) getActivity();
         lstUsersWorkout = new ArrayList<>();
-        rvPreviewWorkout.setHasFixedSize(true);
-        rvPreviewWorkout.setLayoutManager(new GridLayoutManager(getContext(), DisplayView.calculateNoOfColumns(getContext())));
+        workoutPreviewAdapter = new WorkoutPreviewAdapter(getContext(),lstUsersWorkout);
+        gvPreviewWorkout.setAdapter(workoutPreviewAdapter);
         mainActivity.setMainActivityIntf(new MainActivityIntf() {
             @Override
             public void sendCurrUserInfo(final User currUser) {
                 userId = currUser.getId();
                 usersWorkoutRef = FirebaseDatabase.getInstance().getReference().child("workout").child(currUser.getId());
-                usersWorkoutRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                usersWorkoutRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        lstUsersWorkout.clear();
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             Workout usersWorkout = snapshot.getValue(Workout.class);
                             usersWorkout.setId(snapshot.getKey());
                             usersWorkout.setUserId(currUser.getId());
                             lstUsersWorkout.add(usersWorkout);
                         }
-                        workoutPreviewAdapter = new WorkoutPreviewAdapter(getContext(), lstUsersWorkout, WorkoutFragment.this);
-                        rvPreviewWorkout.setAdapter(workoutPreviewAdapter);
+                        workoutPreviewAdapter.notifyDataSetChanged();
                         DisplayView.dismissProgressDialog();
                     }
 
@@ -105,7 +108,7 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener, W
     }
 
     @Override
-    public void openWorkoutDetails(int position) {
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         Intent i = new Intent(getActivity(),AddWorkoutActivity.class);
         i.putExtra("workout",lstUsersWorkout.get(position));
         i.putExtra("tag",ConstantValue.WORKOUT_DETAILS);
@@ -114,7 +117,8 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener, W
 
     private void initView(View view) {
         fabAddWorkout = view.findViewById(R.id.fab_addworkout);
-        rvPreviewWorkout = view.findViewById(R.id.rv_preview_workout);
+        gvPreviewWorkout = view.findViewById(R.id.gv_preview_workout);
         fabAddWorkout.setOnClickListener(this);
+        gvPreviewWorkout.setOnItemClickListener(this);
     }
 }
