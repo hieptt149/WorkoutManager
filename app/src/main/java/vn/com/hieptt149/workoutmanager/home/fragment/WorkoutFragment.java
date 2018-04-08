@@ -42,6 +42,7 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener, W
     private ArrayList<Workout> lstUsersWorkout;
     private DatabaseReference usersWorkoutRef;
     private MainActivity mainActivity;
+    private String userId;
 
     public WorkoutFragment() {
     }
@@ -69,14 +70,16 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener, W
         rvPreviewWorkout.setLayoutManager(new GridLayoutManager(getContext(), DisplayView.calculateNoOfColumns(getContext())));
         mainActivity.setMainActivityIntf(new MainActivityIntf() {
             @Override
-            public void sendCurrUserInfo(User currUser) {
-                usersWorkoutRef = FirebaseDatabase.getInstance().getReference().child("workout").child(Integer.toString(currUser.getId()));
+            public void sendCurrUserInfo(final User currUser) {
+                userId = currUser.getId();
+                usersWorkoutRef = FirebaseDatabase.getInstance().getReference().child("workout").child(currUser.getId());
                 usersWorkoutRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             Workout usersWorkout = snapshot.getValue(Workout.class);
-                            usersWorkout.setId(Integer.parseInt(snapshot.getKey()));
+                            usersWorkout.setId(snapshot.getKey());
+                            usersWorkout.setUserId(currUser.getId());
                             lstUsersWorkout.add(usersWorkout);
                         }
                         workoutPreviewAdapter = new WorkoutPreviewAdapter(getContext(), lstUsersWorkout, WorkoutFragment.this);
@@ -96,6 +99,7 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener, W
     @Override
     public void onClick(View view) {
         Intent i = new Intent(getActivity(), AddWorkoutActivity.class);
+        i.putExtra("userid",userId);
         i.putExtra("tag", ConstantValue.ADD_WORKOUT);
         startActivity(i);
     }

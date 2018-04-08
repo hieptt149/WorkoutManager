@@ -40,7 +40,7 @@ public class ExerciseDetailsFragment extends Fragment {
     private AddWorkoutActivityIntf addWorkoutActivityIntf;
     private TextView tvAddWorkoutToolbarTitle, tvTotalExercise, tvTotalTime, tvClickToChoose, tvExerciseDescription;
     private ProgressBar pbCardio, pbStrength, pbMobility;
-    private ImageView ivExercisePreview;
+    private ImageView ivExercisePreview,ivStart,ivSave,ivDelete;
     private EditText edtWorkoutTitle;
     private LinearLayout lnExercisesInfo;
     private RecyclerView rvPreviewSelectedExercise;
@@ -120,6 +120,9 @@ public class ExerciseDetailsFragment extends Fragment {
         pbStrength = view.findViewById(R.id.pb_strength);
         pbMobility = view.findViewById(R.id.pb_mobility);
         ivExercisePreview = view.findViewById(R.id.iv_choose_icon);
+        ivDelete = view.findViewById(R.id.iv_delete);
+        ivSave = view.findViewById(R.id.iv_save);
+        ivStart = view.findViewById(R.id.iv_start);
         tvClickToChoose = view.findViewById(R.id.tv_click_to_choose);
         edtWorkoutTitle = view.findViewById(R.id.edt_title);
         lnExercisesInfo = view.findViewById(R.id.ln_exercises_info);

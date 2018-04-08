@@ -10,9 +10,9 @@ import java.io.Serializable;
 
 public class History implements Serializable {
 
-    public int id;
-    public int userId;
-    public int workoutId;
+    public String id;
+    public String userId;
+    public String workoutId;
     @PropertyName("datetime")
     public long datetime;
     @PropertyName("time_workout")
@@ -21,7 +21,7 @@ public class History implements Serializable {
     public History() {
     }
 
-    public History(int id, int userId, int workoutId, long datetime, long timeWorkout) {
+    public History(String id, String userId, String workoutId, long datetime, long timeWorkout) {
         this.id = id;
         this.userId = userId;
         this.workoutId = workoutId;
@@ -29,27 +29,27 @@ public class History implements Serializable {
         this.timeWorkout = timeWorkout;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
-    public int getWorkoutId() {
+    public String getWorkoutId() {
         return workoutId;
     }
 
-    public void setWorkoutId(int workoutId) {
+    public void setWorkoutId(String workoutId) {
         this.workoutId = workoutId;
     }
 

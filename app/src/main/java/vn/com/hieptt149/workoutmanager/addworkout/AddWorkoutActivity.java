@@ -1,5 +1,6 @@
 package vn.com.hieptt149.workoutmanager.addworkout;
 
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -50,6 +51,12 @@ public class AddWorkoutActivity extends AppCompatActivity implements View.OnClic
         fragmentTransaction.replace(R.id.ln_addworkout_container,fragment);
         fragmentTransaction.addToBackStack(tag);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void showDialogFragment(Fragment targetFragment,DialogFragment dialogFragment, String tag) {
+        dialogFragment.setTargetFragment(targetFragment,1);
+       dialogFragment.show(fragmentManager,tag);
     }
 
     @Override

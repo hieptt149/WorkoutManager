@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private DatabaseReference usersRef;
     private MainActivityIntf mainActivityIntf;
     //Demo user
-    private int userId = -1;
+    private String userId = "-1";
     private User currUser;
 
     @Override
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 //        } else {
 //
 //        }
-        userId = 9;
+        userId = "9";
         getUserInformation();
     }
 
@@ -94,11 +94,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     /**
-     *
+     *Lấy thông tin của người dùng trên db
      */
     private void getUserInformation() {
         DisplayView.showProgressDialog(this);
-        DatabaseReference userRef = usersRef.child(Integer.toString(userId));
+        DatabaseReference userRef = usersRef.child(userId);
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

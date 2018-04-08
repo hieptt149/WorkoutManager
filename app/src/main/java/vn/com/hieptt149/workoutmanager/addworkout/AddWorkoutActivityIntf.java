@@ -1,5 +1,6 @@
 package vn.com.hieptt149.workoutmanager.addworkout;
 
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 
 import vn.com.hieptt149.workoutmanager.model.Exercise;
@@ -9,7 +10,11 @@ import vn.com.hieptt149.workoutmanager.model.Exercise;
  */
 
 public interface AddWorkoutActivityIntf {
-    void openFragment(Fragment fragment,String tag);
+    void openFragment(Fragment fragment, String tag);
+
+    void showDialogFragment(Fragment targetFragment, DialogFragment dialogFragment, String tag);
+
     void addSelectedExercise(Exercise exercise);
+
     void removeSelectedExercise(Exercise exercise);
 }

@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 public class User implements Serializable {
 
-    public int id;
+    public String id;
     @PropertyName("name")
     public String name;
     @PropertyName("height")
@@ -21,18 +21,18 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(int id, String name, float height, float weight) {
+    public User(String id, String name, float height, float weight) {
         this.id = id;
         this.name = name;
         this.height = height;
         this.weight = weight;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

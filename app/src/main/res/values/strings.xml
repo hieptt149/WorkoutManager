@@ -27,6 +27,8 @@
     <string name="add_workout">Add Workout</string>
     <string name="click_iv_to_choose">(click on icon to choose another)</string>
     <string name="workout_details">Workout Details</string>
+    <string name="positive_btn">OK</string>
+    <string name="negative_btn">Cancel</string>
 
     <!--Add Exercise Fragment-->
     <string name="add_exercise">Add Exercise</string>

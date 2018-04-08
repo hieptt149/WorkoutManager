@@ -2,6 +2,7 @@ package vn.com.hieptt149.workoutmanager.addworkout.fragment;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -21,6 +22,9 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 
 import vn.com.hieptt149.workoutmanager.R;
@@ -29,17 +33,19 @@ import vn.com.hieptt149.workoutmanager.addworkout.AddWorkoutActivityIntf;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
 import vn.com.hieptt149.workoutmanager.model.Exercise;
 import vn.com.hieptt149.workoutmanager.model.Workout;
+import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 import vn.com.hieptt149.workoutmanager.utils.TimeFormatter;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WorkoutDetailsFragment extends Fragment implements View.OnClickListener, WorkoutDetailsFragmentIntf {
+public class WorkoutDetailsFragment extends Fragment implements View.OnClickListener, WorkoutDetailsFragmentIntf,SelectIconDialogFragment.SelectIconDialogListener {
 
     private AddWorkoutActivityIntf addWorkoutActivityIntf;
+    private DatabaseReference currUsersWorkoutRef;
     private TextView tvAddWorkoutToolbarTitle, tvTotalExercise, tvTotalTime, tvClickToChoose, tvExerciseDescription;
     private ProgressBar pbCardio, pbStrength, pbMobility;
-    private ImageView ivChooseWorkoutIcon;
+    private ImageView ivChooseWorkoutIcon, ivStart, ivSave, ivDelete;
     private EditText edtWorkoutTitle;
     private LinearLayout lnExercisesInfo;
     private RecyclerView rvPreviewSelectedExercise;
@@ -53,6 +59,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     private boolean isFirstTime = true;
 
     private static Workout usersWorkoutDetails;
+    private static String userId;
     private static String tag;
 
     public static WorkoutDetailsFragment newInstance(Bundle bundle) {
@@ -60,6 +67,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         if (bundle != null) {
             workoutDetailsFragment.setArguments(bundle);
             usersWorkoutDetails = (Workout) bundle.getSerializable("workout");
+            userId = bundle.getString("userid");
             tag = bundle.getString("tag");
         }
         return workoutDetailsFragment;
@@ -85,9 +93,14 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         //Trường hợp user xem chi tiết workout
         if (tag.equals(ConstantValue.WORKOUT_DETAILS)) {
             tvAddWorkoutToolbarTitle.setText(usersWorkoutDetails.getTitle());
+            ivDelete.setVisibility(View.VISIBLE);
             //Nếu người dùng mới mở màn hình chi tiết lần đầu
-            if (isFirstTime){
+            if (isFirstTime) {
                 lstSelectedExercise.addAll(usersWorkoutDetails.getLstUsersExercises());
+            }
+            if (lstSelectedExercise.size() != 0) {
+                ivStart.setVisibility(View.VISIBLE);
+                ivSave.setVisibility(View.VISIBLE);
             }
             showUsersWorkoutDetails();
         }
@@ -96,6 +109,9 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
             tvAddWorkoutToolbarTitle.setText(R.string.add_workout);
             //Nếu người dùng đã thêm exercise
             if (!isFirstTime) {
+                if (lstSelectedExercise.size() != 0) {
+                    ivSave.setVisibility(View.VISIBLE);
+                }
                 showUsersWorkoutDetails();
             }
         }
@@ -109,9 +125,30 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_add_exercise:
+                isFirstTime = false;
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("lstselectedexercise", lstSelectedExercise);
                 addWorkoutActivityIntf.openFragment(AddExerciseFragment.newInstance(bundle), ConstantValue.ADD_EXERCISE);
+                break;
+            case R.id.iv_choose_icon:
+                addWorkoutActivityIntf.showDialogFragment(WorkoutDetailsFragment.this, SelectIconDialogFragment.newInstance(), ConstantValue.SELECT_ICON);
+                break;
+            case R.id.iv_save:
+                saveWorkout();
+                break;
+            case R.id.iv_delete:
+                DisplayView.showAlertDialog(getContext(), "Are you sure you want to delete this workout?",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        }, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
                 break;
         }
     }
@@ -121,6 +158,25 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         Bundle bundle = new Bundle();
         bundle.putSerializable("selectedexercise", selectedExercise);
         addWorkoutActivityIntf.openFragment(ExerciseDetailsFragment.newInstance(bundle), ConstantValue.EXERCISE_DETAILS);
+    }
+
+    @Override
+    public void onIconItemClick(String tag) {
+        int imgRes = getResources().getIdentifier(tag, "drawable", getContext().getPackageName());
+        ivChooseWorkoutIcon.setTag(tag);
+        ivChooseWorkoutIcon.setImageResource(imgRes);
+    }
+
+    /**
+     * Lưu thông tin workout vào db
+     */
+    private void saveWorkout() {
+//        if (tag.equals(ConstantValue.ADD_WORKOUT)){
+//            currUsersWorkoutRef = FirebaseDatabase.getInstance().getReference().child("workout").child(userId);
+//        } else if (tag.equals(ConstantValue.WORKOUT_DETAILS)){
+//            currUsersWorkoutRef = FirebaseDatabase.getInstance().getReference().child("workout").child(usersWorkoutDetails.getUserId()).child(usersWorkoutDetails.getId());
+//        }
+//        Workout newWorkout = new Workout(edtWorkoutTitle.getText().toString(),getResources().getResourceName())
     }
 
     /**
@@ -138,7 +194,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
             strengthRate += lstSelectedExercise.get(i).getStrengthRate();
             mobilityRate += lstSelectedExercise.get(i).getMobilityRate();
         }
-        if (lstSelectedExercise.size() != 0){
+        if (lstSelectedExercise.size() != 0) {
             totalExercise = lstSelectedExercise.size();
             cadioRate = cadioRate / (lstSelectedExercise.size());
             strengthRate = strengthRate / (lstSelectedExercise.size());
@@ -152,7 +208,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
                 pbMobility.setProgress(mobilityRate);
             }
         });
-        if (totalExercise > 1){
+        if (totalExercise > 1) {
             tvTotalExercise.setText(totalExercise + " exercises");
         } else {
             tvTotalExercise.setText(totalExercise + " exercise");
@@ -160,6 +216,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         tvTotalTime.setText(TimeFormatter.msTimeFormatter(totalTime));
         if (usersWorkoutDetails != null) {
             int imgRes = getResources().getIdentifier(usersWorkoutDetails.getIcon(), "drawable", getContext().getPackageName());
+            ivChooseWorkoutIcon.setTag(usersWorkoutDetails.getIcon());
             ivChooseWorkoutIcon.setImageResource(imgRes);
             edtWorkoutTitle.setText(usersWorkoutDetails.getTitle());
         }
@@ -189,6 +246,9 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         pbStrength = view.findViewById(R.id.pb_strength);
         pbMobility = view.findViewById(R.id.pb_mobility);
         ivChooseWorkoutIcon = view.findViewById(R.id.iv_choose_icon);
+        ivDelete = view.findViewById(R.id.iv_delete);
+        ivSave = view.findViewById(R.id.iv_save);
+        ivStart = view.findViewById(R.id.iv_start);
         tvClickToChoose = view.findViewById(R.id.tv_click_to_choose);
         edtWorkoutTitle = view.findViewById(R.id.edt_title);
         lnExercisesInfo = view.findViewById(R.id.ln_exercises_info);
@@ -198,5 +258,8 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         rlBtnAddExerciseContainer = view.findViewById(R.id.rl_btn_add_exercise_container);
         btnAddExercise = view.findViewById(R.id.btn_add_exercise);
         btnAddExercise.setOnClickListener(this);
+        ivChooseWorkoutIcon.setOnClickListener(this);
+        ivSave.setOnClickListener(this);
+        ivDelete.setOnClickListener(this);
     }
 }
