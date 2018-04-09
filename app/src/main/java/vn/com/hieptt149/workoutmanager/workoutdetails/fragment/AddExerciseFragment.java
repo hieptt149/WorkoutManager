@@ -1,4 +1,4 @@
-package vn.com.hieptt149.workoutmanager.addworkout.fragment;
+package vn.com.hieptt149.workoutmanager.workoutdetails.fragment;
 
 
 import android.content.Context;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.adapter.ExerciseListAdapter;
-import vn.com.hieptt149.workoutmanager.addworkout.AddWorkoutActivityIntf;
+import vn.com.hieptt149.workoutmanager.workoutdetails.AddWorkoutActivityIntf;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
 import vn.com.hieptt149.workoutmanager.model.Exercise;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;
@@ -51,7 +51,7 @@ public class AddExerciseFragment extends Fragment implements AddExerciseFragment
     public static AddExerciseFragment newInstance(Bundle bundle) {
         AddExerciseFragment addExerciseFragment = new AddExerciseFragment();
         if (bundle != null) {
-            lstSelectedExercises = (ArrayList<Exercise>) bundle.getSerializable("lstselectedexercise");
+            lstSelectedExercises = (ArrayList<Exercise>) bundle.getSerializable(ConstantValue.SELECTED_EXERCISE_LIST);
         }
         return addExerciseFragment;
     }
@@ -73,7 +73,7 @@ public class AddExerciseFragment extends Fragment implements AddExerciseFragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView(view);
-        exercisesRef = FirebaseDatabase.getInstance().getReference().child("exercise");
+        exercisesRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.EXERCISE);
         tvAddWorkoutToolBarTitle.setText(R.string.add_exercise);
         linearLayoutManager = new LinearLayoutManager(getContext());
         dividerItemDecoration = new DividerItemDecoration(getContext(), linearLayoutManager.getOrientation());
@@ -99,7 +99,7 @@ public class AddExerciseFragment extends Fragment implements AddExerciseFragment
     @Override
     public void onExerciseItemClick(Exercise selectedExercise) {
         Bundle bundle = new Bundle();
-        bundle.putSerializable("selectedexercise", selectedExercise);
+        bundle.putSerializable(ConstantValue.SELECTED_EXERCISE, selectedExercise);
         addWorkoutActivityIntf.openFragment(ExerciseDetailsFragment.newInstance(bundle), ConstantValue.EXERCISE_DETAILS);
     }
 

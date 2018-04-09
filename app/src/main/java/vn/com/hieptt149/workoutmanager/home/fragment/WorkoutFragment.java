@@ -1,14 +1,12 @@
 package vn.com.hieptt149.workoutmanager.home.fragment;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +24,7 @@ import java.util.ArrayList;
 
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.adapter.WorkoutPreviewAdapter;
-import vn.com.hieptt149.workoutmanager.addworkout.AddWorkoutActivity;
+import vn.com.hieptt149.workoutmanager.workoutdetails.AddWorkoutActivity;
 import vn.com.hieptt149.workoutmanager.home.MainActivity;
 import vn.com.hieptt149.workoutmanager.home.MainActivityIntf;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
@@ -44,17 +42,27 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener,Ad
     private WorkoutPreviewAdapter workoutPreviewAdapter;
     private ArrayList<Workout> lstUsersWorkout;
     private DatabaseReference usersWorkoutRef;
-    private MainActivity mainActivity;
+    private MainActivityIntf mainActivityIntf;
     private String userId;
+
+    private static User currUser;
 
     public WorkoutFragment() {
     }
 
-    public static WorkoutFragment newInstance() {
+    public static WorkoutFragment newInstance(Bundle bundle) {
         WorkoutFragment workoutFragment = new WorkoutFragment();
+        if (bundle != null){
+            currUser = (User) bundle.getSerializable(ConstantValue.CURRENT_USER);
+        }
         return workoutFragment;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mainActivityIntf = (MainActivityIntf) context;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,34 +75,28 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener,Ad
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView(view);
-        mainActivity = (MainActivity) getActivity();
         lstUsersWorkout = new ArrayList<>();
         workoutPreviewAdapter = new WorkoutPreviewAdapter(getContext(),lstUsersWorkout);
         gvPreviewWorkout.setAdapter(workoutPreviewAdapter);
-        mainActivity.setMainActivityIntf(new MainActivityIntf() {
+        userId = currUser.getId();
+        usersWorkoutRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.WORKOUT).child(currUser.getId());
+        usersWorkoutRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void sendCurrUserInfo(final User currUser) {
-                userId = currUser.getId();
-                usersWorkoutRef = FirebaseDatabase.getInstance().getReference().child("workout").child(currUser.getId());
-                usersWorkoutRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        lstUsersWorkout.clear();
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            Workout usersWorkout = snapshot.getValue(Workout.class);
-                            usersWorkout.setId(snapshot.getKey());
-                            usersWorkout.setUserId(currUser.getId());
-                            lstUsersWorkout.add(usersWorkout);
-                        }
-                        workoutPreviewAdapter.notifyDataSetChanged();
-                        DisplayView.dismissProgressDialog();
-                    }
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                lstUsersWorkout.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Workout usersWorkout = snapshot.getValue(Workout.class);
+                    usersWorkout.setId(snapshot.getKey());
+                    usersWorkout.setUserId(currUser.getId());
+                    lstUsersWorkout.add(usersWorkout);
+                }
+                workoutPreviewAdapter.notifyDataSetChanged();
+                DisplayView.dismissProgressDialog();
+            }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        DisplayView.dismissProgressDialog();
-                    }
-                });
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                DisplayView.dismissProgressDialog();
             }
         });
     }
@@ -102,16 +104,16 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener,Ad
     @Override
     public void onClick(View view) {
         Intent i = new Intent(getActivity(), AddWorkoutActivity.class);
-        i.putExtra("userid",userId);
-        i.putExtra("tag", ConstantValue.ADD_WORKOUT);
+        i.putExtra(ConstantValue.USER_ID,userId);
+        i.putExtra(ConstantValue.TAG, ConstantValue.ADD_WORKOUT);
         startActivity(i);
     }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         Intent i = new Intent(getActivity(),AddWorkoutActivity.class);
-        i.putExtra("workout",lstUsersWorkout.get(position));
-        i.putExtra("tag",ConstantValue.WORKOUT_DETAILS);
+        i.putExtra(ConstantValue.SELECTED_WORKOUT,lstUsersWorkout.get(position));
+        i.putExtra(ConstantValue.TAG,ConstantValue.WORKOUT_DETAILS);
         startActivity(i);
     }
 

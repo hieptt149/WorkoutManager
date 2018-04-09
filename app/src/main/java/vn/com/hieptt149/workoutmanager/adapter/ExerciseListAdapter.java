@@ -1,7 +1,6 @@
 package vn.com.hieptt149.workoutmanager.adapter;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +14,7 @@ import com.bumptech.glide.request.RequestOptions;
 import java.util.ArrayList;
 
 import vn.com.hieptt149.workoutmanager.R;
-import vn.com.hieptt149.workoutmanager.addworkout.fragment.AddExerciseFragment;
-import vn.com.hieptt149.workoutmanager.addworkout.fragment.AddExerciseFragmentIntf;
+import vn.com.hieptt149.workoutmanager.workoutdetails.fragment.AddExerciseFragmentIntf;
 import vn.com.hieptt149.workoutmanager.model.Exercise;
 
 /**

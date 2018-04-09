@@ -1,4 +1,4 @@
-package vn.com.hieptt149.workoutmanager.addworkout.fragment;
+package vn.com.hieptt149.workoutmanager.workoutdetails.fragment;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -27,7 +27,8 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 
 import vn.com.hieptt149.workoutmanager.R;
-import vn.com.hieptt149.workoutmanager.addworkout.AddWorkoutActivityIntf;
+import vn.com.hieptt149.workoutmanager.model.ConstantValue;
+import vn.com.hieptt149.workoutmanager.workoutdetails.AddWorkoutActivityIntf;
 import vn.com.hieptt149.workoutmanager.model.Exercise;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 
@@ -52,7 +53,7 @@ public class ExerciseDetailsFragment extends Fragment {
     public static ExerciseDetailsFragment newInstance(Bundle bundle) {
         ExerciseDetailsFragment exerciseDetailsFragment = new ExerciseDetailsFragment();
         if (bundle != null){
-            selectedExercise = (Exercise) bundle.getSerializable("selectedexercise");
+            selectedExercise = (Exercise) bundle.getSerializable(ConstantValue.SELECTED_EXERCISE);
         } else {
             selectedExercise = null;
         }

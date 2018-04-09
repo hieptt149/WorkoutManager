@@ -1,11 +1,13 @@
 package vn.com.hieptt149.workoutmanager.adapter;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,37 +32,6 @@ public class WorkoutPreviewAdapter extends BaseAdapter {
         this.lstWorkouts = lstWorkouts;
     }
 
-    //    public WorkoutPreviewAdapter(Context context, ArrayList<Workout> lstWorkouts, WorkoutFragmentIntf workoutFragmentIntf) {
-//        this.context = context;
-//        this.lstWorkouts = lstWorkouts;
-//        this.workoutFragmentIntf = workoutFragmentIntf;
-//    }
-//
-//    @Override
-//    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_preview, parent, false);
-//        return new ViewHolder(view);
-//    }
-//
-//    @Override
-//    public void onBindViewHolder(ViewHolder holder, final int position) {
-//        Workout workout = lstWorkouts.get(position);
-//        int imgRes = context.getResources().getIdentifier(workout.getIcon(), "drawable", context.getPackageName());
-//        holder.ivWorkoutIcon.setImageResource(imgRes);
-//        holder.tvWorkoutTitle.setText(workout.getTitle());
-//        holder.lnWorkoutItem.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                workoutFragmentIntf.openWorkoutDetails(position);
-//            }
-//        });
-//    }
-//
-//    @Override
-//    public int getItemCount() {
-//        return lstWorkouts.size();
-//    }
-
     @Override
     public int getCount() {
         return lstWorkouts.size();
@@ -79,10 +50,11 @@ public class WorkoutPreviewAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         ViewHolder viewHolder = null;
-        if (view == null){
+        if (view == null) {
             viewHolder = new ViewHolder();
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = layoutInflater.inflate(R.layout.item_preview,null);
+            view = layoutInflater.inflate(R.layout.item_preview, null);
+            view.setLayoutParams(new GridView.LayoutParams(GridView.AUTO_FIT, (int) (150 * Resources.getSystem().getDisplayMetrics().density)));
             viewHolder.lnWorkoutItem = view.findViewById(R.id.ln_preview_item);
             viewHolder.ivWorkoutIcon = view.findViewById(R.id.iv_preview_item);
             viewHolder.tvWorkoutTitle = view.findViewById(R.id.tv_item_title);

@@ -1,4 +1,4 @@
-package vn.com.hieptt149.workoutmanager.addworkout;
+package vn.com.hieptt149.workoutmanager.workoutdetails;
 
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;

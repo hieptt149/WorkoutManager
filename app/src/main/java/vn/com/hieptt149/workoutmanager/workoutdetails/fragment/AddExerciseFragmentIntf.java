@@ -1,4 +1,4 @@
-package vn.com.hieptt149.workoutmanager.addworkout.fragment;
+package vn.com.hieptt149.workoutmanager.workoutdetails.fragment;
 
 import vn.com.hieptt149.workoutmanager.model.Exercise;
 

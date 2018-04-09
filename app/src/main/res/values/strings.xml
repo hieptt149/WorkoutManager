@@ -16,6 +16,10 @@
     <!--Profile Fragment-->
 
     <!--Settings Fragment-->
+    <string name="sound">Sounds</string>
+    <string name="exercises_duration">Exercise\'s duration</string>
+    <string name="rests_duration">Rest\'s duration</string>
+    <string name="themes">Themes</string>
 
     <!--Workout Details Fragment-->
     <string name="back">Back</string>

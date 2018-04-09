@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -21,12 +22,13 @@ import com.google.firebase.database.ValueEventListener;
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.home.fragment.ProfileFragment;
 import vn.com.hieptt149.workoutmanager.home.fragment.SettingsFragment;
+import vn.com.hieptt149.workoutmanager.model.ConstantValue;
 import vn.com.hieptt149.workoutmanager.model.User;
 import vn.com.hieptt149.workoutmanager.utils.CustomViewPager;
 import vn.com.hieptt149.workoutmanager.home.fragment.WorkoutFragment;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, MainActivityIntf {
 
     private BottomNavigationView bottomNavigationView;
     private CustomViewPager vpAppContainer;
@@ -34,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private TextView tvAppToolbarTitle;
     private SharedPreferences sharedPreferences;
     private DatabaseReference usersRef;
-    private MainActivityIntf mainActivityIntf;
+    private FragmentManager fragmentManager;
     //Demo user
     private String userId = "-1";
     private User currUser;
@@ -45,11 +47,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         setContentView(R.layout.activity_main);
         initView();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        usersRef = FirebaseDatabase.getInstance().getReference().child("user");
-        myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
+        usersRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.USER);
+        fragmentManager = getSupportFragmentManager();
         //set số page được off screen
         vpAppContainer.setOffscreenPageLimit(2);
-        vpAppContainer.setAdapter(myPagerAdapter);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(0);
         tvAppToolbarTitle.setText(R.string.workout);
@@ -87,6 +88,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         return false;
     }
 
+    @Override
+    public void showDialogFragment(Fragment targetFragment, DialogFragment dialogFragment, String tag) {
+        dialogFragment.setTargetFragment(targetFragment, 1);
+        dialogFragment.show(fragmentManager, tag);
+    }
+
     private void initView() {
         bottomNavigationView = findViewById(R.id.bottom_nav);
         vpAppContainer = findViewById(R.id.vp_app_container);
@@ -94,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     /**
-     *Lấy thông tin của người dùng trên db
+     * Lấy thông tin của người dùng trên db
      */
     private void getUserInformation() {
         DisplayView.showProgressDialog(this);
@@ -104,7 +111,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             public void onDataChange(DataSnapshot dataSnapshot) {
                 currUser = dataSnapshot.getValue(User.class);
                 currUser.setId(userId);
-                mainActivityIntf.sendCurrUserInfo(currUser);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(ConstantValue.CURRENT_USER, currUser);
+                myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), bundle);
+                vpAppContainer.setAdapter(myPagerAdapter);
             }
 
             @Override
@@ -114,23 +124,21 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         });
     }
 
-    public void setMainActivityIntf(MainActivityIntf mainActivityIntf){
-        this.mainActivityIntf = mainActivityIntf;
-    }
-
     private static class MyPagerAdapter extends FragmentPagerAdapter {
 
         private static int NUM_ITEMS = 3;
+        private Bundle bundle;
 
-        public MyPagerAdapter(FragmentManager fm) {
+        public MyPagerAdapter(FragmentManager fm, Bundle bundle) {
             super(fm);
+            this.bundle = bundle;
         }
 
         @Override
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return WorkoutFragment.newInstance();
+                    return WorkoutFragment.newInstance(bundle);
                 case 1:
                     return ProfileFragment.newInstance();
                 case 2:

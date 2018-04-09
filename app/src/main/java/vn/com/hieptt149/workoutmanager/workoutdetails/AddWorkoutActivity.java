@@ -1,4 +1,4 @@
-package vn.com.hieptt149.workoutmanager.addworkout;
+package vn.com.hieptt149.workoutmanager.workoutdetails;
 
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -11,12 +11,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import vn.com.hieptt149.workoutmanager.R;
-import vn.com.hieptt149.workoutmanager.addworkout.fragment.WorkoutDetailsFragment;
+import vn.com.hieptt149.workoutmanager.workoutdetails.fragment.WorkoutDetailsFragment;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
 import vn.com.hieptt149.workoutmanager.model.Exercise;
-import vn.com.hieptt149.workoutmanager.model.Workout;
 
-public class AddWorkoutActivity extends AppCompatActivity implements View.OnClickListener,AddWorkoutActivityIntf {
+public class AddWorkoutActivity extends AppCompatActivity implements View.OnClickListener, AddWorkoutActivityIntf {
 
     private TextView tvAddWorkoutBack;
     private LinearLayout lnAddWorkoutContainer;
@@ -32,13 +31,13 @@ public class AddWorkoutActivity extends AppCompatActivity implements View.OnClic
         bundle = getIntent().getExtras();
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.ln_addworkout_container, WorkoutDetailsFragment.newInstance(bundle),ConstantValue.WORKOUT_DETAILS);
+        fragmentTransaction.add(R.id.ln_addworkout_container, WorkoutDetailsFragment.newInstance(bundle), ConstantValue.WORKOUT_DETAILS);
         fragmentTransaction.commit();
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.tv_addworkout_back:
                 onBackPressed();
                 break;
@@ -48,15 +47,15 @@ public class AddWorkoutActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void openFragment(Fragment fragment, String tag) {
         fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.ln_addworkout_container,fragment);
+        fragmentTransaction.replace(R.id.ln_addworkout_container, fragment);
         fragmentTransaction.addToBackStack(tag);
         fragmentTransaction.commit();
     }
 
     @Override
-    public void showDialogFragment(Fragment targetFragment,DialogFragment dialogFragment, String tag) {
-        dialogFragment.setTargetFragment(targetFragment,1);
-       dialogFragment.show(fragmentManager,tag);
+    public void showDialogFragment(Fragment targetFragment, DialogFragment dialogFragment, String tag) {
+        dialogFragment.setTargetFragment(targetFragment, 1);
+        dialogFragment.show(fragmentManager, tag);
     }
 
     @Override
@@ -73,7 +72,7 @@ public class AddWorkoutActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onBackPressed() {
-        if (fragmentManager.getBackStackEntryCount() > 0){
+        if (fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack();
         } else {
             super.onBackPressed();

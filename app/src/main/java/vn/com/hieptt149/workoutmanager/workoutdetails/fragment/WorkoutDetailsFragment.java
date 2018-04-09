@@ -1,15 +1,13 @@
-package vn.com.hieptt149.workoutmanager.addworkout.fragment;
+package vn.com.hieptt149.workoutmanager.workoutdetails.fragment;
 
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +27,7 @@ import java.util.ArrayList;
 
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.adapter.ExercisePreviewAdapter;
-import vn.com.hieptt149.workoutmanager.addworkout.AddWorkoutActivityIntf;
+import vn.com.hieptt149.workoutmanager.workoutdetails.AddWorkoutActivityIntf;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
 import vn.com.hieptt149.workoutmanager.model.Exercise;
 import vn.com.hieptt149.workoutmanager.model.Workout;
@@ -68,9 +66,9 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         WorkoutDetailsFragment workoutDetailsFragment = new WorkoutDetailsFragment();
         if (bundle != null) {
             workoutDetailsFragment.setArguments(bundle);
-            usersWorkoutDetails = (Workout) bundle.getSerializable("workout");
-            userId = bundle.getString("userid");
-            tag = bundle.getString("tag");
+            usersWorkoutDetails = (Workout) bundle.getSerializable(ConstantValue.SELECTED_WORKOUT);
+            userId = bundle.getString(ConstantValue.USER_ID);
+            tag = bundle.getString(ConstantValue.TAG);
         }
         return workoutDetailsFragment;
     }
@@ -117,6 +115,8 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
                     ivSave.setVisibility(View.VISIBLE);
                 }
                 showUsersWorkoutDetails();
+            } else {
+                imgTag = null;
             }
         }
         rvPreviewSelectedExercise.setHasFixedSize(true);
@@ -132,7 +132,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
             case R.id.btn_add_exercise:
                 isFirstTime = false;
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("lstselectedexercise", lstSelectedExercise);
+                bundle.putSerializable(ConstantValue.SELECTED_EXERCISE_LIST, lstSelectedExercise);
                 addWorkoutActivityIntf.openFragment(AddExerciseFragment.newInstance(bundle), ConstantValue.ADD_EXERCISE);
                 break;
             case R.id.iv_choose_icon:
@@ -151,8 +151,9 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     @Override
     public void onExerciseItemClick(Exercise selectedExercise) {
         Bundle bundle = new Bundle();
-        bundle.putSerializable("selectedexercise", selectedExercise);
+        bundle.putSerializable(ConstantValue.SELECTED_EXERCISE, selectedExercise);
         addWorkoutActivityIntf.openFragment(ExerciseDetailsFragment.newInstance(bundle), ConstantValue.EXERCISE_DETAILS);
+        isFirstTime = false;
     }
 
     @Override
@@ -169,27 +170,27 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     private void saveWorkout() {
         DisplayView.showAlertDialog(getContext(), getString(R.string.confirm_save),
                 new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Workout newWorkout = new Workout(edtWorkoutTitle.getText().toString(),
-                        (String) ivChooseWorkoutIcon.getTag(),lstSelectedExercise,cadioRate,strengthRate,mobilityRate);
-                if (tag.equals(ConstantValue.ADD_WORKOUT)){
-                    currUsersWorkoutRef = FirebaseDatabase.getInstance().getReference().child("workout").child(userId);
-                    currUsersWorkoutRef.push().setValue(newWorkout);
-                } else if (tag.equals(ConstantValue.WORKOUT_DETAILS)){
-                    currUsersWorkoutRef = FirebaseDatabase.getInstance().getReference().child("workout").
-                            child(usersWorkoutDetails.getUserId()).child(usersWorkoutDetails.getId());
-                    currUsersWorkoutRef.setValue(newWorkout);
-                }
-                dialogInterface.dismiss();
-                getActivity().onBackPressed();
-            }
-        }, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Workout newWorkout = new Workout(edtWorkoutTitle.getText().toString(),
+                                (String) ivChooseWorkoutIcon.getTag(), lstSelectedExercise, cadioRate, strengthRate, mobilityRate);
+                        if (tag.equals(ConstantValue.ADD_WORKOUT)) {
+                            currUsersWorkoutRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.WORKOUT).child(userId);
+                            currUsersWorkoutRef.push().setValue(newWorkout);
+                        } else if (tag.equals(ConstantValue.WORKOUT_DETAILS)) {
+                            currUsersWorkoutRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.WORKOUT).
+                                    child(usersWorkoutDetails.getUserId()).child(usersWorkoutDetails.getId());
+                            currUsersWorkoutRef.setValue(newWorkout);
+                        }
+                        dialogInterface.dismiss();
+                        getActivity().onBackPressed();
+                    }
+                }, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
     }
 
     /**
@@ -200,7 +201,10 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
+                        currUsersWorkoutRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.WORKOUT).
+                                child(usersWorkoutDetails.getUserId()).child(usersWorkoutDetails.getId());
+                        currUsersWorkoutRef.removeValue();
+                        getActivity().onBackPressed();
                     }
                 }, new DialogInterface.OnClickListener() {
                     @Override
