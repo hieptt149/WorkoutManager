@@ -56,27 +56,32 @@ public class SettingsBottomSheetDialogFragment extends BottomSheetDialogFragment
         exerscisesDurationFragment = getActivity().getSupportFragmentManager().findFragmentByTag(ConstantValue.EXERCISES_DURATION);
         restsDurationFragment = getActivity().getSupportFragmentManager().findFragmentByTag(ConstantValue.RESTS_DURATION);
         if (exerscisesDurationFragment != null) {
-            tvSeekbarValue.setText(TimeFormatter.msTimeFormatter(exerscisesDuration));
-
-//            sbDuration.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//                @Override
-//                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//
-//                }
-//
-//                @Override
-//                public void onStartTrackingTouch(SeekBar seekBar) {
-//
-//                }
-//
-//                @Override
-//                public void onStopTrackingTouch(SeekBar seekBar) {
-//
-//                }
-//            });
+            setupView(exerscisesDuration, ConstantValue.MAX_EXERSCISE_DURATION);
         }
         if (restsDurationFragment != null) {
-            tvSeekbarValue.setText(TimeFormatter.msTimeFormatter(restsDuration));
+            setupView(restsDuration, ConstantValue.MAX_RESTS_DURATION);
         }
+    }
+
+    private void setupView(long duration, long maxDuration) {
+        tvSeekbarValue.setText(TimeFormatter.msTimeFormatter(duration));
+        sbDuration.setMax((int) maxDuration);
+        sbDuration.setProgress((int) duration);
+        sbDuration.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 }
