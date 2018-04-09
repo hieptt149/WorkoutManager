@@ -27,6 +27,7 @@ public class ConstantValue {
     public static String USER_ID = "user_id";
     public static String SELECTED_EXERCISE_LIST = "selected_exercise_list";
     public static String SELECTED_EXERCISE = "selected_exercise";
+    public static String DURATION_SETTINGS_TYPE = "duration_type";
 
     public static int MAX_EXERSCISE_DURATION = 90000;
     public static int MAX_RESTS_DURATION = 30000;

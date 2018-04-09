@@ -19,12 +19,11 @@ import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.home.MainActivity;
 import vn.com.hieptt149.workoutmanager.home.MainActivityIntf;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
-import vn.com.hieptt149.workoutmanager.utils.TimeFormatter;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SettingsFragment extends Fragment implements View.OnClickListener {
+public class SettingsFragment extends Fragment implements View.OnClickListener,SettingsBottomSheetDialogFragment.SettingsBottomSheetDialogListener{
 
     private MainActivity mainActivity;
     private MainActivityIntf mainActivityIntf;
@@ -73,25 +72,20 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         if (sharedPreferences.contains(ConstantValue.EXERCISES_DURATION)) {
             if (exerscisesDuration == 0) {
                 exerscisesDuration = ConstantValue.DEFAULT_EXERCISES_DURATION;
-                tvExercisesDuration.setText(TimeFormatter.msTimeFormatter(ConstantValue.DEFAULT_EXERCISES_DURATION));
-            } else {
-                tvExercisesDuration.setText(TimeFormatter.msTimeFormatter(exerscisesDuration));
             }
         } else {
             exerscisesDuration = ConstantValue.DEFAULT_EXERCISES_DURATION;
-            tvExercisesDuration.setText(TimeFormatter.msTimeFormatter(ConstantValue.DEFAULT_EXERCISES_DURATION));
         }
+        tvExercisesDuration.setText(exerscisesDuration / 1000 + " sec");
         if (sharedPreferences.contains(ConstantValue.RESTS_DURATION)) {
             if (restsDuration == 0) {
                 restsDuration = ConstantValue.DEFAULT_RESTS_DURATION;
-                tvRestsDuration.setText(TimeFormatter.msTimeFormatter(ConstantValue.DEFAULT_RESTS_DURATION));
-            } else {
-                tvRestsDuration.setText(TimeFormatter.msTimeFormatter(restsDuration));
             }
         } else {
             restsDuration = ConstantValue.DEFAULT_RESTS_DURATION;
-            tvRestsDuration.setText(TimeFormatter.msTimeFormatter(ConstantValue.DEFAULT_RESTS_DURATION));
+
         }
+        tvRestsDuration.setText(restsDuration / 1000 + " sec");
     }
 
 
@@ -99,15 +93,26 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ln_exercises_duration:
-                bundle.putLong(ConstantValue.EXERCISES_DURATION,exerscisesDuration);
-                mainActivityIntf.showDialogFragment(SettingsFragment.this,
+                bundle.putLong(ConstantValue.EXERCISES_DURATION, exerscisesDuration);
+                bundle.putBoolean(ConstantValue.DURATION_SETTINGS_TYPE,true);
+                mainActivityIntf.showBottomSheetDialogFragment(SettingsFragment.this,
                         SettingsBottomSheetDialogFragment.newInstance(bundle), ConstantValue.EXERCISES_DURATION);
                 break;
             case R.id.ln_rests_duration:
-                bundle.putLong(ConstantValue.RESTS_DURATION,restsDuration);
-                mainActivityIntf.showDialogFragment(SettingsFragment.this,
+                bundle.putLong(ConstantValue.RESTS_DURATION, restsDuration);
+                bundle.putBoolean(ConstantValue.DURATION_SETTINGS_TYPE,false);
+                mainActivityIntf.showBottomSheetDialogFragment(SettingsFragment.this,
                         SettingsBottomSheetDialogFragment.newInstance(bundle), ConstantValue.RESTS_DURATION);
                 break;
+        }
+    }
+
+    @Override
+    public void onTvDoneClick(long currDuration, boolean isExercisesDuration) {
+        if (isExercisesDuration){
+            tvExercisesDuration.setText(currDuration/1000 + " sec");
+        } else {
+            tvRestsDuration.setText(currDuration/1000 + " sec");
         }
     }
 }

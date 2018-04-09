@@ -89,7 +89,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     @Override
-    public void showDialogFragment(Fragment targetFragment, DialogFragment dialogFragment, String tag) {
+    public void showBottomSheetDialogFragment(Fragment targetFragment, DialogFragment dialogFragment, String tag) {
+        dialogFragment.setCancelable(false);
         dialogFragment.setTargetFragment(targetFragment, 1);
         dialogFragment.show(fragmentManager, tag);
     }

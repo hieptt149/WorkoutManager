@@ -20,6 +20,7 @@
     <string name="exercises_duration">Exercise\'s duration</string>
     <string name="rests_duration">Rest\'s duration</string>
     <string name="themes">Themes</string>
+    <string name="done">Done</string>
 
     <!--Workout Details Fragment-->
     <string name="back">Back</string>

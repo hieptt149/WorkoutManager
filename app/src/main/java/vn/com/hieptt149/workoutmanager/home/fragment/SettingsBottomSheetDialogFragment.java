@@ -20,13 +20,16 @@ import vn.com.hieptt149.workoutmanager.utils.TimeFormatter;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SettingsBottomSheetDialogFragment extends BottomSheetDialogFragment {
+public class SettingsBottomSheetDialogFragment extends BottomSheetDialogFragment implements View.OnClickListener{
 
-    private TextView tvSeekbarValue;
+    private TextView tvSeekbarValue,tvDone;
     private SeekBar sbDuration;
     private int seekbarProgress;
-    private Fragment exerscisesDurationFragment, restsDurationFragment;
+    private SettingsBottomSheetDialogListener settingsBottomSheetDialogListener;
+    private long newDuration;
+
     private static long exerscisesDuration, restsDuration;
+    private static boolean isExercisesDuration;
 
     public SettingsBottomSheetDialogFragment() {
     }
@@ -36,6 +39,7 @@ public class SettingsBottomSheetDialogFragment extends BottomSheetDialogFragment
         if (bundle != null) {
             exerscisesDuration = bundle.getLong(ConstantValue.EXERCISES_DURATION);
             restsDuration = bundle.getLong(ConstantValue.RESTS_DURATION);
+            isExercisesDuration = bundle.getBoolean(ConstantValue.DURATION_SETTINGS_TYPE);
         }
         return settingsBottomSheetDialogFragment;
     }
@@ -52,25 +56,33 @@ public class SettingsBottomSheetDialogFragment extends BottomSheetDialogFragment
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         tvSeekbarValue = view.findViewById(R.id.tv_seekbar_value);
+        tvDone = view.findViewById(R.id.tv_done);
         sbDuration = view.findViewById(R.id.sb_duration);
-        exerscisesDurationFragment = getActivity().getSupportFragmentManager().findFragmentByTag(ConstantValue.EXERCISES_DURATION);
-        restsDurationFragment = getActivity().getSupportFragmentManager().findFragmentByTag(ConstantValue.RESTS_DURATION);
-        if (exerscisesDurationFragment != null) {
-            setupView(exerscisesDuration, ConstantValue.MAX_EXERSCISE_DURATION);
-        }
-        if (restsDurationFragment != null) {
-            setupView(restsDuration, ConstantValue.MAX_RESTS_DURATION);
+        tvDone.setOnClickListener(this);
+        settingsBottomSheetDialogListener = (SettingsBottomSheetDialogListener) getTargetFragment();
+        if (isExercisesDuration) {
+            setupView(exerscisesDuration, 15000, 15, 5000.0);
+        } else {
+            setupView(restsDuration, 5000, 25, 1000.0);
         }
     }
 
-    private void setupView(long duration, long maxDuration) {
-        tvSeekbarValue.setText(TimeFormatter.msTimeFormatter(duration));
-        sbDuration.setMax((int) maxDuration);
-        sbDuration.setProgress((int) duration);
+    @Override
+    public void onClick(View view) {
+        settingsBottomSheetDialogListener.onTvDoneClick(newDuration,isExercisesDuration);
+        dismiss();
+    }
+
+    private void setupView(long currDuration, final long minDuration, int seekbarMaxValue, final double valuePerDrag) {
+        double currProgress = (currDuration - minDuration) / valuePerDrag;
+        tvSeekbarValue.setText(currDuration / 1000 + " sec");
+        sbDuration.setMax(seekbarMaxValue);
+        sbDuration.setProgress((int) currProgress);
         sbDuration.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+                tvSeekbarValue.setText((int)(((progress * valuePerDrag) + minDuration) / 1000) + " sec");
+                newDuration = (long) ((progress * valuePerDrag) + minDuration);
             }
 
             @Override
@@ -83,5 +95,9 @@ public class SettingsBottomSheetDialogFragment extends BottomSheetDialogFragment
 
             }
         });
+    }
+
+    public interface SettingsBottomSheetDialogListener{
+        void onTvDoneClick(long newDuration,boolean isExercisesDuration);
     }
 }
