@@ -54,8 +54,6 @@ public class ExerciseDetailsFragment extends Fragment {
         ExerciseDetailsFragment exerciseDetailsFragment = new ExerciseDetailsFragment();
         if (bundle != null){
             selectedExercise = (Exercise) bundle.getSerializable(ConstantValue.SELECTED_EXERCISE);
-        } else {
-            selectedExercise = null;
         }
         return exerciseDetailsFragment;
     }
@@ -87,6 +85,7 @@ public class ExerciseDetailsFragment extends Fragment {
         rlBtnAddExerciseContainer.setVisibility(View.GONE);
         tvClickToChoose.setVisibility(View.GONE);
         edtWorkoutTitle.setEnabled(false);
+        ivExercisePreview.setTag(null);
         edtWorkoutTitle.setText(selectedExercise.getName());
         pbCardio.setProgress(selectedExercise.getCadioRate());
         pbStrength.setProgress(selectedExercise.getStrengthRate());

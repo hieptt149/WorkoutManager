@@ -20,15 +20,13 @@ import vn.com.hieptt149.workoutmanager.utils.TimeFormatter;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SettingsBottomSheetDialogFragment extends BottomSheetDialogFragment implements View.OnClickListener{
+public class SettingsBottomSheetDialogFragment extends BottomSheetDialogFragment implements View.OnClickListener {
 
-    private TextView tvSeekbarValue,tvDone;
+    private TextView tvSeekbarValue, tvDone;
     private SeekBar sbDuration;
-    private int seekbarProgress;
     private SettingsBottomSheetDialogListener settingsBottomSheetDialogListener;
-    private long newDuration;
 
-    private static long exerscisesDuration, restsDuration;
+    private static long exerscisesDuration, restsDuration, newDuration;
     private static boolean isExercisesDuration;
 
     public SettingsBottomSheetDialogFragment() {
@@ -69,7 +67,7 @@ public class SettingsBottomSheetDialogFragment extends BottomSheetDialogFragment
 
     @Override
     public void onClick(View view) {
-        settingsBottomSheetDialogListener.onTvDoneClick(newDuration,isExercisesDuration);
+        settingsBottomSheetDialogListener.onTvDoneClick(newDuration, isExercisesDuration);
         dismiss();
     }
 
@@ -81,7 +79,7 @@ public class SettingsBottomSheetDialogFragment extends BottomSheetDialogFragment
         sbDuration.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                tvSeekbarValue.setText((int)(((progress * valuePerDrag) + minDuration) / 1000) + " sec");
+                tvSeekbarValue.setText((int) (((progress * valuePerDrag) + minDuration) / 1000) + " sec");
                 newDuration = (long) ((progress * valuePerDrag) + minDuration);
             }
 
@@ -97,7 +95,7 @@ public class SettingsBottomSheetDialogFragment extends BottomSheetDialogFragment
         });
     }
 
-    public interface SettingsBottomSheetDialogListener{
-        void onTvDoneClick(long newDuration,boolean isExercisesDuration);
+    public interface SettingsBottomSheetDialogListener {
+        void onTvDoneClick(long newDuration, boolean isExercisesDuration);
     }
 }

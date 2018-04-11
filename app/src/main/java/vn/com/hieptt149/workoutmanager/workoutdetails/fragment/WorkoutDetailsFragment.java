@@ -3,12 +3,15 @@ package vn.com.hieptt149.workoutmanager.workoutdetails.fragment;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -42,6 +45,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
 
     private AddWorkoutActivityIntf addWorkoutActivityIntf;
     private DatabaseReference currUsersWorkoutRef;
+    private SharedPreferences sharedPreferences;
     private TextView tvAddWorkoutToolbarTitle, tvTotalExercise, tvTotalTime, tvClickToChoose, tvExerciseDescription;
     private ProgressBar pbCardio, pbStrength, pbMobility;
     private ImageView ivChooseWorkoutIcon, ivStart, ivSave, ivDelete;
@@ -53,8 +57,8 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     private Button btnAddExercise;
     private ExercisePreviewAdapter exercisePreviewAdapter;
     private ArrayList<Exercise> lstSelectedExercise = new ArrayList<>();
-    private long totalTime;
-    private int totalExercise, cadioRate = 0, strengthRate = 0, mobilityRate = 0, practiceTime = 60000;
+    private long practiceTime, restTime, totalTime;
+    private int totalExercise, cadioRate = 0, strengthRate = 0, mobilityRate = 0;
     private boolean isFirstTime = true;
 
     private static Workout usersWorkoutDetails;
@@ -90,6 +94,9 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView(view);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        practiceTime = sharedPreferences.getLong(ConstantValue.EXERCISES_DURATION, ConstantValue.DEFAULT_EXERCISES_DURATION);
+        restTime = sharedPreferences.getLong(ConstantValue.RESTS_DURATION, ConstantValue.DEFAULT_RESTS_DURATION);
         //Trường hợp user xem chi tiết workout
         if (tag.equals(ConstantValue.WORKOUT_DETAILS)) {
             tvAddWorkoutToolbarTitle.setText(usersWorkoutDetails.getTitle());
@@ -224,7 +231,12 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         strengthRate = 0;
         mobilityRate = 0;
         for (int i = 0; i < lstSelectedExercise.size(); i++) {
-            totalTime += practiceTime;
+            totalTime += i == 0 ? practiceTime : practiceTime + restTime;
+//            if (i == 0) {
+//                totalTime += practiceTime;
+//            } else {
+//                totalTime += practiceTime + restTime;
+//            }
             cadioRate += lstSelectedExercise.get(i).getCadioRate();
             strengthRate += lstSelectedExercise.get(i).getStrengthRate();
             mobilityRate += lstSelectedExercise.get(i).getMobilityRate();

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="@dimen/medium_space"
+    android:padding="@dimen/small_space"
     android:weightSum="10"
     tools:context="vn.com.hieptt149.workoutmanager.workoutdetails.fragment.WorkoutDetailsFragment">
 
@@ -38,8 +38,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="3"
-                android:max="100"
-                android:indeterminate="false"/>
+                android:indeterminate="false"
+                android:max="100" />
         </LinearLayout>
 
         <LinearLayout
@@ -64,8 +64,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="3"
-                android:max="100"
-                android:indeterminate="false"/>
+                android:indeterminate="false"
+                android:max="100" />
         </LinearLayout>
 
         <LinearLayout
@@ -90,8 +90,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="3"
-                android:max="100"
-                android:indeterminate="false"/>
+                android:indeterminate="false"
+                android:max="100" />
         </LinearLayout>
     </LinearLayout>
 
@@ -110,7 +110,7 @@
             android:layout_gravity="center"
             android:layout_weight="5"
             android:src="@drawable/no_image"
-            android:tag="no_image"/>
+            android:tag="no_image" />
 
         <TextView
             android:id="@+id/tv_click_to_choose"
@@ -119,43 +119,47 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/click_iv_to_choose"
-            android:textStyle="italic"/>
+            android:textStyle="italic" />
 
         <EditText
             android:id="@+id/edt_title"
             android:layout_width="@dimen/workout_details_image_view_width"
             android:layout_height="0dp"
-            android:layout_weight="2"
             android:layout_gravity="center"
+            android:layout_weight="2"
             android:backgroundTint="@android:color/transparent"
             android:gravity="center"
             android:hint="Workout Name"
-            android:singleLine="true"/>
+            android:singleLine="true" />
+
         <LinearLayout
             android:id="@+id/ln_btn_save_delete"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal">
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
             <ImageView
                 android:id="@+id/iv_delete"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_delete"
-                android:visibility="gone"/>
+                android:visibility="gone" />
+
             <ImageView
                 android:id="@+id/iv_save"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_save"
-                android:visibility="gone"/>
+                android:visibility="gone" />
+
             <ImageView
                 android:id="@+id/iv_start"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_start"
-                android:visibility="gone"/>
+                android:visibility="gone" />
         </LinearLayout>
 
     </LinearLayout>
@@ -163,7 +167,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3">
+        android:layout_weight="4">
 
         <LinearLayout
             android:id="@+id/ln_exercises_info"
@@ -202,16 +206,21 @@
                     android:background="@android:color/darker_gray" />
             </RelativeLayout>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_preview_selected_exercise"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_alignTop="@+id/view"
-                android:layout_weight="8"
                 android:layout_marginTop="@dimen/small_space"
-                android:orientation="horizontal"></android.support.v7.widget.RecyclerView>
+                android:layout_weight="8">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_preview_selected_exercise"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"></android.support.v7.widget.RecyclerView>
+            </LinearLayout>
         </LinearLayout>
 
         <ScrollView
@@ -219,6 +228,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone">
+
             <TextView
                 android:id="@+id/tv_exercise_description"
                 android:layout_width="match_parent"
@@ -230,7 +240,7 @@
         android:id="@+id/rl_btn_add_exercise_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2">
+        android:layout_weight="1">
 
         <Button
             android:id="@+id/btn_add_exercise"
