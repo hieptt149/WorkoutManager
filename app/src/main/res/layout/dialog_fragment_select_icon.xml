@@ -4,6 +4,7 @@
     android:layout_height="@dimen/select_icon_dialog_height"
     android:padding="@dimen/medium_space"
     android:orientation="vertical"
+    android:gravity="center"
     tools:context="vn.com.hieptt149.workoutmanager.workoutdetails.fragment.SelectIconDialogFragment">
 
     <GridView

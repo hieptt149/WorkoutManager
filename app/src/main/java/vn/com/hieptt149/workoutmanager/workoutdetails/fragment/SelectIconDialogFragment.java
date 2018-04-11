@@ -4,9 +4,12 @@ package vn.com.hieptt149.workoutmanager.workoutdetails.fragment;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -35,15 +38,17 @@ public class SelectIconDialogFragment extends DialogFragment {
         return selectIconDialogFragment;
     }
 
-    @NonNull
+    @Nullable
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog = new Dialog(getContext());
-        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        dialog.setContentView(R.layout.dialog_fragment_select_icon);
-        gvIcon = dialog.findViewById(R.id.gv_icon);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.dialog_fragment_select_icon, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        gvIcon = view.findViewById(R.id.gv_icon);
+        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         selectIconDialogListener = (SelectIconDialogListener) getTargetFragment();
         createIconList();
         selectIconAdapter = new SelectIconAdapter(getContext(),lstIconTags);
@@ -55,8 +60,6 @@ public class SelectIconDialogFragment extends DialogFragment {
                 dismiss();
             }
         });
-        dialog.show();
-        return dialog;
     }
 
     public void createIconList(){

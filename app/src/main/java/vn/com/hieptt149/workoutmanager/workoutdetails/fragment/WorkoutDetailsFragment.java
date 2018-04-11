@@ -146,6 +146,8 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
                 addWorkoutActivityIntf.showDialogFragment(WorkoutDetailsFragment.this,
                         SelectIconDialogFragment.newInstance(), ConstantValue.SELECT_ICON);
                 break;
+            case R.id.iv_start:
+                break;
             case R.id.iv_save:
                 saveWorkout();
                 break;
@@ -232,11 +234,6 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         mobilityRate = 0;
         for (int i = 0; i < lstSelectedExercise.size(); i++) {
             totalTime += i == 0 ? practiceTime : practiceTime + restTime;
-//            if (i == 0) {
-//                totalTime += practiceTime;
-//            } else {
-//                totalTime += practiceTime + restTime;
-//            }
             cadioRate += lstSelectedExercise.get(i).getCadioRate();
             strengthRate += lstSelectedExercise.get(i).getStrengthRate();
             mobilityRate += lstSelectedExercise.get(i).getMobilityRate();

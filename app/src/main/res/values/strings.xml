@@ -27,8 +27,8 @@
     <string name="cardio">Cardio</string>
     <string name="strength">Strength</string>
     <string name="mobility">Mobility</string>
-    <string name="total_exercise">Total exercise</string>
-    <string name="total_time">Total time</string>
+    <string name="total_exercise">0 exercise</string>
+    <string name="total_time">00:00</string>
     <string name="add_workout">Add Workout</string>
     <string name="click_iv_to_choose">(click on icon to choose another)</string>
     <string name="workout_details">Workout Details</string>
