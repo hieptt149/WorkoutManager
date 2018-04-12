@@ -119,6 +119,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
             //Nếu người dùng đã thêm exercise
             if (!isFirstTime) {
                 if (lstSelectedExercise.size() != 0) {
+                    ivStart.setVisibility(View.VISIBLE);
                     ivSave.setVisibility(View.VISIBLE);
                 }
                 showUsersWorkoutDetails();
@@ -302,6 +303,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         btnAddExercise = view.findViewById(R.id.btn_add_exercise);
         btnAddExercise.setOnClickListener(this);
         ivChooseWorkoutIcon.setOnClickListener(this);
+        ivStart.setOnClickListener(this);
         ivSave.setOnClickListener(this);
         ivDelete.setOnClickListener(this);
     }

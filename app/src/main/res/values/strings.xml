@@ -13,6 +13,7 @@
     <string name="workout_title">Workout Title</string>
     <string name="workout_duration">Workout Duration</string>
     <string name="workout_exercises">Workout&#39;s Exercise</string>
+
     <!--Profile Fragment-->
 
     <!--Settings Fragment-->
@@ -40,4 +41,12 @@
     <!--Add Exercise Fragment-->
     <string name="add_exercise">Add Exercise</string>
     <string name="exercise_name">Exercise name</string>
+
+    <!--Login Activity-->
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="logout">Logout</string>
+    <string name="enter_email">Enter your email</string>
+    <string name="enter_password">Enter your password</string>
+    <string name="forgot_password">Forgot your password?</string>
 </resources>

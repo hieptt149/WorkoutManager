@@ -2,6 +2,7 @@ package vn.com.hieptt149.workoutmanager.home.fragment;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -30,7 +31,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
     private SharedPreferences sharedPreferences;
     private Switch swSounds;
     private LinearLayout lnExercisesDuration, lnRestsDuration;
-    private TextView tvExercisesDuration, tvRestsDuration;
+    private TextView tvExercisesDuration, tvRestsDuration, tvLogin;
     private Spinner spnThemes;
     private long exerscisesDuration, restsDuration;
     private Bundle bundle;
@@ -57,13 +58,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         swSounds = view.findViewById(R.id.sw_sounds);
-        lnExercisesDuration = view.findViewById(R.id.ln_exercises_duration);
-        tvExercisesDuration = view.findViewById(R.id.tv_exercises_duration);
-        lnRestsDuration = view.findViewById(R.id.ln_rests_duration);
-        tvRestsDuration = view.findViewById(R.id.tv_rests_duration);
-        spnThemes = view.findViewById(R.id.spn_themes);
-        lnExercisesDuration.setOnClickListener(this);
-        lnRestsDuration.setOnClickListener(this);
+        initView(view);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         bundle = new Bundle();
         mainActivity = (MainActivity) getActivity();
@@ -72,7 +67,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
         tvExercisesDuration.setText(exerscisesDuration / 1000 + " sec");
         tvRestsDuration.setText(restsDuration / 1000 + " sec");
     }
-
 
     @Override
     public void onClick(View view) {
@@ -88,6 +82,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
                 bundle.putBoolean(ConstantValue.DURATION_SETTINGS_TYPE, false);
                 mainActivityIntf.showBottomSheetDialogFragment(SettingsFragment.this,
                         SettingsBottomSheetDialogFragment.newInstance(bundle), ConstantValue.RESTS_DURATION);
+                break;
+            case R.id.tv_login:
                 break;
         }
     }
@@ -105,5 +101,17 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
             editor.putLong(ConstantValue.RESTS_DURATION, currDuration);
         }
         editor.apply();
+    }
+
+    private void initView(View view) {
+        lnExercisesDuration = view.findViewById(R.id.ln_exercises_duration);
+        tvExercisesDuration = view.findViewById(R.id.tv_exercises_duration);
+        lnRestsDuration = view.findViewById(R.id.ln_rests_duration);
+        tvRestsDuration = view.findViewById(R.id.tv_rests_duration);
+        spnThemes = view.findViewById(R.id.spn_themes);
+        tvLogin = view.findViewById(R.id.tv_login);
+        lnExercisesDuration.setOnClickListener(this);
+        lnRestsDuration.setOnClickListener(this);
+        tvLogin.setOnClickListener(this);
     }
 }

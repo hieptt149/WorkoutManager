@@ -26,7 +26,7 @@ public class SettingsBottomSheetDialogFragment extends BottomSheetDialogFragment
     private SeekBar sbDuration;
     private SettingsBottomSheetDialogListener settingsBottomSheetDialogListener;
 
-    private static long exerscisesDuration, restsDuration, newDuration;
+    private static long exerscisesDuration, restsDuration, newExercisesDuration,newRestsDuration;
     private static boolean isExercisesDuration;
 
     public SettingsBottomSheetDialogFragment() {
@@ -58,6 +58,8 @@ public class SettingsBottomSheetDialogFragment extends BottomSheetDialogFragment
         sbDuration = view.findViewById(R.id.sb_duration);
         tvDone.setOnClickListener(this);
         settingsBottomSheetDialogListener = (SettingsBottomSheetDialogListener) getTargetFragment();
+        newExercisesDuration = exerscisesDuration;
+        newRestsDuration = restsDuration;
         if (isExercisesDuration) {
             setupView(exerscisesDuration, 15000, 15, 5000.0);
         } else {
@@ -67,7 +69,11 @@ public class SettingsBottomSheetDialogFragment extends BottomSheetDialogFragment
 
     @Override
     public void onClick(View view) {
-        settingsBottomSheetDialogListener.onTvDoneClick(newDuration, isExercisesDuration);
+        if (isExercisesDuration){
+            settingsBottomSheetDialogListener.onTvDoneClick(newExercisesDuration, isExercisesDuration);
+        } else {
+            settingsBottomSheetDialogListener.onTvDoneClick(newRestsDuration, isExercisesDuration);
+        }
         dismiss();
     }
 
@@ -80,7 +86,11 @@ public class SettingsBottomSheetDialogFragment extends BottomSheetDialogFragment
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 tvSeekbarValue.setText((int) (((progress * valuePerDrag) + minDuration) / 1000) + " sec");
-                newDuration = (long) ((progress * valuePerDrag) + minDuration);
+                if (isExercisesDuration) {
+                    newExercisesDuration = (long) ((progress * valuePerDrag) + minDuration);
+                } else {
+                    newRestsDuration = (long) ((progress * valuePerDrag) + minDuration);
+                }
             }
 
             @Override
