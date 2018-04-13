@@ -19,6 +19,7 @@ import android.widget.TextView;
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.home.MainActivity;
 import vn.com.hieptt149.workoutmanager.home.MainActivityIntf;
+import vn.com.hieptt149.workoutmanager.login.LoginActivity;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
 
 /**
@@ -84,6 +85,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
                         SettingsBottomSheetDialogFragment.newInstance(bundle), ConstantValue.RESTS_DURATION);
                 break;
             case R.id.tv_login:
+                startActivity(new Intent(getActivity(), LoginActivity.class));
                 break;
         }
     }

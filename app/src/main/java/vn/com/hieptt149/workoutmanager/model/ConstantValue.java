@@ -19,6 +19,9 @@ public class ConstantValue {
     public static String SELECT_ICON = "select_icon";
     public static String EXERCISES_DURATION = "exercises_duration";
     public static String RESTS_DURATION = "rests_duration";
+    public static String REGISTER = "register";
+    public static String LOGIN = "login";
+    public static String LOGOUT = "logout";
 
     //key
     public static String TAG = "tag";
@@ -29,8 +32,10 @@ public class ConstantValue {
     public static String SELECTED_EXERCISE = "selected_exercise";
     public static String DURATION_SETTINGS_TYPE = "duration_type";
 
+    public static String validemail = "[a-zA-Z0-9._-]{1,100}+@[a-zA-Z0-9]+\\.+[a-zA-Z0-9.]+";
     public static int MAX_EXERSCISE_DURATION = 90000;
     public static int MAX_RESTS_DURATION = 30000;
     public static int DEFAULT_EXERCISES_DURATION = 30000;
     public static int DEFAULT_RESTS_DURATION = 10000;
+
 }
