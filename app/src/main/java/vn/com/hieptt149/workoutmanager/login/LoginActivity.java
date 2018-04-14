@@ -5,6 +5,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +20,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.database.DatabaseReference;
@@ -31,7 +35,8 @@ import vn.com.hieptt149.workoutmanager.model.ConstantValue;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 import vn.com.hieptt149.workoutmanager.workoutdetails.fragment.WorkoutDetailsFragment;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener,
+        View.OnFocusChangeListener, View.OnTouchListener {
 
     private DatabaseReference userRef;
     private FirebaseAuth auth;
@@ -42,6 +47,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button btnLoginRegister;
     private String email, password;
     private Matcher matcher;
+
+    private static boolean isPasswordShow = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,11 +63,31 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_login_register:
+                email = edtEmail.getText().toString();
+                password = edtPassword.getText().toString();
+                matcher = Pattern.compile(ConstantValue.validemail).matcher(email);
+                if (email.length() == 0 || email.isEmpty()) {
+                    edtEmail.setError(getString(R.string.enter_email));
+                    return;
+                } else if (!matcher.matches()) {
+                    edtEmail.setError(getString(R.string.not_email));
+                    return;
+                }
+                if (password.length() == 0 || password.isEmpty()) {
+                    edtPassword.setError(getString(R.string.enter_password));
+                    return;
+                } else if (password.length() < 6) {
+                    edtPassword.setError(getString(R.string.short_password));
+                    return;
+                }
+                DisplayView.showProgressDialog(this);
                 if (rdbtnLogin.isChecked()) {
                     login();
                 } else if (rdbtnRegister.isChecked()) {
                     register();
                 }
+                break;
+            case R.id.tv_forgot_password:
                 break;
             case R.id.tv_back:
                 onBackPressed();
@@ -80,39 +107,78 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void login() {
-        Toast.makeText(this, "Login", Toast.LENGTH_SHORT).show();
+    @Override
+    public void onFocusChange(View view, boolean hasFocus) {
+        if (hasFocus) {
+            edtPassword.setCompoundDrawablesWithIntrinsicBounds(R.drawable.key, 0, R.drawable.eye, 0);
+            edtPassword.setOnTouchListener(this);
+        } else {
+            edtPassword.setCompoundDrawablesWithIntrinsicBounds(R.drawable.key, 0, 0, 0);
+            edtPassword.setOnTouchListener(null);
+            edtPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            isPasswordShow = false;
+        }
     }
 
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        int DRAWABLE_RIGHT = 2;
+        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+            if (motionEvent.getRawX() >= (edtPassword.getRight() - edtPassword.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                isPasswordShow = !isPasswordShow;
+                if (!isPasswordShow) {
+                    edtPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                } else {
+                    edtPassword.setInputType(InputType.TYPE_CLASS_TEXT);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Đăng nhập tài khoản
+     */
+    private void login() {
+        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                DisplayView.dismissProgressDialog();
+                if (task.isSuccessful()) {
+                    finish();
+                    Toast.makeText(LoginActivity.this, R.string.login_success + email, Toast.LENGTH_SHORT).show();
+                } else {
+                    try {
+                        throw task.getException();
+                    }
+                    //Email không tồn tại hoặc đã bị xóa
+                    catch (FirebaseAuthInvalidUserException e) {
+                        edtEmail.setError(getString(R.string.email_not_exist));
+                    }
+                    //Nhập sai password
+                    catch (FirebaseAuthInvalidCredentialsException e) {
+                        edtPassword.setError(getString(R.string.wrong_password));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * Đăng ký tài khoản
+     */
     private void register() {
-        email = edtEmail.getText().toString();
-        password = edtPassword.getText().toString();
-        matcher = Pattern.compile(ConstantValue.validemail).matcher(email);
-        if (email.length() == 0 || email.isEmpty()) {
-            edtEmail.setError(getString(R.string.enter_email));
-            return;
-        } else if (!matcher.matches()) {
-            edtEmail.setError(getString(R.string.not_email));
-            return;
-        }
-        if (password.length() == 0 || password.isEmpty()) {
-            edtPassword.setError(getString(R.string.enter_password));
-            return;
-        } else if (password.length() < 6) {
-            edtPassword.setError(getString(R.string.short_password));
-            return;
-        }
-        DisplayView.showProgressDialog(this);
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this,
                 new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         DisplayView.dismissProgressDialog();
                         if (task.isSuccessful()) {
-//                            userRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.USER);
-//                            userRef.setValue(task.getResult().getUser().getUid());
-                            Toast.makeText(LoginActivity.this, auth.getCurrentUser().getEmail().toString(), Toast.LENGTH_SHORT).show();
-                            onBackPressed();
+                            UserInfoDialog userInfoDialog = new UserInfoDialog(LoginActivity.this);
+                            userInfoDialog.show();
                         } else {
                             try {
                                 throw task.getException();
@@ -142,8 +208,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         rdbtnLogin = findViewById(R.id.rdbtn_login);
         rdbtnRegister = findViewById(R.id.rdbtn_register);
         btnLoginRegister = findViewById(R.id.btn_login_register);
+        edtPassword.setOnFocusChangeListener(this);
         btnLoginRegister.setOnClickListener(this);
         rdgrLoginRegister.setOnCheckedChangeListener(this);
+        tvForgotPassword.setOnClickListener(this);
         tvBack.setOnClickListener(this);
     }
 }

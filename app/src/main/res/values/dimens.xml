@@ -13,5 +13,6 @@
     <dimen name="workout_details_item_height">150dp</dimen>
     <dimen name="select_icon_dialog_width">300dp</dimen>
     <dimen name="select_icon_dialog_height">300dp</dimen>
-    <dimen name="select_icon_item_dimen">100dp</dimen>
+    <dimen name="select_icon_item_dimen">60dp</dimen>
+    <dimen name="user_info_dialog_width">300dp</dimen>
 </resources>

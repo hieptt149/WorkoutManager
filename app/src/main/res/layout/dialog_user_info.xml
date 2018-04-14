@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/user_info_dialog_width"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/large_space"
+    tools:context="vn.com.hieptt149.workoutmanager.login.UserInfoDialog">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="Enter your information"
+        android:textSize="@dimen/big_text_size"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/edt_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/medium_space"
+        android:hint="@string/name"
+        android:drawableLeft="@drawable/name"
+        android:drawablePadding="@dimen/small_space"/>
+
+    <EditText
+        android:id="@+id/edt_age"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/medium_space"
+        android:hint="@string/age"
+        android:drawableLeft="@drawable/age"
+        android:drawablePadding="@dimen/small_space"/>
+
+    <EditText
+        android:id="@+id/edt_height"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/medium_space"
+        android:hint="@string/height"
+        android:drawableLeft="@drawable/height"
+        android:drawablePadding="@dimen/small_space"/>
+
+    <EditText
+        android:id="@+id/edt_weight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/medium_space"
+        android:hint="@string/weight"
+        android:drawableLeft="@drawable/scale"
+        android:drawablePadding="@dimen/small_space"/>
+
+    <Button
+        android:id="@+id/btn_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/medium_space"
+        android:text="@string/confirm" />
+</LinearLayout>

@@ -20,6 +20,8 @@
         </activity>
         <activity android:name=".workoutdetails.AddWorkoutActivity" />
         <activity android:name=".login.LoginActivity" />
+        <activity android:name=".login.UserInfoDialog" />
+        <activity android:name=".login.ForgotPasswordDialog"></activity>
     </application>
 
 </manifest>

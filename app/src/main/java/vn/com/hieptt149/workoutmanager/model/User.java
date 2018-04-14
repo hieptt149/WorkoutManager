@@ -12,15 +12,24 @@ public class User implements Serializable {
 
     private String id;
     private String name;
-    private float height;
-    private float weight;
+    private int age;
+    private double height;
+    private double weight;
 
     public User() {
     }
 
-    public User(String id, String name, float height, float weight) {
+    public User(String name,int age, double height, double weight) {
+        this.name = name;
+        this.age = age;
+        this.height = height;
+        this.weight = weight;
+    }
+
+    public User(String id,String name, int age, double height, double weight) {
         this.id = id;
         this.name = name;
+        this.age = age;
         this.height = height;
         this.weight = weight;
     }
@@ -43,23 +52,33 @@ public class User implements Serializable {
         this.name = name;
     }
 
+    @PropertyName("age")
+    public int getAge() {
+        return age;
+    }
+
+    @PropertyName("age")
+    public void setAge(int age) {
+        this.age = age;
+    }
+
     @PropertyName("height")
-    public float getHeight() {
+    public double getHeight() {
         return height;
     }
 
     @PropertyName("height")
-    public void setHeight(float height) {
+    public void setHeight(double height) {
         this.height = height;
     }
 
     @PropertyName("weight")
-    public float getWeight() {
+    public double getWeight() {
         return weight;
     }
 
     @PropertyName("weight")
-    public void setWeight(float weight) {
+    public void setWeight(double weight) {
         this.weight = weight;
     }
 }

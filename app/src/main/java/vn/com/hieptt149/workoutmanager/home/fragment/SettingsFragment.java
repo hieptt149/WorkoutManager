@@ -2,6 +2,7 @@ package vn.com.hieptt149.workoutmanager.home.fragment;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,19 +16,22 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import vn.com.hieptt149.workoutmanager.R;
-import vn.com.hieptt149.workoutmanager.home.MainActivity;
 import vn.com.hieptt149.workoutmanager.home.MainActivityIntf;
 import vn.com.hieptt149.workoutmanager.login.LoginActivity;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
+import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class SettingsFragment extends Fragment implements View.OnClickListener, SettingsBottomSheetDialogFragment.SettingsBottomSheetDialogListener {
 
-    private MainActivity mainActivity;
+    private FirebaseAuth auth;
     private MainActivityIntf mainActivityIntf;
     private SharedPreferences sharedPreferences;
     private Switch swSounds;
@@ -36,6 +40,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
     private Spinner spnThemes;
     private long exerscisesDuration, restsDuration;
     private Bundle bundle;
+
+    private static boolean isLogin;
 
     public static SettingsFragment newInstance() {
         SettingsFragment settingsFragment = new SettingsFragment();
@@ -60,13 +66,25 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
         super.onViewCreated(view, savedInstanceState);
         swSounds = view.findViewById(R.id.sw_sounds);
         initView(view);
+        auth = FirebaseAuth.getInstance();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         bundle = new Bundle();
-        mainActivity = (MainActivity) getActivity();
         exerscisesDuration = sharedPreferences.getLong(ConstantValue.EXERCISES_DURATION, ConstantValue.DEFAULT_EXERCISES_DURATION);
         restsDuration = sharedPreferences.getLong(ConstantValue.RESTS_DURATION, ConstantValue.DEFAULT_RESTS_DURATION);
         tvExercisesDuration.setText(exerscisesDuration / 1000 + " sec");
         tvRestsDuration.setText(restsDuration / 1000 + " sec");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (auth.getCurrentUser() != null) {
+            isLogin = true;
+            tvLogin.setText(R.string.logout);
+        } else {
+            isLogin = false;
+            tvLogin.setText(R.string.login);
+        }
     }
 
     @Override
@@ -85,7 +103,23 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
                         SettingsBottomSheetDialogFragment.newInstance(bundle), ConstantValue.RESTS_DURATION);
                 break;
             case R.id.tv_login:
-                startActivity(new Intent(getActivity(), LoginActivity.class));
+                if (!isLogin) {
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                } else {
+                    DisplayView.showAlertDialog(getContext(), getString(R.string.confirm_logout), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            auth.signOut();
+                            isLogin = false;
+                            tvLogin.setText(R.string.login);
+                        }
+                    }, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+                }
                 break;
         }
     }
