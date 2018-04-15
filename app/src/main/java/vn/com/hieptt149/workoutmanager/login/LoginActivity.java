@@ -1,5 +1,6 @@
 package vn.com.hieptt149.workoutmanager.login;
 
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -88,6 +89,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
                 break;
             case R.id.tv_forgot_password:
+                email = edtEmail.getText().toString();
+                matcher = Pattern.compile(ConstantValue.validemail).matcher(email);
+                if (email.length() == 0 || email.isEmpty()) {
+                    edtEmail.setError(getString(R.string.enter_email));
+                    return;
+                } else if (!matcher.matches()) {
+                    edtEmail.setError(getString(R.string.not_email));
+                    return;
+                }
+                sendResetPasswordInstructions();
                 break;
             case R.id.tv_back:
                 onBackPressed();
@@ -147,7 +158,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 DisplayView.dismissProgressDialog();
                 if (task.isSuccessful()) {
                     finish();
-                    Toast.makeText(LoginActivity.this, R.string.login_success + email, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, getString(R.string.login_success) + " " + auth.getCurrentUser().getDisplayName(), Toast.LENGTH_SHORT).show();
                 } else {
                     try {
                         throw task.getException();
@@ -194,6 +205,33 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 e.printStackTrace();
                             }
                         }
+                    }
+                });
+    }
+
+    /**
+     * Gửi hướng dẫn reset mật khẩu
+     */
+    private void sendResetPasswordInstructions() {
+        DisplayView.showAlertDialog(this, "Is " + email + " your email?" + getString(R.string.send_reset_password),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        auth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(LoginActivity.this, R.string.send_reset_password_success, Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(LoginActivity.this, R.string.send_reset_password_failed, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
+                }, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
                     }
                 });
     }

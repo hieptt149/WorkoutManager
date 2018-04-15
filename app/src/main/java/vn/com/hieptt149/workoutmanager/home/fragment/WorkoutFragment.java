@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,26 +36,21 @@ import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WorkoutFragment extends Fragment implements View.OnClickListener,AdapterView.OnItemClickListener{
+public class WorkoutFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener {
 
+    private FirebaseAuth auth;
     private GridView gvPreviewWorkout;
     private FloatingActionButton fabAddWorkout;
     private WorkoutPreviewAdapter workoutPreviewAdapter;
     private ArrayList<Workout> lstUsersWorkout;
     private DatabaseReference usersWorkoutRef;
     private MainActivityIntf mainActivityIntf;
-    private String userId;
-
-    private static User currUser;
 
     public WorkoutFragment() {
     }
 
-    public static WorkoutFragment newInstance(Bundle bundle) {
+    public static WorkoutFragment newInstance() {
         WorkoutFragment workoutFragment = new WorkoutFragment();
-        if (bundle != null){
-            currUser = (User) bundle.getSerializable(ConstantValue.CURRENT_USER);
-        }
         return workoutFragment;
     }
 
@@ -75,45 +71,67 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener,Ad
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView(view);
+        auth = FirebaseAuth.getInstance();
         lstUsersWorkout = new ArrayList<>();
-        workoutPreviewAdapter = new WorkoutPreviewAdapter(getContext(),lstUsersWorkout);
+        workoutPreviewAdapter = new WorkoutPreviewAdapter(getContext(), lstUsersWorkout);
         gvPreviewWorkout.setAdapter(workoutPreviewAdapter);
-        userId = currUser.getId();
-        usersWorkoutRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.WORKOUT).child(currUser.getId());
-        usersWorkoutRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                lstUsersWorkout.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Workout usersWorkout = snapshot.getValue(Workout.class);
-                    usersWorkout.setId(snapshot.getKey());
-                    usersWorkout.setUserId(currUser.getId());
-                    lstUsersWorkout.add(usersWorkout);
-                }
-                workoutPreviewAdapter.notifyDataSetChanged();
-                DisplayView.dismissProgressDialog();
-            }
+    }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                DisplayView.dismissProgressDialog();
+    @Override
+    public void onResume() {
+        super.onResume();
+        DisplayView.showProgressDialog(getContext());
+        if (auth.getCurrentUser() != null) {
+            usersWorkoutRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.WORKOUT).child(auth.getCurrentUser().getUid());
+            usersWorkoutRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    lstUsersWorkout.clear();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Workout usersWorkout = snapshot.getValue(Workout.class);
+                        usersWorkout.setId(snapshot.getKey());
+                        usersWorkout.setUserId(auth.getCurrentUser().getUid());
+                        lstUsersWorkout.add(usersWorkout);
+                    }
+                    workoutPreviewAdapter.notifyDataSetChanged();
+                    DisplayView.dismissProgressDialog();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    DisplayView.dismissProgressDialog();
+                }
+            });
+        } else {
+            DisplayView.dismissProgressDialog();
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            if (auth != null){
+                if (auth.getCurrentUser() == null && lstUsersWorkout.size() != 0) {
+                    lstUsersWorkout.clear();
+                    workoutPreviewAdapter.notifyDataSetChanged();
+                }
             }
-        });
+        }
     }
 
     @Override
     public void onClick(View view) {
         Intent i = new Intent(getActivity(), AddWorkoutActivity.class);
-        i.putExtra(ConstantValue.USER_ID,userId);
         i.putExtra(ConstantValue.TAG, ConstantValue.ADD_WORKOUT);
         startActivity(i);
     }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        Intent i = new Intent(getActivity(),AddWorkoutActivity.class);
-        i.putExtra(ConstantValue.SELECTED_WORKOUT,lstUsersWorkout.get(position));
-        i.putExtra(ConstantValue.TAG,ConstantValue.WORKOUT_DETAILS);
+        Intent i = new Intent(getActivity(), AddWorkoutActivity.class);
+        i.putExtra(ConstantValue.SELECTED_WORKOUT, lstUsersWorkout.get(position));
+        i.putExtra(ConstantValue.TAG, ConstantValue.WORKOUT_DETAILS);
         startActivity(i);
     }
 

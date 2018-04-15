@@ -11,7 +11,6 @@ import java.io.Serializable;
 public class User implements Serializable {
 
     private String id;
-    private String name;
     private int age;
     private double height;
     private double weight;
@@ -19,16 +18,14 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(String name,int age, double height, double weight) {
-        this.name = name;
+    public User(int age, double height, double weight) {
         this.age = age;
         this.height = height;
         this.weight = weight;
     }
 
-    public User(String id,String name, int age, double height, double weight) {
+    public User(String id, int age, double height, double weight) {
         this.id = id;
-        this.name = name;
         this.age = age;
         this.height = height;
         this.weight = weight;
@@ -40,16 +37,6 @@ public class User implements Serializable {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    @PropertyName("name")
-    public String getName() {
-        return name;
-    }
-
-    @PropertyName("name")
-    public void setName(String name) {
-        this.name = name;
     }
 
     @PropertyName("age")

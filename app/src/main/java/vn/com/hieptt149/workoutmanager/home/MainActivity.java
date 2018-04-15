@@ -37,9 +37,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private SharedPreferences sharedPreferences;
     private DatabaseReference usersRef;
     private FragmentManager fragmentManager;
-    //Demo user
-    private String userId = "-1";
-    private User currUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,24 +46,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         usersRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.USER);
         fragmentManager = getSupportFragmentManager();
+        myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         //set số page được off screen
         vpAppContainer.setOffscreenPageLimit(2);
+        vpAppContainer.setAdapter(myPagerAdapter);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(0);
         tvAppToolbarTitle.setText(R.string.workout);
-        //Lấy id của user đã đăng nhập lần trước
-//        if (sharedPreferences.contains("userid")){
-//            userId = sharedPreferences.getInt("userid",-1);
-//        }
-        //Demo
-        //Trong trường hợp không có phiên đăng nhập nào lần trước
-//        if (userId == -1){
-//
-//        } else {
-//
-//        }
-        userId = "9";
-        getUserInformation();
+//        getUserInformation();
     }
 
     @Override
@@ -101,45 +88,42 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         tvAppToolbarTitle = findViewById(R.id.tv_app_toolbar_title);
     }
 
-    /**
-     * Lấy thông tin của người dùng trên db
-     */
-    private void getUserInformation() {
-        DisplayView.showProgressDialog(this);
-        DatabaseReference userRef = usersRef.child(userId);
-        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                currUser = dataSnapshot.getValue(User.class);
-                currUser.setId(userId);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(ConstantValue.CURRENT_USER, currUser);
-                myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), bundle);
-                vpAppContainer.setAdapter(myPagerAdapter);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                DisplayView.dismissProgressDialog();
-            }
-        });
-    }
+//    /**
+//     * Lấy thông tin của người dùng trên db
+//     */
+//    private void getUserInformation() {
+//        DisplayView.showProgressDialog(this);
+//        DatabaseReference userRef = usersRef.child(userId);
+//        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                currUser = dataSnapshot.getValue(User.class);
+//                currUser.setId(userId);
+//                Bundle bundle = new Bundle();
+//                bundle.putSerializable(ConstantValue.CURRENT_USER, currUser);
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                DisplayView.dismissProgressDialog();
+//            }
+//        });
+//    }
 
     private static class MyPagerAdapter extends FragmentPagerAdapter {
 
         private static int NUM_ITEMS = 3;
-        private Bundle bundle;
 
-        public MyPagerAdapter(FragmentManager fm, Bundle bundle) {
+        public MyPagerAdapter(FragmentManager fm) {
             super(fm);
-            this.bundle = bundle;
         }
 
         @Override
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return WorkoutFragment.newInstance(bundle);
+                    return WorkoutFragment.newInstance();
                 case 1:
                     return ProfileFragment.newInstance();
                 case 2:

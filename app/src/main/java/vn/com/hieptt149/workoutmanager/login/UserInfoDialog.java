@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
@@ -30,6 +32,7 @@ public class UserInfoDialog extends Dialog implements View.OnClickListener {
     private int age;
     private double height, weight;
     private Context loginActivity;
+    private User user;
 
     public UserInfoDialog(@NonNull Context context) {
         super(context);
@@ -84,13 +87,17 @@ public class UserInfoDialog extends Dialog implements View.OnClickListener {
             edtWeight.setError(getContext().getString(R.string.number_format_exception));
             return;
         }
-        User user = new User(name, age, height, weight);
+        user = new User(age, height, weight);
         UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName(name).build();
-        auth.getCurrentUser().updateProfile(userProfileChangeRequest);
-        FirebaseDatabase.getInstance().getReference().child(ConstantValue.USER).child(auth.getCurrentUser().getUid()).setValue(user);
-        dismiss();
-        ((Activity) loginActivity).finish();
-        Toast.makeText(getContext(), R.string.register_successfully, Toast.LENGTH_SHORT).show();
+        auth.getCurrentUser().updateProfile(userProfileChangeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                FirebaseDatabase.getInstance().getReference().child(ConstantValue.USER).child(auth.getCurrentUser().getUid()).setValue(user);
+                dismiss();
+                ((Activity) loginActivity).finish();
+                Toast.makeText(getContext(), R.string.register_successfully, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void initView() {

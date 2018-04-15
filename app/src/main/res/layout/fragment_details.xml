@@ -108,7 +108,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_gravity="center"
-            android:layout_weight="5"
+            android:layout_weight="5.5"
             android:src="@drawable/no_image"
             android:tag="no_image" />
 
@@ -136,7 +136,7 @@
             android:id="@+id/ln_btn_save_delete"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_weight="1.5"
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 
@@ -145,21 +145,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_delete"
-                android:visibility="gone" />
+                android:adjustViewBounds="true"
+                android:visibility="gone"/>
 
             <ImageView
                 android:id="@+id/iv_save"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_save"
-                android:visibility="gone" />
+                android:adjustViewBounds="true"
+                android:visibility="gone"/>
 
             <ImageView
                 android:id="@+id/iv_start"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_start"
-                android:visibility="gone" />
+                android:adjustViewBounds="true"
+                android:visibility="gone"/>
         </LinearLayout>
 
     </LinearLayout>

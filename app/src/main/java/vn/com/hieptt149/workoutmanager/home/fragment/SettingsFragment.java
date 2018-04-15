@@ -19,11 +19,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.home.MainActivityIntf;
 import vn.com.hieptt149.workoutmanager.login.LoginActivity;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
+import vn.com.hieptt149.workoutmanager.model.User;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 
 /**
@@ -31,15 +37,18 @@ import vn.com.hieptt149.workoutmanager.utils.DisplayView;
  */
 public class SettingsFragment extends Fragment implements View.OnClickListener, SettingsBottomSheetDialogFragment.SettingsBottomSheetDialogListener {
 
+    private DatabaseReference currUserRef;
     private FirebaseAuth auth;
     private MainActivityIntf mainActivityIntf;
     private SharedPreferences sharedPreferences;
     private Switch swSounds;
-    private LinearLayout lnExercisesDuration, lnRestsDuration;
-    private TextView tvExercisesDuration, tvRestsDuration, tvLogin;
+    private LinearLayout lnUsersSettings, lnExercisesDuration, lnRestsDuration;
+    private TextView tvUsersName, tvUsersAge, tvUsersHeight, tvUsersWeight, tvChangePassword,
+            tvExercisesDuration, tvRestsDuration, tvLogin;
     private Spinner spnThemes;
     private long exerscisesDuration, restsDuration;
     private Bundle bundle;
+    private User currUser;
 
     private static boolean isLogin;
 
@@ -79,10 +88,15 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
     public void onStart() {
         super.onStart();
         if (auth.getCurrentUser() != null) {
+            currUserRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.USER)
+                    .child(auth.getCurrentUser().getUid());
+            getCurrUserInformation();
             isLogin = true;
             tvLogin.setText(R.string.logout);
         } else {
             isLogin = false;
+            lnUsersSettings.setVisibility(View.GONE);
+            tvChangePassword.setVisibility(View.GONE);
             tvLogin.setText(R.string.login);
         }
     }
@@ -90,6 +104,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.tv_change_password:
+                break;
             case R.id.ln_exercises_duration:
                 bundle.putLong(ConstantValue.EXERCISES_DURATION, exerscisesDuration);
                 bundle.putBoolean(ConstantValue.DURATION_SETTINGS_TYPE, true);
@@ -111,6 +127,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
                         public void onClick(DialogInterface dialogInterface, int i) {
                             auth.signOut();
                             isLogin = false;
+                            lnUsersSettings.setVisibility(View.GONE);
+                            tvChangePassword.setVisibility(View.GONE);
                             tvLogin.setText(R.string.login);
                         }
                     }, new DialogInterface.OnClickListener() {
@@ -139,13 +157,45 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
         editor.apply();
     }
 
+    /**
+     * Lấy thông tin của người dùng đã đăng nhập
+     */
+    private void getCurrUserInformation() {
+        currUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                currUser = dataSnapshot.getValue(User.class);
+                currUser.setId(dataSnapshot.getKey());
+                lnUsersSettings.setVisibility(View.VISIBLE);
+                tvChangePassword.setVisibility(View.VISIBLE);
+                tvUsersName.setText(auth.getCurrentUser().getDisplayName());
+                tvUsersAge.setText(getString(R.string.age) + ": " + currUser.getAge());
+                tvUsersHeight.setText(getString(R.string.height) + ": " + currUser.getHeight());
+                tvUsersWeight.setText(getString(R.string.weight) + ": " + currUser.getWeight());
+                DisplayView.dismissProgressDialog();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                DisplayView.dismissProgressDialog();
+            }
+        });
+    }
+
     private void initView(View view) {
+        lnUsersSettings = view.findViewById(R.id.ln_users_settings);
+        tvUsersName = view.findViewById(R.id.tv_users_name);
+        tvUsersAge = view.findViewById(R.id.tv_users_age);
+        tvUsersHeight = view.findViewById(R.id.tv_users_height);
+        tvUsersWeight = view.findViewById(R.id.tv_users_weight);
+        tvChangePassword = view.findViewById(R.id.tv_change_password);
         lnExercisesDuration = view.findViewById(R.id.ln_exercises_duration);
         tvExercisesDuration = view.findViewById(R.id.tv_exercises_duration);
         lnRestsDuration = view.findViewById(R.id.ln_rests_duration);
         tvRestsDuration = view.findViewById(R.id.tv_rests_duration);
         spnThemes = view.findViewById(R.id.spn_themes);
         tvLogin = view.findViewById(R.id.tv_login);
+        tvChangePassword.setOnClickListener(this);
         lnExercisesDuration.setOnClickListener(this);
         lnRestsDuration.setOnClickListener(this);
         tvLogin.setOnClickListener(this);

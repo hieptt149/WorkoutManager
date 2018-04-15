@@ -1,146 +1,208 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".home.fragment.SettingsFragment">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray" />
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/item_height"
-        android:orientation="horizontal"
-        android:padding="@dimen/medium_space"
-        android:weightSum="10">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/ln_users_settings"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/user_setting_item_height"
+            android:orientation="horizontal"
+            android:weightSum="10"
+            android:padding="@dimen/medium_space">
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:src="@drawable/avatar" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="7"
+                android:paddingLeft="@dimen/medium_space"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tv_users_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/name"
+                    android:singleLine="true"
+                    android:ellipsize="marquee"
+                    android:textSize="@dimen/normal_text_size"/>
+                <TextView
+                    android:id="@+id/tv_users_age"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/age"
+                    android:textSize="@dimen/normal_text_size"/>
+                <TextView
+                    android:id="@+id/tv_users_height"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/height"
+                    android:textSize="@dimen/normal_text_size"/>
+                <TextView
+                    android:id="@+id/tv_users_weight"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/weight"
+                    android:textSize="@dimen/normal_text_size"/>
+            </LinearLayout>
+        </LinearLayout>
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="8"
+            android:id="@+id/tv_change_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/large_space"
+            android:gravity="center_horizontal"
+            android:text="@string/change_password"
+            android:textStyle="italic"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height"
+            android:orientation="horizontal"
+            android:padding="@dimen/medium_space"
+            android:weightSum="10">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="8"
+                android:gravity="center_vertical"
+                android:text="@string/sound"
+                android:textSize="@dimen/normal_text_size" />
+
+            <Switch
+                android:id="@+id/sw_sounds"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center_vertical|right" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray" />
+
+        <LinearLayout
+            android:id="@+id/ln_exercises_duration"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height"
+            android:orientation="horizontal"
+            android:padding="@dimen/medium_space"
+            android:weightSum="10">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="8"
+                android:gravity="center_vertical"
+                android:text="@string/exercises_duration"
+                android:textSize="@dimen/normal_text_size" />
+
+            <TextView
+                android:id="@+id/tv_exercises_duration"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center_vertical|right"
+                android:textSize="@dimen/normal_text_size" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray" />
+
+        <LinearLayout
+            android:id="@+id/ln_rests_duration"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height"
+            android:orientation="horizontal"
+            android:padding="@dimen/medium_space"
+            android:weightSum="10">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="8"
+                android:gravity="center_vertical"
+                android:text="@string/rests_duration"
+                android:textSize="@dimen/normal_text_size" />
+
+            <TextView
+                android:id="@+id/tv_rests_duration"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center_vertical|right"
+                android:textSize="@dimen/normal_text_size" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height"
+            android:orientation="horizontal"
+            android:padding="@dimen/medium_space"
+            android:weightSum="10">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="6"
+                android:gravity="center_vertical"
+                android:text="@string/themes"
+                android:textSize="@dimen/normal_text_size" />
+
+            <Spinner
+                android:id="@+id/spn_themes"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:gravity="center_vertical|right"></Spinner>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/tv_login"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height"
             android:gravity="center_vertical"
-            android:text="@string/sound"
+            android:padding="@dimen/medium_space"
+            android:text="@string/login"
             android:textSize="@dimen/normal_text_size" />
 
-        <Switch
-            android:id="@+id/sw_sounds"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:gravity="center_vertical|right" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray" />
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray" />
-
-    <LinearLayout
-        android:id="@+id/ln_exercises_duration"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/item_height"
-        android:orientation="horizontal"
-        android:padding="@dimen/medium_space"
-        android:weightSum="10">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="8"
-            android:gravity="center_vertical"
-            android:text="@string/exercises_duration"
-            android:textSize="@dimen/normal_text_size" />
-
-        <TextView
-            android:id="@+id/tv_exercises_duration"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:gravity="center_vertical|right"
-            android:textSize="@dimen/normal_text_size" />
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray" />
-
-    <LinearLayout
-        android:id="@+id/ln_rests_duration"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/item_height"
-        android:orientation="horizontal"
-        android:padding="@dimen/medium_space"
-        android:weightSum="10">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="8"
-            android:gravity="center_vertical"
-            android:text="@string/rests_duration"
-            android:textSize="@dimen/normal_text_size" />
-
-        <TextView
-            android:id="@+id/tv_rests_duration"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:gravity="center_vertical|right"
-            android:textSize="@dimen/normal_text_size" />
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/item_height"
-        android:orientation="horizontal"
-        android:padding="@dimen/medium_space"
-        android:weightSum="10">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="6"
-            android:gravity="center_vertical"
-            android:text="@string/themes"
-            android:textSize="@dimen/normal_text_size" />
-
-        <Spinner
-            android:id="@+id/spn_themes"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="4"
-            android:gravity="center_vertical|right"></Spinner>
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray" />
-
-    <TextView
-        android:id="@+id/tv_login"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/item_height"
-        android:gravity="center_vertical"
-        android:padding="@dimen/medium_space"
-        android:text="@string/login"
-        android:textSize="@dimen/normal_text_size" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray" />
-
-</LinearLayout>
+</ScrollView>

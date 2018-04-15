@@ -23,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -43,6 +44,7 @@ import vn.com.hieptt149.workoutmanager.utils.TimeFormatter;
 public class WorkoutDetailsFragment extends Fragment implements View.OnClickListener, WorkoutDetailsFragmentIntf,
         SelectIconDialogFragment.SelectIconDialogListener {
 
+    private FirebaseAuth auth;
     private AddWorkoutActivityIntf addWorkoutActivityIntf;
     private DatabaseReference currUsersWorkoutRef;
     private SharedPreferences sharedPreferences;
@@ -62,7 +64,6 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     private boolean isFirstTime = true;
 
     private static Workout usersWorkoutDetails;
-    private static String userId;
     private static String tag;
     private static String imgTag;
 
@@ -71,7 +72,6 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         if (bundle != null) {
             workoutDetailsFragment.setArguments(bundle);
             usersWorkoutDetails = (Workout) bundle.getSerializable(ConstantValue.SELECTED_WORKOUT);
-            userId = bundle.getString(ConstantValue.USER_ID);
             tag = bundle.getString(ConstantValue.TAG);
         }
         return workoutDetailsFragment;
@@ -95,6 +95,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         super.onViewCreated(view, savedInstanceState);
         initView(view);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        auth = FirebaseAuth.getInstance();
         practiceTime = sharedPreferences.getLong(ConstantValue.EXERCISES_DURATION, ConstantValue.DEFAULT_EXERCISES_DURATION);
         restTime = sharedPreferences.getLong(ConstantValue.RESTS_DURATION, ConstantValue.DEFAULT_RESTS_DURATION);
         //Trường hợp user xem chi tiết workout
@@ -120,7 +121,11 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
             if (!isFirstTime) {
                 if (lstSelectedExercise.size() != 0) {
                     ivStart.setVisibility(View.VISIBLE);
-                    ivSave.setVisibility(View.VISIBLE);
+                    if (auth.getCurrentUser() != null){
+                        ivSave.setVisibility(View.VISIBLE);
+                    } else {
+                        ivSave.setVisibility(View.GONE);
+                    }
                 }
                 showUsersWorkoutDetails();
             } else {
@@ -178,6 +183,9 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
      * Lưu thông tin workout vào db
      */
     private void saveWorkout() {
+        if (edtWorkoutTitle.getText().toString().length() == 0 || edtWorkoutTitle.getText().toString().isEmpty()){
+            edtWorkoutTitle.setError(getString(R.string.enter_workout_title));
+        }
         DisplayView.showAlertDialog(getContext(), getString(R.string.confirm_save),
                 new DialogInterface.OnClickListener() {
                     @Override
@@ -185,7 +193,8 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
                         Workout newWorkout = new Workout(edtWorkoutTitle.getText().toString(),
                                 (String) ivChooseWorkoutIcon.getTag(), lstSelectedExercise, cadioRate, strengthRate, mobilityRate);
                         if (tag.equals(ConstantValue.ADD_WORKOUT)) {
-                            currUsersWorkoutRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.WORKOUT).child(userId);
+                            currUsersWorkoutRef = FirebaseDatabase.getInstance().getReference()
+                                    .child(ConstantValue.WORKOUT).child(auth.getCurrentUser().getUid());
                             currUsersWorkoutRef.push().setValue(newWorkout);
                         } else if (tag.equals(ConstantValue.WORKOUT_DETAILS)) {
                             currUsersWorkoutRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.WORKOUT).
