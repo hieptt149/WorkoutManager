@@ -73,13 +73,7 @@ public class AddExerciseFragment extends Fragment implements AddExerciseFragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView(view);
-        exercisesRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.EXERCISE);
-        tvAddWorkoutToolBarTitle.setText(R.string.add_exercise);
-        linearLayoutManager = new LinearLayoutManager(getContext());
-        dividerItemDecoration = new DividerItemDecoration(getContext(), linearLayoutManager.getOrientation());
-        rvExercise.setHasFixedSize(true);
-        rvExercise.setLayoutManager(linearLayoutManager);
-        rvExercise.addItemDecoration(dividerItemDecoration);
+        initVar();
     }
 
     @Override
@@ -171,5 +165,15 @@ public class AddExerciseFragment extends Fragment implements AddExerciseFragment
     private void initView(View view) {
         tvAddWorkoutToolBarTitle = getActivity().findViewById(R.id.tv_addworkout_toolbar_title);
         rvExercise = view.findViewById(R.id.rv_exercise);
+    }
+
+    private void initVar() {
+        exercisesRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.EXERCISE);
+        tvAddWorkoutToolBarTitle.setText(R.string.add_exercise);
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        dividerItemDecoration = new DividerItemDecoration(getContext(), linearLayoutManager.getOrientation());
+        rvExercise.setHasFixedSize(true);
+        rvExercise.setLayoutManager(linearLayoutManager);
+        rvExercise.addItemDecoration(dividerItemDecoration);
     }
 }

@@ -15,14 +15,16 @@
 
         <TextView
             android:id="@+id/tv_addworkout_toolbar_title"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/activity_toolbar_title_width"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:gravity="center"
             android:text="@string/toolbar_title"
             android:textColor="@android:color/white"
             android:textSize="@dimen/big_text_size"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:singleLine="true"
+            android:ellipsize="marquee"/>
 
         <TextView
             android:id="@+id/tv_addworkout_back"

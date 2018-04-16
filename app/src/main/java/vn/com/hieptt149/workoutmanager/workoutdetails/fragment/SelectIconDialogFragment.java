@@ -47,19 +47,10 @@ public class SelectIconDialogFragment extends DialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        gvIcon = view.findViewById(R.id.gv_icon);
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-        selectIconDialogListener = (SelectIconDialogListener) getTargetFragment();
-        createIconList();
-        selectIconAdapter = new SelectIconAdapter(getContext(),lstIconTags);
-        gvIcon.setAdapter(selectIconAdapter);
-        gvIcon.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                selectIconDialogListener.onIconItemClick(lstIconTags.get(position));
-                dismiss();
-            }
-        });
+        initView(view);
+        initVar();
+
     }
 
     public void createIconList(){
@@ -78,6 +69,24 @@ public class SelectIconDialogFragment extends DialogFragment {
         lstIconTags.add("stopclock");
         lstIconTags.add("water_bottle");
         lstIconTags.add("weight");
+    }
+
+    private void initView(View view) {
+        gvIcon = view.findViewById(R.id.gv_icon);
+    }
+
+    private void initVar() {
+        selectIconDialogListener = (SelectIconDialogListener) getTargetFragment();
+        createIconList();
+        selectIconAdapter = new SelectIconAdapter(getContext(),lstIconTags);
+        gvIcon.setAdapter(selectIconAdapter);
+        gvIcon.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                selectIconDialogListener.onIconItemClick(lstIconTags.get(position));
+                dismiss();
+            }
+        });
     }
 
     public interface SelectIconDialogListener{

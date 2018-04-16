@@ -71,10 +71,7 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener, A
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView(view);
-        auth = FirebaseAuth.getInstance();
-        lstUsersWorkout = new ArrayList<>();
-        workoutPreviewAdapter = new WorkoutPreviewAdapter(getContext(), lstUsersWorkout);
-        gvPreviewWorkout.setAdapter(workoutPreviewAdapter);
+        initVar();
     }
 
     @Override
@@ -140,5 +137,12 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener, A
         gvPreviewWorkout = view.findViewById(R.id.gv_preview_workout);
         fabAddWorkout.setOnClickListener(this);
         gvPreviewWorkout.setOnItemClickListener(this);
+    }
+
+    private void initVar() {
+        auth = FirebaseAuth.getInstance();
+        lstUsersWorkout = new ArrayList<>();
+        workoutPreviewAdapter = new WorkoutPreviewAdapter(getContext(), lstUsersWorkout);
+        gvPreviewWorkout.setAdapter(workoutPreviewAdapter);
     }
 }

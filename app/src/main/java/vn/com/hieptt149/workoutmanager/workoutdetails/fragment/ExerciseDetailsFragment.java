@@ -87,7 +87,7 @@ public class ExerciseDetailsFragment extends Fragment {
         edtWorkoutTitle.setEnabled(false);
         ivExercisePreview.setTag(null);
         edtWorkoutTitle.setText(selectedExercise.getName());
-        pbCardio.setProgress(selectedExercise.getCadioRate());
+        pbCardio.setProgress(selectedExercise.getCardioRate());
         pbStrength.setProgress(selectedExercise.getStrengthRate());
         pbMobility.setProgress(selectedExercise.getMobilityRate());
         RequestOptions options = new RequestOptions();

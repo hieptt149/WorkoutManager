@@ -10,21 +10,31 @@ import java.io.Serializable;
 
 public class History implements Serializable {
 
-    private String id;
-    private String userId;
-    private String workoutId;
-    private long datetime;
-    private long timeWorkout;
+    private String id, userId, workoutId;
+    private double caloriesBurn, currHeight, currWeight;
+    private long practiceDate, timePracticed;
 
     public History() {
     }
 
-    public History(String id, String userId, String workoutId, long datetime, long timeWorkout) {
+    public History(double caloriesBurn, double currHeight, double currWeight, long practiceDate, long timePracticed) {
+        this.caloriesBurn = caloriesBurn;
+        this.currHeight = currHeight;
+        this.currWeight = currWeight;
+        this.practiceDate = practiceDate;
+        this.timePracticed = timePracticed;
+    }
+
+    public History(String id, String userId, String workoutId, double caloriesBurn, double currHeight,
+                   double currWeight, long practiceDate, long timePracticed) {
         this.id = id;
         this.userId = userId;
         this.workoutId = workoutId;
-        this.datetime = datetime;
-        this.timeWorkout = timeWorkout;
+        this.caloriesBurn = caloriesBurn;
+        this.currHeight = currHeight;
+        this.currWeight = currWeight;
+        this.practiceDate = practiceDate;
+        this.timePracticed = timePracticed;
     }
 
     public String getId() {
@@ -51,23 +61,53 @@ public class History implements Serializable {
         this.workoutId = workoutId;
     }
 
-    @PropertyName("datetime")
-    public long getDatetime() {
-        return datetime;
+    @PropertyName("calories_burn")
+    public double getCaloriesBurn() {
+        return caloriesBurn;
     }
 
-    @PropertyName("datetime")
-    public void setDatetime(long datetime) {
-        this.datetime = datetime;
+    @PropertyName("calories_burn")
+    public void setCaloriesBurn(double caloriesBurn) {
+        this.caloriesBurn = caloriesBurn;
     }
 
-    @PropertyName("time_workout")
-    public long getTimeWorkout() {
-        return timeWorkout;
+    @PropertyName("curr_height")
+    public double getCurrHeight() {
+        return currHeight;
     }
 
-    @PropertyName("time_workout")
-    public void setTimeWorkout(long timeWorkout) {
-        this.timeWorkout = timeWorkout;
+    @PropertyName("curr_height")
+    public void setCurrHeight(double currHeight) {
+        this.currHeight = currHeight;
+    }
+
+    @PropertyName("curr_weight")
+    public double getCurrWeight() {
+        return currWeight;
+    }
+
+    @PropertyName("curr_weight")
+    public void setCurrWeight(double currWeight) {
+        this.currWeight = currWeight;
+    }
+
+    @PropertyName("practice_date")
+    public long getPracticeDate() {
+        return practiceDate;
+    }
+
+    @PropertyName("practice_date")
+    public void setPracticeDate(long practiceDate) {
+        this.practiceDate = practiceDate;
+    }
+
+    @PropertyName("time_practiced")
+    public long getTimePracticed() {
+        return timePracticed;
+    }
+
+    @PropertyName("time_practiced")
+    public void setTimePracticed(long timePracticed) {
+        this.timePracticed = timePracticed;
     }
 }

@@ -14,22 +14,24 @@ public class Exercise implements Serializable {
     private String name;
     private String description;
     private String url;
-    private int cadioRate;
+    private int cardioRate;
     private int strengthRate;
     private int mobilityRate;
+    private double metsRate;
     private boolean isAdded;
 
     public Exercise() {
     }
 
-    public Exercise(int id, String name, String description, String url, int cadioRate, int strengthRate, int mobilityRate) {
+    public Exercise(int id, String name, String description, String url, int cardioRate, int strengthRate, int mobilityRate, double metsRate) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.url = url;
-        this.cadioRate = cadioRate;
+        this.cardioRate = cardioRate;
         this.strengthRate = strengthRate;
         this.mobilityRate = mobilityRate;
+        this.metsRate = metsRate;
     }
 
     @PropertyName("id")
@@ -72,14 +74,14 @@ public class Exercise implements Serializable {
         this.url = url;
     }
 
-    @PropertyName("cadio_rate")
-    public int getCadioRate() {
-        return cadioRate;
+    @PropertyName("cardio_rate")
+    public int getCardioRate() {
+        return cardioRate;
     }
 
-    @PropertyName("cadio_rate")
-    public void setCadioRate(int cadio_rate) {
-        this.cadioRate = cadio_rate;
+    @PropertyName("cardio_rate")
+    public void setCardioRate(int cardio_rate) {
+        this.cardioRate = cardio_rate;
     }
 
     @PropertyName("strength_rate")
@@ -100,6 +102,16 @@ public class Exercise implements Serializable {
     @PropertyName("mobility_rate")
     public void setMobilityRate(int mobility_rate) {
         this.mobilityRate = mobility_rate;
+    }
+
+    @PropertyName("mets_rate")
+    public double getMetsRate() {
+        return metsRate;
+    }
+
+    @PropertyName("mets_rate")
+    public void setMetsRate(double metsRate) {
+        this.metsRate = metsRate;
     }
 
     public boolean isAdded() {

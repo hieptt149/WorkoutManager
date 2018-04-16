@@ -56,8 +56,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         initView();
-        auth = FirebaseAuth.getInstance();
-        rdbtnLogin.setChecked(true);
+        initVar();
     }
 
     @Override
@@ -251,5 +250,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         rdgrLoginRegister.setOnCheckedChangeListener(this);
         tvForgotPassword.setOnClickListener(this);
         tvBack.setOnClickListener(this);
+    }
+
+    private void initVar() {
+        auth = FirebaseAuth.getInstance();
+        rdbtnLogin.setChecked(true);
     }
 }

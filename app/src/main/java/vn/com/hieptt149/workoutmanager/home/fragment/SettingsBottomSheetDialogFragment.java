@@ -14,8 +14,6 @@ import android.widget.TextView;
 
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
-import vn.com.hieptt149.workoutmanager.utils.DisplayView;
-import vn.com.hieptt149.workoutmanager.utils.TimeFormatter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,13 +51,8 @@ public class SettingsBottomSheetDialogFragment extends BottomSheetDialogFragment
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        tvSeekbarValue = view.findViewById(R.id.tv_seekbar_value);
-        tvDone = view.findViewById(R.id.tv_done);
-        sbDuration = view.findViewById(R.id.sb_duration);
-        tvDone.setOnClickListener(this);
-        settingsBottomSheetDialogListener = (SettingsBottomSheetDialogListener) getTargetFragment();
-        newExercisesDuration = exerscisesDuration;
-        newRestsDuration = restsDuration;
+        initView(view);
+        initVar();
         if (isExercisesDuration) {
             setupView(exerscisesDuration, 15000, 15, 5000.0);
         } else {
@@ -107,5 +100,18 @@ public class SettingsBottomSheetDialogFragment extends BottomSheetDialogFragment
 
     public interface SettingsBottomSheetDialogListener {
         void onTvDoneClick(long newDuration, boolean isExercisesDuration);
+    }
+
+    private void initView(View view) {
+        tvSeekbarValue = view.findViewById(R.id.tv_seekbar_value);
+        tvDone = view.findViewById(R.id.tv_done);
+        sbDuration = view.findViewById(R.id.sb_duration);
+        tvDone.setOnClickListener(this);
+    }
+
+    private void initVar() {
+        settingsBottomSheetDialogListener = (SettingsBottomSheetDialogListener) getTargetFragment();
+        newExercisesDuration = exerscisesDuration;
+        newRestsDuration = restsDuration;
     }
 }

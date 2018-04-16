@@ -12,21 +12,24 @@ public class User implements Serializable {
 
     private String id;
     private int age;
+    private boolean gender;
     private double height;
     private double weight;
 
     public User() {
     }
 
-    public User(int age, double height, double weight) {
+    public User(int age, boolean gender, double height, double weight) {
         this.age = age;
+        this.gender = gender;
         this.height = height;
         this.weight = weight;
     }
 
-    public User(String id, int age, double height, double weight) {
+    public User(String id, int age, boolean gender, double height, double weight) {
         this.id = id;
         this.age = age;
+        this.gender = gender;
         this.height = height;
         this.weight = weight;
     }
@@ -47,6 +50,16 @@ public class User implements Serializable {
     @PropertyName("age")
     public void setAge(int age) {
         this.age = age;
+    }
+
+    @PropertyName("gender")
+    public boolean getGender() {
+        return gender;
+    }
+
+    @PropertyName("gender")
+    public void setGender(boolean gender) {
+        this.gender = gender;
     }
 
     @PropertyName("height")

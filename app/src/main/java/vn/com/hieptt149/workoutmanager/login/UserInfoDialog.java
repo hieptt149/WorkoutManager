@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,6 +28,8 @@ import vn.com.hieptt149.workoutmanager.model.User;
 public class UserInfoDialog extends Dialog implements View.OnClickListener {
 
     private FirebaseAuth auth;
+    private RadioGroup rdgrGender;
+    private RadioButton rdbtnMale, rdbtnFemale;
     private EditText edtName, edtAge, edtHeight, edtWeight;
     private Button btnConfirm;
     private String name;
@@ -33,6 +37,7 @@ public class UserInfoDialog extends Dialog implements View.OnClickListener {
     private double height, weight;
     private Context loginActivity;
     private User user;
+    private boolean gender;
 
     public UserInfoDialog(@NonNull Context context) {
         super(context);
@@ -47,7 +52,7 @@ public class UserInfoDialog extends Dialog implements View.OnClickListener {
         setCanceledOnTouchOutside(false);
         setCancelable(false);
         initView();
-        auth = FirebaseAuth.getInstance();
+        initVar();
     }
 
     @Override
@@ -87,7 +92,12 @@ public class UserInfoDialog extends Dialog implements View.OnClickListener {
             edtWeight.setError(getContext().getString(R.string.number_format_exception));
             return;
         }
-        user = new User(age, height, weight);
+        if (rdbtnMale.isChecked()) {
+            gender = true;
+        } else if (rdbtnFemale.isChecked()) {
+            gender = false;
+        }
+        user = new User(age, gender, height, weight);
         UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName(name).build();
         auth.getCurrentUser().updateProfile(userProfileChangeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -101,11 +111,18 @@ public class UserInfoDialog extends Dialog implements View.OnClickListener {
     }
 
     private void initView() {
+        rdgrGender = findViewById(R.id.rdgr_gender);
+        rdbtnMale = findViewById(R.id.rdbtn_male);
+        rdbtnFemale = findViewById(R.id.rdbtn_female);
         edtName = findViewById(R.id.edt_name);
         edtAge = findViewById(R.id.edt_age);
         edtHeight = findViewById(R.id.edt_height);
         edtWeight = findViewById(R.id.edt_weight);
         btnConfirm = findViewById(R.id.btn_confirm);
         btnConfirm.setOnClickListener(this);
+    }
+
+    private void initVar() {
+        auth = FirebaseAuth.getInstance();
     }
 }

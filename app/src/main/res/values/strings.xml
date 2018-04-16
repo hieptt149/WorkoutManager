@@ -6,7 +6,7 @@
 
     <!--Main Activity-->
     <string name="workout">Workout</string>
-    <string name="profile">Profile</string>
+    <string name="history">History</string>
     <string name="settings">Settings</string>
 
     <!--Workout Fragment-->
@@ -14,7 +14,7 @@
     <string name="workout_duration">Workout Duration</string>
     <string name="workout_exercises">Workout&#39;s Exercise</string>
 
-    <!--Profile Fragment-->
+    <!--History Fragment-->
 
     <!--Settings Fragment-->
     <string name="sound">Sounds</string>
@@ -65,8 +65,11 @@
     <string name="confirm">Confirm</string>
     <string name="name">Name</string>
     <string name="age">Age</string>
+    <string name="gender">Gender</string>
     <string name="height">Height</string>
     <string name="weight">Weight</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
     <string name="enter_name">Enter your name</string>
     <string name="enter_age">Enter your age</string>
     <string name="enter_height">Enter your height</string>
@@ -79,4 +82,7 @@
     <string name="send_reset_password">\nWe will send password reset instructions to this email?</string>
     <string name="send_reset_password_success">We have sent you instructions to reset your password</string>
     <string name="send_reset_password_failed">Failed to send reset email</string>
+
+    <!--StartWorkoutFragment-->
+    <string name="demo_time">00:00</string>
 </resources>

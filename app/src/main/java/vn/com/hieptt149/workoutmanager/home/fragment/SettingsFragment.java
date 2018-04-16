@@ -43,7 +43,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
     private SharedPreferences sharedPreferences;
     private Switch swSounds;
     private LinearLayout lnUsersSettings, lnExercisesDuration, lnRestsDuration;
-    private TextView tvUsersName, tvUsersAge, tvUsersHeight, tvUsersWeight, tvChangePassword,
+    private TextView tvUsersName, tvUsersAge, tvUsersGender, tvUsersHeight, tvUsersWeight, tvChangePassword,
             tvExercisesDuration, tvRestsDuration, tvLogin;
     private Spinner spnThemes;
     private long exerscisesDuration, restsDuration;
@@ -75,13 +75,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
         super.onViewCreated(view, savedInstanceState);
         swSounds = view.findViewById(R.id.sw_sounds);
         initView(view);
-        auth = FirebaseAuth.getInstance();
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        bundle = new Bundle();
-        exerscisesDuration = sharedPreferences.getLong(ConstantValue.EXERCISES_DURATION, ConstantValue.DEFAULT_EXERCISES_DURATION);
-        restsDuration = sharedPreferences.getLong(ConstantValue.RESTS_DURATION, ConstantValue.DEFAULT_RESTS_DURATION);
-        tvExercisesDuration.setText(exerscisesDuration / 1000 + " sec");
-        tvRestsDuration.setText(restsDuration / 1000 + " sec");
+        initVar();
     }
 
     @Override
@@ -170,8 +164,13 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
                 tvChangePassword.setVisibility(View.VISIBLE);
                 tvUsersName.setText(auth.getCurrentUser().getDisplayName());
                 tvUsersAge.setText(getString(R.string.age) + ": " + currUser.getAge());
-                tvUsersHeight.setText(getString(R.string.height) + ": " + currUser.getHeight());
-                tvUsersWeight.setText(getString(R.string.weight) + ": " + currUser.getWeight());
+                if (currUser.getGender()) {
+                    tvUsersGender.setText(getString(R.string.male));
+                } else {
+                    tvUsersGender.setText(getString(R.string.female));
+                }
+                tvUsersHeight.setText(getString(R.string.height) + ": " + currUser.getHeight() + " cm");
+                tvUsersWeight.setText(getString(R.string.weight) + ": " + currUser.getWeight() + " kg");
                 DisplayView.dismissProgressDialog();
             }
 
@@ -186,6 +185,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
         lnUsersSettings = view.findViewById(R.id.ln_users_settings);
         tvUsersName = view.findViewById(R.id.tv_users_name);
         tvUsersAge = view.findViewById(R.id.tv_users_age);
+        tvUsersGender = view.findViewById(R.id.tv_users_gender);
         tvUsersHeight = view.findViewById(R.id.tv_users_height);
         tvUsersWeight = view.findViewById(R.id.tv_users_weight);
         tvChangePassword = view.findViewById(R.id.tv_change_password);
@@ -199,5 +199,15 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
         lnExercisesDuration.setOnClickListener(this);
         lnRestsDuration.setOnClickListener(this);
         tvLogin.setOnClickListener(this);
+    }
+
+    private void initVar() {
+        auth = FirebaseAuth.getInstance();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        bundle = new Bundle();
+        exerscisesDuration = sharedPreferences.getLong(ConstantValue.EXERCISES_DURATION, ConstantValue.DEFAULT_EXERCISES_DURATION);
+        restsDuration = sharedPreferences.getLong(ConstantValue.RESTS_DURATION, ConstantValue.DEFAULT_RESTS_DURATION);
+        tvExercisesDuration.setText(exerscisesDuration / 1000 + " sec");
+        tvRestsDuration.setText(restsDuration / 1000 + " sec");
     }
 }
