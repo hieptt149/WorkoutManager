@@ -2,8 +2,6 @@ package vn.com.hieptt149.workoutmanager.login;
 
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
@@ -11,7 +9,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -26,7 +23,6 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,7 +30,6 @@ import java.util.regex.Pattern;
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;
-import vn.com.hieptt149.workoutmanager.workoutdetails.fragment.WorkoutDetailsFragment;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener,
         View.OnFocusChangeListener, View.OnTouchListener {
@@ -55,8 +50,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        initView();
-        initVar();
+        init();
     }
 
     @Override
@@ -235,7 +229,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 });
     }
 
-    private void initView() {
+    private void init() {
         tvTitle = findViewById(R.id.tv_title);
         tvForgotPassword = findViewById(R.id.tv_forgot_password);
         tvBack = findViewById(R.id.tv_back);
@@ -250,9 +244,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         rdgrLoginRegister.setOnCheckedChangeListener(this);
         tvForgotPassword.setOnClickListener(this);
         tvBack.setOnClickListener(this);
-    }
-
-    private void initVar() {
         auth = FirebaseAuth.getInstance();
         rdbtnLogin.setChecked(true);
     }

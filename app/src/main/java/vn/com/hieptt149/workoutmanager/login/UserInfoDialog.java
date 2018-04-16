@@ -51,8 +51,7 @@ public class UserInfoDialog extends Dialog implements View.OnClickListener {
         setContentView(R.layout.dialog_user_info);
         setCanceledOnTouchOutside(false);
         setCancelable(false);
-        initView();
-        initVar();
+        init();
     }
 
     @Override
@@ -110,7 +109,7 @@ public class UserInfoDialog extends Dialog implements View.OnClickListener {
         });
     }
 
-    private void initView() {
+    private void init() {
         rdgrGender = findViewById(R.id.rdgr_gender);
         rdbtnMale = findViewById(R.id.rdbtn_male);
         rdbtnFemale = findViewById(R.id.rdbtn_female);
@@ -120,9 +119,6 @@ public class UserInfoDialog extends Dialog implements View.OnClickListener {
         edtWeight = findViewById(R.id.edt_weight);
         btnConfirm = findViewById(R.id.btn_confirm);
         btnConfirm.setOnClickListener(this);
-    }
-
-    private void initVar() {
         auth = FirebaseAuth.getInstance();
     }
 }

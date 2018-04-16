@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -93,8 +94,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initView(view);
-        initVar();
+        init(view);
         //Trường hợp user xem chi tiết workout
         if (tag.equals(ConstantValue.WORKOUT_DETAILS)) {
             tvAddWorkoutToolbarTitle.setText(usersWorkoutDetails.getTitle());
@@ -118,7 +118,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
             if (!isFirstTime) {
                 if (lstSelectedExercise.size() != 0) {
                     ivStart.setVisibility(View.VISIBLE);
-                    if (auth.getCurrentUser() != null){
+                    if (auth.getCurrentUser() != null) {
                         ivSave.setVisibility(View.VISIBLE);
                     } else {
                         ivSave.setVisibility(View.GONE);
@@ -150,14 +150,14 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
                         SelectIconDialogFragment.newInstance(), ConstantValue.SELECT_ICON);
                 break;
             case R.id.iv_start:
-                if (edtWorkoutTitle.getText().toString().length() == 0 || edtWorkoutTitle.getText().toString().isEmpty()){
-                    edtWorkoutTitle.setError(getString(R.string.enter_workout_title));
-                    return;
-                }
+                isFirstTime = false;
                 fragmentBundle = new Bundle();
-                fragmentBundle.putString(ConstantValue.WORKOUT_TITLE,edtWorkoutTitle.getText().toString());
-                fragmentBundle.putSerializable(ConstantValue.SELECTED_EXERCISE_LIST,lstSelectedExercise);
-                addWorkoutActivityIntf.openFragment(StartWorkoutFragment.newInstance(fragmentBundle),ConstantValue.START_WORKOUT);
+                fragmentBundle.putString(ConstantValue.WORKOUT_TITLE, edtWorkoutTitle.getText().toString());
+                fragmentBundle.putSerializable(ConstantValue.SELECTED_EXERCISE_LIST, lstSelectedExercise);
+                fragmentBundle.putLong(ConstantValue.TOTAL_TIME, totalTime);
+                fragmentBundle.putLong(ConstantValue.EXERCISES_DURATION, practiceTime);
+                fragmentBundle.putLong(ConstantValue.RESTS_DURATION, restTime);
+                addWorkoutActivityIntf.openFragment(StartWorkoutFragment.newInstance(fragmentBundle), ConstantValue.START_WORKOUT);
                 break;
             case R.id.iv_save:
                 saveWorkout();
@@ -188,7 +188,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
      * Lưu thông tin workout vào db
      */
     private void saveWorkout() {
-        if (edtWorkoutTitle.getText().toString().length() == 0 || edtWorkoutTitle.getText().toString().isEmpty()){
+        if (edtWorkoutTitle.getText().toString().length() == 0 || edtWorkoutTitle.getText().toString().isEmpty()) {
             edtWorkoutTitle.setError(getString(R.string.enter_workout_title));
             return;
         }
@@ -283,6 +283,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
 
     /**
      * Thêm exercise vào list exercise
+     *
      * @param exercise: exercise cần thêm
      */
     public void addSelectedExercise(Exercise exercise) {
@@ -292,6 +293,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
 
     /**
      * Xóa exercise trong list exercise
+     *
      * @param exercise: exercise muốn xóa
      */
     public void removeSelectedExercise(Exercise exercise) {
@@ -305,7 +307,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         isFirstTime = false;
     }
 
-    private void initView(View view) {
+    private void init(View view) {
         tvAddWorkoutToolbarTitle = getActivity().findViewById(R.id.tv_addworkout_toolbar_title);
         tvTotalExercise = view.findViewById(R.id.tv_total_exercise);
         tvTotalTime = view.findViewById(R.id.tv_total_time);
@@ -329,9 +331,6 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         ivStart.setOnClickListener(this);
         ivSave.setOnClickListener(this);
         ivDelete.setOnClickListener(this);
-    }
-
-    private void initVar() {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         auth = FirebaseAuth.getInstance();
         practiceTime = sharedPreferences.getLong(ConstantValue.EXERCISES_DURATION, ConstantValue.DEFAULT_EXERCISES_DURATION);

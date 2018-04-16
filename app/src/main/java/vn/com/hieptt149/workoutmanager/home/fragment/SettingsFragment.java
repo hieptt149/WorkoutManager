@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -74,8 +73,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         swSounds = view.findViewById(R.id.sw_sounds);
-        initView(view);
-        initVar();
+        init(view);
     }
 
     @Override
@@ -181,7 +179,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
         });
     }
 
-    private void initView(View view) {
+    private void init(View view) {
         lnUsersSettings = view.findViewById(R.id.ln_users_settings);
         tvUsersName = view.findViewById(R.id.tv_users_name);
         tvUsersAge = view.findViewById(R.id.tv_users_age);
@@ -199,9 +197,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
         lnExercisesDuration.setOnClickListener(this);
         lnRestsDuration.setOnClickListener(this);
         tvLogin.setOnClickListener(this);
-    }
-
-    private void initVar() {
         auth = FirebaseAuth.getInstance();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         bundle = new Bundle();

@@ -28,11 +28,6 @@ public class AddWorkoutActivity extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_workout);
         initView();
-        bundle = getIntent().getExtras();
-        fragmentManager = getSupportFragmentManager();
-        fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.ln_addworkout_container, WorkoutDetailsFragment.newInstance(bundle), ConstantValue.WORKOUT_DETAILS);
-        fragmentTransaction.commit();
     }
 
     @Override
@@ -83,5 +78,10 @@ public class AddWorkoutActivity extends AppCompatActivity implements View.OnClic
         tvAddWorkoutBack = findViewById(R.id.tv_addworkout_back);
         lnAddWorkoutContainer = findViewById(R.id.ln_addworkout_container);
         tvAddWorkoutBack.setOnClickListener(this);
+        bundle = getIntent().getExtras();
+        fragmentManager = getSupportFragmentManager();
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.ln_addworkout_container, WorkoutDetailsFragment.newInstance(bundle), ConstantValue.WORKOUT_DETAILS);
+        fragmentTransaction.commit();
     }
 }

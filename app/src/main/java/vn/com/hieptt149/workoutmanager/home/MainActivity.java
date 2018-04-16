@@ -37,8 +37,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initView();
-        initVar();
+        init();
     }
 
     @Override
@@ -67,13 +66,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         dialogFragment.show(fragmentManager, tag);
     }
 
-    private void initView() {
+    private void init() {
         bottomNavigationView = findViewById(R.id.bottom_nav);
         vpAppContainer = findViewById(R.id.vp_app_container);
         tvAppToolbarTitle = findViewById(R.id.tv_app_toolbar_title);
-    }
-
-    private void initVar() {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         usersRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.USER);
         fragmentManager = getSupportFragmentManager();

@@ -72,8 +72,7 @@ public class AddExerciseFragment extends Fragment implements AddExerciseFragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initView(view);
-        initVar();
+        init(view);
     }
 
     @Override
@@ -162,12 +161,9 @@ public class AddExerciseFragment extends Fragment implements AddExerciseFragment
         });
     }
 
-    private void initView(View view) {
+    private void init(View view) {
         tvAddWorkoutToolBarTitle = getActivity().findViewById(R.id.tv_addworkout_toolbar_title);
         rvExercise = view.findViewById(R.id.rv_exercise);
-    }
-
-    private void initVar() {
         exercisesRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.EXERCISE);
         tvAddWorkoutToolBarTitle.setText(R.string.add_exercise);
         linearLayoutManager = new LinearLayoutManager(getContext());

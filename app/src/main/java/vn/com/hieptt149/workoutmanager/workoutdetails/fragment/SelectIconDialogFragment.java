@@ -1,7 +1,6 @@
 package vn.com.hieptt149.workoutmanager.workoutdetails.fragment;
 
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
@@ -48,8 +46,7 @@ public class SelectIconDialogFragment extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-        initView(view);
-        initVar();
+        init(view);
 
     }
 
@@ -71,15 +68,8 @@ public class SelectIconDialogFragment extends DialogFragment {
         lstIconTags.add("weight");
     }
 
-    private void initView(View view) {
+    private void init(View view) {
         gvIcon = view.findViewById(R.id.gv_icon);
-    }
-
-    private void initVar() {
-        selectIconDialogListener = (SelectIconDialogListener) getTargetFragment();
-        createIconList();
-        selectIconAdapter = new SelectIconAdapter(getContext(),lstIconTags);
-        gvIcon.setAdapter(selectIconAdapter);
         gvIcon.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -87,6 +77,10 @@ public class SelectIconDialogFragment extends DialogFragment {
                 dismiss();
             }
         });
+        selectIconDialogListener = (SelectIconDialogListener) getTargetFragment();
+        createIconList();
+        selectIconAdapter = new SelectIconAdapter(getContext(),lstIconTags);
+        gvIcon.setAdapter(selectIconAdapter);
     }
 
     public interface SelectIconDialogListener{

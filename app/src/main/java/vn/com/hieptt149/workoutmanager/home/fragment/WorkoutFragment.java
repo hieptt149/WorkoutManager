@@ -26,10 +26,8 @@ import java.util.ArrayList;
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.adapter.WorkoutPreviewAdapter;
 import vn.com.hieptt149.workoutmanager.workoutdetails.AddWorkoutActivity;
-import vn.com.hieptt149.workoutmanager.home.MainActivity;
 import vn.com.hieptt149.workoutmanager.home.MainActivityIntf;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
-import vn.com.hieptt149.workoutmanager.model.User;
 import vn.com.hieptt149.workoutmanager.model.Workout;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 
@@ -70,8 +68,7 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener, A
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initView(view);
-        initVar();
+        init(view);
     }
 
     @Override
@@ -132,14 +129,11 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener, A
         startActivity(i);
     }
 
-    private void initView(View view) {
+    private void init(View view) {
         fabAddWorkout = view.findViewById(R.id.fab_addworkout);
         gvPreviewWorkout = view.findViewById(R.id.gv_preview_workout);
         fabAddWorkout.setOnClickListener(this);
         gvPreviewWorkout.setOnItemClickListener(this);
-    }
-
-    private void initVar() {
         auth = FirebaseAuth.getInstance();
         lstUsersWorkout = new ArrayList<>();
         workoutPreviewAdapter = new WorkoutPreviewAdapter(getContext(), lstUsersWorkout);
