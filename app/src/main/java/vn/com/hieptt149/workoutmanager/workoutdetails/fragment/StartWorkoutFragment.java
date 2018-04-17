@@ -3,6 +3,7 @@ package vn.com.hieptt149.workoutmanager.workoutdetails.fragment;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -31,12 +32,12 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
     private ImageView ivExercisePreview, ivPreviousExercise, ivNextExercise;
     private CircularSeekBar sbDuration;
     private MyCountDownTimer countDownTimer;
-    private boolean isStart, isWorkout = true;
-    private long exerciseTimeCounted, restTimeCounted;
+    private Handler handler;
 
+    private static boolean isStart, isWorkout;
     private static String workoutTitle;
     private static ArrayList<Exercise> lstExercise;
-    private static long totalTime, exercisesDuration, restsDuration;
+    private static long totalTime, exercisesDuration, restsDuration, exerciseTimeCounted, restTimeCounted;
     private static int currInterval;
 
     public StartWorkoutFragment() {
@@ -80,9 +81,48 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.iv_previous_exercise:
-                break;
+//            case R.id.iv_previous_exercise:
+//                countDownTimer.cancel();
+//                if (isWorkout) {
+//                    isWorkout = false;
+//                } else {
+//
+//                }
+//                break;
             case R.id.iv_next_exercise:
+                countDownTimer.cancel();
+                ivNextExercise.setClickable(false);
+                if (isWorkout) {
+                    isWorkout = false;
+                    exerciseTimeCounted = 0;
+                    currInterval++;
+                    tvDuration.setText(Formula.msTimeFormatter(restTimeCounted));
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            ivNextExercise.setClickable(true);
+                            countDownTimer.start();
+                        }
+                    }, 1000);
+                    exerciseTimeCounted = exercisesDuration;
+                } else {
+
+                    isWorkout = true;
+                    restTimeCounted = 0;
+                    tvDuration.setText(Formula.msTimeFormatter(exerciseTimeCounted));
+                    if (currInterval == lstExercise.size()) {
+                        ivNextExercise.setVisibility(View.INVISIBLE);
+                    }
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            ivNextExercise.setClickable(true);
+                            countDownTimer.start();
+                        }
+                    }, 1000);
+                    restTimeCounted = restsDuration;
+                }
+                tvExerciseName.setText(lstExercise.get(currInterval - 1).getName());
                 break;
             case R.id.tv_duration:
                 if (!isStart) {
@@ -113,38 +153,41 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         ivPreviousExercise.setOnClickListener(this);
         ivNextExercise.setOnClickListener(this);
         sbDuration.setOnTouchListener(this);
-        exerciseTimeCounted = exercisesDuration;
-        restTimeCounted = restsDuration;
-        currInterval = 1;
-        sbDuration.setMax((int) exercisesDuration);
-        tvDuration.setText(Formula.msTimeFormatter(exerciseTimeCounted));
+        handler = new Handler();
+        refreshTimer();
+//        sbDuration.setMax((int) exercisesDuration);
         countDownTimer = new MyCountDownTimer(Long.MAX_VALUE, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 if (isWorkout) {
                     exerciseTimeCounted -= 1000;
                     tvDuration.setText(Formula.msTimeFormatter(exerciseTimeCounted));
-                    tvExerciseName.setText(lstExercise.get(currInterval - 1).getName());
                     if (exerciseTimeCounted == 0) {
+                        exerciseTimeCounted = exercisesDuration;
                         if (currInterval < lstExercise.size()) {
+                            isWorkout = false;
                             currInterval++;
-                        } else {
+                            tvDuration.setText(Formula.msTimeFormatter(restTimeCounted));
+                        }
+                        //Khi đồng hồ chạy đến giây cuối cùng của bài tập cuối
+                        else {
+                            refreshTimer();
                             countDownTimer.cancel();
                         }
-                        exerciseTimeCounted = exercisesDuration;
-                        isWorkout = false;
-                        tvDuration.setText(Formula.msTimeFormatter(restTimeCounted));
                     }
                 } else {
                     restTimeCounted -= 1000;
                     tvDuration.setText(Formula.msTimeFormatter(restTimeCounted));
-                    tvExerciseName.setText(lstExercise.get(currInterval - 1).getName());
                     if (restTimeCounted == 0) {
                         restTimeCounted = restsDuration;
-                        isWorkout = false;
+                        isWorkout = true;
                         tvDuration.setText(Formula.msTimeFormatter(exerciseTimeCounted));
+                        if (currInterval == lstExercise.size()) {
+                            ivNextExercise.setVisibility(View.INVISIBLE);
+                        }
                     }
                 }
+                tvExerciseName.setText(lstExercise.get(currInterval - 1).getName());
             }
 
             @Override
@@ -152,5 +195,16 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
 
             }
         };
+    }
+
+    private void refreshTimer() {
+        isStart = false;
+        isWorkout = true;
+        exerciseTimeCounted = exercisesDuration;
+        restTimeCounted = restsDuration;
+        currInterval = 1;
+        tvDuration.setText(Formula.msTimeFormatter(exerciseTimeCounted));
+        tvExerciseName.setText(lstExercise.get(currInterval - 1).getName());
+        ivNextExercise.setVisibility(View.VISIBLE);
     }
 }
