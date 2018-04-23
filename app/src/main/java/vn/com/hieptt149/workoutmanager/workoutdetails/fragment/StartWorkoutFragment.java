@@ -31,13 +31,13 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
     private TextView tvAddWorkoutToolbarTitle, tvExerciseName, tvDuration;
     private ImageView ivExercisePreview, ivPreviousExercise, ivNextExercise;
     private CircularSeekBar sbDuration;
-    private MyCountDownTimer countDownTimer;
+    private MyCountDownTimer countDownTimer, animationTimer;
     private Handler handler;
 
     private static boolean isStart, isWorkout;
     private static String workoutTitle;
     private static ArrayList<Exercise> lstExercise;
-    private static long totalTime, exercisesDuration, restsDuration, exerciseTimeCounted, restTimeCounted;
+    private static long exercisesDuration, restsDuration, exerciseTimeCounted, restTimeCounted, animationTime;
     private static int currInterval;
 
     public StartWorkoutFragment() {
@@ -50,7 +50,6 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
             startWorkoutFragment.setArguments(bundle);
             workoutTitle = bundle.getString(ConstantValue.WORKOUT_TITLE);
             lstExercise = (ArrayList<Exercise>) bundle.getSerializable(ConstantValue.SELECTED_EXERCISE_LIST);
-            totalTime = bundle.getLong(ConstantValue.TOTAL_TIME);
             exercisesDuration = bundle.getLong(ConstantValue.EXERCISES_DURATION);
             restsDuration = bundle.getLong(ConstantValue.RESTS_DURATION);
         }
@@ -106,7 +105,6 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
                     }, 1000);
                     exerciseTimeCounted = exercisesDuration;
                 } else {
-
                     isWorkout = true;
                     restTimeCounted = 0;
                     tvDuration.setText(Formula.msTimeFormatter(exerciseTimeCounted));
@@ -155,46 +153,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         sbDuration.setOnTouchListener(this);
         handler = new Handler();
         refreshTimer();
-//        sbDuration.setMax((int) exercisesDuration);
-        countDownTimer = new MyCountDownTimer(Long.MAX_VALUE, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                if (isWorkout) {
-                    exerciseTimeCounted -= 1000;
-                    tvDuration.setText(Formula.msTimeFormatter(exerciseTimeCounted));
-                    if (exerciseTimeCounted == 0) {
-                        exerciseTimeCounted = exercisesDuration;
-                        if (currInterval < lstExercise.size()) {
-                            isWorkout = false;
-                            currInterval++;
-                            tvDuration.setText(Formula.msTimeFormatter(restTimeCounted));
-                        }
-                        //Khi đồng hồ chạy đến giây cuối cùng của bài tập cuối
-                        else {
-                            refreshTimer();
-                            countDownTimer.cancel();
-                        }
-                    }
-                } else {
-                    restTimeCounted -= 1000;
-                    tvDuration.setText(Formula.msTimeFormatter(restTimeCounted));
-                    if (restTimeCounted == 0) {
-                        restTimeCounted = restsDuration;
-                        isWorkout = true;
-                        tvDuration.setText(Formula.msTimeFormatter(exerciseTimeCounted));
-                        if (currInterval == lstExercise.size()) {
-                            ivNextExercise.setVisibility(View.INVISIBLE);
-                        }
-                    }
-                }
-                tvExerciseName.setText(lstExercise.get(currInterval - 1).getName());
-            }
-
-            @Override
-            public void onFinish() {
-
-            }
-        };
+        initCountDownTimer();
     }
 
     private void refreshTimer() {
@@ -205,6 +164,60 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         currInterval = 1;
         tvDuration.setText(Formula.msTimeFormatter(exerciseTimeCounted));
         tvExerciseName.setText(lstExercise.get(currInterval - 1).getName());
+        sbDuration.setProgress(0);
         ivNextExercise.setVisibility(View.VISIBLE);
+    }
+
+    private void initCountDownTimer() {
+        countDownTimer = new MyCountDownTimer(Long.MAX_VALUE, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                if (isWorkout) {
+                    if (currInterval == lstExercise.size()) {
+                        ivNextExercise.setVisibility(View.INVISIBLE);
+                    }
+                    exerciseTimeCounted -= 1000;
+                    tvDuration.setText(Formula.msTimeFormatter(exerciseTimeCounted));
+                    if (exerciseTimeCounted == 0) {
+                        exerciseTimeCounted = exercisesDuration;
+                        if (currInterval < lstExercise.size()) {
+                            isWorkout = false;
+                            currInterval++;
+//                                tvDuration.setText(Formula.msTimeFormatter(restTimeCounted));
+                        }
+                        //Khi đồng hồ chạy đến giây 0 của bài tập cuối
+                        else {
+                            refreshTimer();
+                            countDownTimer.cancel();
+                        }
+                    }
+                } else {
+                    tvExerciseName.setText(lstExercise.get(currInterval - 1).getName());
+                    restTimeCounted -= 1000;
+                    tvDuration.setText(Formula.msTimeFormatter(restTimeCounted));
+                    if (restTimeCounted == 0) {
+                        restTimeCounted = restsDuration;
+                        isWorkout = true;
+//                            tvDuration.setText(Formula.msTimeFormatter(exerciseTimeCounted));
+                    }
+                }
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        };
+        animationTimer = new MyCountDownTimer(Long.MAX_VALUE, 100) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        };
     }
 }

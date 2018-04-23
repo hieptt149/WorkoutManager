@@ -154,7 +154,6 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
                 fragmentBundle = new Bundle();
                 fragmentBundle.putString(ConstantValue.WORKOUT_TITLE, edtWorkoutTitle.getText().toString());
                 fragmentBundle.putSerializable(ConstantValue.SELECTED_EXERCISE_LIST, lstSelectedExercise);
-                fragmentBundle.putLong(ConstantValue.TOTAL_TIME, totalTime);
                 fragmentBundle.putLong(ConstantValue.EXERCISES_DURATION, practiceTime);
                 fragmentBundle.putLong(ConstantValue.RESTS_DURATION, restTime);
                 addWorkoutActivityIntf.openFragment(StartWorkoutFragment.newInstance(fragmentBundle), ConstantValue.START_WORKOUT);
