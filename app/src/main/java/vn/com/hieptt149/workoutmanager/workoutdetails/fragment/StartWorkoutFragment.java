@@ -37,7 +37,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
     private static boolean isStart, isWorkout;
     private static String workoutTitle;
     private static ArrayList<Exercise> lstExercise;
-    private static long exercisesDuration, restsDuration, exerciseTimeCounted, restTimeCounted, animationTime;
+    private static long exercisesDuration, restsDuration, exerciseTimeCounted, restTimeCounted, exerciseAnimationTime, restAnimationTime;
     private static int currInterval;
 
     public StartWorkoutFragment() {
@@ -90,45 +90,49 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
 //                break;
             case R.id.iv_next_exercise:
                 countDownTimer.cancel();
-                ivNextExercise.setClickable(false);
+                animationTimer.cancel();
                 if (isWorkout) {
                     isWorkout = false;
-                    exerciseTimeCounted = 0;
-                    currInterval++;
-                    tvDuration.setText(Formula.msTimeFormatter(restTimeCounted));
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            ivNextExercise.setClickable(true);
-                            countDownTimer.start();
-                        }
-                    }, 1000);
                     exerciseTimeCounted = exercisesDuration;
+                    exerciseAnimationTime = exercisesDuration;
+                    currInterval++;
+                    countDownTimer.start();
+                    animationTimer.start();
                 } else {
                     isWorkout = true;
-                    restTimeCounted = 0;
-                    tvDuration.setText(Formula.msTimeFormatter(exerciseTimeCounted));
+                    restTimeCounted = restsDuration;
+                    restAnimationTime = restsDuration;
                     if (currInterval == lstExercise.size()) {
                         ivNextExercise.setVisibility(View.INVISIBLE);
                     }
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            ivNextExercise.setClickable(true);
-                            countDownTimer.start();
-                        }
-                    }, 1000);
-                    restTimeCounted = restsDuration;
+                    countDownTimer.start();
+                    animationTimer.start();
                 }
                 tvExerciseName.setText(lstExercise.get(currInterval - 1).getName());
                 break;
             case R.id.tv_duration:
                 if (!isStart) {
                     isStart = true;
-                    countDownTimer.start();
+                    if (isWorkout) {
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                countDownTimer.start();
+                            }
+                        }, exerciseAnimationTime - exerciseTimeCounted);
+                    } else {
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                countDownTimer.start();
+                            }
+                        }, restAnimationTime - restTimeCounted);
+                    }
+                    animationTimer.start();
                 } else {
                     isStart = false;
                     countDownTimer.pause();
+                    animationTimer.pause();
                 }
                 break;
         }
@@ -161,10 +165,11 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         isWorkout = true;
         exerciseTimeCounted = exercisesDuration;
         restTimeCounted = restsDuration;
+        exerciseAnimationTime = exercisesDuration;
+        restAnimationTime = restsDuration;
         currInterval = 1;
-        tvDuration.setText(Formula.msTimeFormatter(exerciseTimeCounted));
+        sbDuration.setMax((int) exercisesDuration);
         tvExerciseName.setText(lstExercise.get(currInterval - 1).getName());
-        sbDuration.setProgress(0);
         ivNextExercise.setVisibility(View.VISIBLE);
     }
 
@@ -176,29 +181,36 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
                     if (currInterval == lstExercise.size()) {
                         ivNextExercise.setVisibility(View.INVISIBLE);
                     }
-                    exerciseTimeCounted -= 1000;
+                    if (exerciseTimeCounted == exercisesDuration){
+                        sbDuration.setMax((int) exercisesDuration);
+                    }
                     tvDuration.setText(Formula.msTimeFormatter(exerciseTimeCounted));
+                    exerciseTimeCounted -= 1000;
                     if (exerciseTimeCounted == 0) {
                         exerciseTimeCounted = exercisesDuration;
+                        exerciseAnimationTime = exercisesDuration;
                         if (currInterval < lstExercise.size()) {
                             isWorkout = false;
                             currInterval++;
-//                                tvDuration.setText(Formula.msTimeFormatter(restTimeCounted));
                         }
                         //Khi đồng hồ chạy đến giây 0 của bài tập cuối
                         else {
                             refreshTimer();
                             countDownTimer.cancel();
+                            animationTimer.cancel();
                         }
                     }
                 } else {
-                    tvExerciseName.setText(lstExercise.get(currInterval - 1).getName());
-                    restTimeCounted -= 1000;
+                    if (restTimeCounted == restsDuration){
+                        sbDuration.setMax((int) restsDuration);
+                    }
                     tvDuration.setText(Formula.msTimeFormatter(restTimeCounted));
+                    restTimeCounted -= 1000;
+                    tvExerciseName.setText(lstExercise.get(currInterval - 1).getName());
                     if (restTimeCounted == 0) {
                         restTimeCounted = restsDuration;
+                        restAnimationTime = restsDuration;
                         isWorkout = true;
-//                            tvDuration.setText(Formula.msTimeFormatter(exerciseTimeCounted));
                     }
                 }
             }
@@ -211,7 +223,13 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         animationTimer = new MyCountDownTimer(Long.MAX_VALUE, 100) {
             @Override
             public void onTick(long millisUntilFinished) {
-
+                if (isWorkout) {
+                    sbDuration.setProgress((int) exerciseAnimationTime);
+                    exerciseAnimationTime -= 100;
+                } else {
+                    sbDuration.setProgress((int) restAnimationTime);
+                    restAnimationTime -= 100;
+                }
             }
 
             @Override

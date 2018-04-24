@@ -45,8 +45,6 @@ public class ExerciseDetailsFragment extends Fragment {
     private EditText edtWorkoutTitle;
     private LinearLayout lnExercisesInfo;
     private RecyclerView rvPreviewSelectedExercise;
-    private ScrollView svDescriptionContainer;
-    private RelativeLayout rlBtnAddExerciseContainer;
     private Button btnAddExercise;
     private static Exercise selectedExercise;
 
@@ -81,8 +79,8 @@ public class ExerciseDetailsFragment extends Fragment {
         DisplayView.showProgressDialog(getContext());
         tvAddWorkoutToolbarTitle.setText(selectedExercise.getName());
         lnExercisesInfo.setVisibility(View.GONE);
-        svDescriptionContainer.setVisibility(View.VISIBLE);
-        rlBtnAddExerciseContainer.setVisibility(View.GONE);
+        tvExerciseDescription.setVisibility(View.VISIBLE);
+        btnAddExercise.setVisibility(View.GONE);
         tvClickToChoose.setVisibility(View.GONE);
         edtWorkoutTitle.setEnabled(false);
         ivExercisePreview.setTag(null);
@@ -127,9 +125,7 @@ public class ExerciseDetailsFragment extends Fragment {
         edtWorkoutTitle = view.findViewById(R.id.edt_title);
         lnExercisesInfo = view.findViewById(R.id.ln_exercises_info);
         rvPreviewSelectedExercise = view.findViewById(R.id.rv_preview_selected_exercise);
-        svDescriptionContainer = view.findViewById(R.id.sv_description_container);
         tvExerciseDescription = view.findViewById(R.id.tv_exercise_description);
-        rlBtnAddExerciseContainer = view.findViewById(R.id.rl_btn_add_exercise_container);
         btnAddExercise = view.findViewById(R.id.btn_add_exercise);
     }
 }

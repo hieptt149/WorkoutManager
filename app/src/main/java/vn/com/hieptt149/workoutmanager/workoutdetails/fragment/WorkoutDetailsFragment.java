@@ -54,8 +54,6 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     private EditText edtWorkoutTitle;
     private LinearLayout lnExercisesInfo;
     private RecyclerView rvPreviewSelectedExercise;
-    private ScrollView svDescriptionContainer;
-    private RelativeLayout rlBtnAddExerciseContainer;
     private Button btnAddExercise;
     private ExercisePreviewAdapter exercisePreviewAdapter;
     private ArrayList<Exercise> lstSelectedExercise = new ArrayList<>();
@@ -321,9 +319,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         edtWorkoutTitle = view.findViewById(R.id.edt_title);
         lnExercisesInfo = view.findViewById(R.id.ln_exercises_info);
         rvPreviewSelectedExercise = view.findViewById(R.id.rv_preview_selected_exercise);
-        svDescriptionContainer = view.findViewById(R.id.sv_description_container);
         tvExerciseDescription = view.findViewById(R.id.tv_exercise_description);
-        rlBtnAddExerciseContainer = view.findViewById(R.id.rl_btn_add_exercise_container);
         btnAddExercise = view.findViewById(R.id.btn_add_exercise);
         btnAddExercise.setOnClickListener(this);
         ivChooseWorkoutIcon.setOnClickListener(this);
