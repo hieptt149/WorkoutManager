@@ -23,6 +23,10 @@ public class Exercise implements Serializable {
     public Exercise() {
     }
 
+    public Exercise(String name) {
+        this.name = name;
+    }
+
     public Exercise(int id, String name, String description, String url, int cardioRate, int strengthRate, int mobilityRate, double metsRate) {
         this.id = id;
         this.name = name;
