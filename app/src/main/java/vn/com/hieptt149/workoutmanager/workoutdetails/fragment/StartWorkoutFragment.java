@@ -87,7 +87,17 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
 //                }
 //                break;
             case R.id.iv_next_exercise:
-
+                if (countDownTimer != null && animationTimer != null) {
+                    countDownTimer.cancel();
+                    animationTimer.cancel();
+                    currInterval++;
+                    initCountDownTimer();
+                    initAnimation();
+                    timer = lstTimer.get(currInterval).getDuration();
+                    animation = lstTimer.get(currInterval).getDuration();
+                    countDownTimer.start();
+                    animationTimer.start();
+                }
                 break;
             case R.id.tv_duration:
                 if (status == Status.STOP) {
@@ -149,6 +159,9 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         initAnimation();
     }
 
+    /**
+     * Khởi tạo timer
+     */
     private void initCountDownTimer() {
         countDownTimer = new MyCountDownTimer(Long.MAX_VALUE, 1000) {
             @Override
@@ -158,13 +171,17 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
                 if (timer == 0 && currInterval < lstTimer.size() - 1) {
                     currInterval++;
                     timer = lstTimer.get(currInterval).getDuration();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            tvDuration.setText(Formula.msTimeFormatter(lstTimer.get(currInterval).getDuration()));
+                        }
+                    }, 500);
                 }
                 timer -= 1000;
                 //Chạy hết interval cuối cùng
-                if (timer == -2000 && currInterval == lstTimer.size() - 1) {
+                if (timer < 0 && currInterval == lstTimer.size() - 1) {
                     countDownTimer.cancel();
-                    animationTimer.cancel();
-                    refreshTimer();
                 }
             }
 
@@ -175,6 +192,9 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         };
     }
 
+    /**
+     * Khởi tạo animation cho timer
+     */
     private void initAnimation() {
         animationTimer = new MyCountDownTimer(Long.MAX_VALUE, 100) {
             @Override
@@ -196,6 +216,11 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
                     tvExerciseName.setText(lstTimer.get(currInterval).getExerciseName());
                 }
                 animation -= 100;
+                //Chạy hết interval cuối cùng
+                if (timer < 0 && animation == 0 && currInterval == lstTimer.size() - 1) {
+                    animationTimer.cancel();
+                    refreshTimer();
+                }
             }
 
             @Override
