@@ -33,6 +33,43 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
     private CircularSeekBar sbDuration;
     private MyCountDownTimer countDownTimer, animationTimer;
     private Handler handler;
+
+    private void initAnimation() {
+        animationTimer = new MyCountDownTimer(Long.MAX_VALUE, 100) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                sbDuration.setProgress((int) animation);
+                //Chạy tới cuối interval
+                if (animation == 0 && currInterval <= lstTimer.size() - 1) {
+                    animation = lstTimer.get(currInterval).getDuration();
+                }
+                //Chạy tới đầu interval
+                if (animation == lstTimer.get(currInterval).getDuration()) {
+                    if (currInterval == 0) {
+                        ivNextExercise.setVisibility(View.VISIBLE);
+                    }
+                    if (currInterval == lstTimer.size() - 1) {
+                        ivNextExercise.setVisibility(View.INVISIBLE);
+                    }
+                    sbDuration.setMax((int) lstTimer.get(currInterval).getDuration());
+                    tvExerciseName.setText(lstTimer.get(currInterval).getExerciseName());
+                }
+                animation -= 100;
+                //Chạy hết interval cuối cùng
+                if (animation == 0 && currInterval == lstTimer.size() - 1) {
+                    countDownTimer.cancel();
+                    animationTimer.cancel();
+                    refreshTimer();
+                }
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        };
+    }
+
     private static Status status;
     private static long exercisesDuration, restsDuration, timer, animation;
     private ArrayList<Timer> lstTimer;
@@ -49,6 +86,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
             animationTimer.cancel();
         }
     }
+
     private static int currInterval;
 
     public StartWorkoutFragment() {
@@ -147,34 +185,13 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         countDownTimer = new MyCountDownTimer(Long.MAX_VALUE, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                tvExerciseName.setText(lstTimer.get(currInterval).getExerciseName());
                 tvDuration.setText(Formula.msTimeFormatter(timer));
-                if (currInterval == 0) {
-                    ivNextExercise.setVisibility(View.VISIBLE);
-                }
-                if (currInterval == lstTimer.size() - 1) {
-                    ivNextExercise.setVisibility(View.INVISIBLE);
-                }
                 //Chạy tới cuối interval
                 if (timer == 0 && currInterval < lstTimer.size() - 1) {
                     currInterval++;
                     timer = lstTimer.get(currInterval).getDuration();
                 }
-                //Chạy tới đầu interval
-                if (timer == lstTimer.get(currInterval).getDuration()) {
-                    if (animationTimer != null) {
-                        animationTimer.cancel();
-                        animationTimer = null;
-                    }
-                    initAnimation();
-                    animationTimer.start();
-                }
                 timer -= 1000;
-                if (timer < 0 && currInterval == lstTimer.size() - 1) {
-                    countDownTimer.cancel();
-                    animationTimer.cancel();
-                    refreshTimer();
-                }
             }
 
             @Override
@@ -184,27 +201,8 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         };
     }
 
-    private void initAnimation() {
-        animationTimer = new MyCountDownTimer(Long.MAX_VALUE, 100) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                sbDuration.setProgress((int) animation);
-                //Chạy tới cuối interval
-                if (animation == 0 && currInterval < lstTimer.size() - 1) {
-                    animation = lstTimer.get(currInterval).getDuration();
-                }
-                //Chạy tới đầu interval
-                if (animation == lstTimer.get(currInterval).getDuration()) {
-                    sbDuration.setMax((int) lstTimer.get(currInterval).getDuration());
-                }
-                animation -= 100;
-            }
-
-            @Override
-            public void onFinish() {
-
-            }
-        };
+    private enum Status {
+        START, STOP, PAUSE
     }
 
     private void createTimerList() {
@@ -231,12 +229,5 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         tvDuration.setText(Formula.msTimeFormatter(0));
         tvExerciseName.setText(workoutTitle);
         sbDuration.setProgress(0);
-//        tvExerciseName.setText(lstExercise.get(currInterval - 1).getName());
-//        ivNextExercise.setVisibility(View.VISIBLE);
-    }
-
-    //    private static boolean isStart;
-    private enum Status {
-        START, STOP, PAUSE
     }
 }
