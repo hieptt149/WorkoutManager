@@ -10,35 +10,38 @@ public class Formula {
 
     /**
      * Tính lượng calo cần đốt cháy để duy trì cân năng hiện tại
+     *
      * @param gender: giới tính
-     * @param age: tuổi
+     * @param age:    tuổi
      * @param height: chiều cao (cm)
      * @param weight: cân nặng (kg)
-     * @return
+     * @return (cal)
      */
     public static double calculateCaloriesBurnADay(boolean gender, int age, double height, double weight) {
         double bmr;
         if (gender) {
-            bmr = 66 + (6.2 * weight) + (12.7 * height) - (6.76 * age);
+            bmr = 66 + (6.2 * weight * 2.20462262) + (12.7 * height * 0.032808399) - (6.76 * age);
         } else {
-            bmr = 655.1 + (4.35 * weight) + (4.7 * height) - (4.7 * age);
+            bmr = 655.1 + (4.35 * weight * 2.20462262) + (4.7 * height * 3.2808399) - (4.7 * age);
         }
-        return (bmr * 1.55);
+        return (bmr * 1.725);
     }
 
     /**
      * Tính lượng calo của bài tập
+     *
      * @param metsRate: chỉ số METS
-     * @param weight: chiều cao của người tập (cm)
+     * @param weight:   chiều cao của người tập (cm)
      * @param duration: thời gian tập (millisec)
-     * @return
+     * @return (cal)
      */
     public static double calculateCaloriesBurned(double metsRate, double weight, long duration) {
-        return (metsRate * weight * (duration / 60000));
+        return (metsRate * weight * duration * 1000.0) / 3600000.0;
     }
 
     /**
      * Quy đổi thời gian thành định dạng mm:ss
+     *
      * @param milliseconds: thời gian quy đổi (millisec)
      * @return
      */
@@ -51,6 +54,7 @@ public class Formula {
 
     /**
      * Quy đổi thời gian thành định dang hh:mm:ss
+     *
      * @param milliseconds: thời gian quy đổi (millisec)
      * @return
      */

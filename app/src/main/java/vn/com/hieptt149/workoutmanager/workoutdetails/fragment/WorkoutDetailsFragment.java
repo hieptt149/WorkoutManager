@@ -18,10 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -31,12 +28,12 @@ import java.util.ArrayList;
 
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.adapter.ExercisePreviewAdapter;
-import vn.com.hieptt149.workoutmanager.workoutdetails.AddWorkoutActivityIntf;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
 import vn.com.hieptt149.workoutmanager.model.Exercise;
 import vn.com.hieptt149.workoutmanager.model.Workout;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 import vn.com.hieptt149.workoutmanager.utils.Formula;
+import vn.com.hieptt149.workoutmanager.workoutdetails.AddWorkoutActivityIntf;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -138,23 +135,14 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_add_exercise:
-                isFirstTime = false;
-                fragmentBundle = new Bundle();
-                fragmentBundle.putSerializable(ConstantValue.SELECTED_EXERCISE_LIST, lstSelectedExercise);
-                addWorkoutActivityIntf.openFragment(AddExerciseFragment.newInstance(fragmentBundle), ConstantValue.ADD_EXERCISE);
+                addExercise();
                 break;
             case R.id.iv_choose_icon:
                 addWorkoutActivityIntf.showDialogFragment(WorkoutDetailsFragment.this,
                         SelectIconDialogFragment.newInstance(), ConstantValue.SELECT_ICON);
                 break;
             case R.id.iv_start:
-                isFirstTime = false;
-                fragmentBundle = new Bundle();
-                fragmentBundle.putString(ConstantValue.WORKOUT_TITLE, edtWorkoutTitle.getText().toString());
-                fragmentBundle.putSerializable(ConstantValue.SELECTED_EXERCISE_LIST, lstSelectedExercise);
-                fragmentBundle.putLong(ConstantValue.EXERCISES_DURATION, practiceTime);
-                fragmentBundle.putLong(ConstantValue.RESTS_DURATION, restTime);
-                addWorkoutActivityIntf.openFragment(StartWorkoutFragment.newInstance(fragmentBundle), ConstantValue.START_WORKOUT);
+                startWorkout();
                 break;
             case R.id.iv_save:
                 saveWorkout();
@@ -179,6 +167,29 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         imgTag = tag;
         ivChooseWorkoutIcon.setTag(imgTag);
         ivChooseWorkoutIcon.setImageResource(imgRes);
+    }
+
+    /**
+     * Mở màn hình thêm bài tập vào workout
+     */
+    private void addExercise() {
+        isFirstTime = false;
+        fragmentBundle = new Bundle();
+        fragmentBundle.putSerializable(ConstantValue.SELECTED_EXERCISE_LIST, lstSelectedExercise);
+        addWorkoutActivityIntf.openFragment(AddExerciseFragment.newInstance(fragmentBundle), ConstantValue.ADD_EXERCISE);
+    }
+
+    /**
+     * Bắt đầu tập với bài workout
+     */
+    private void startWorkout() {
+        isFirstTime = false;
+        fragmentBundle = new Bundle();
+        fragmentBundle.putSerializable(ConstantValue.USERS_WORKOUT_DETAILS, usersWorkoutDetails);
+        fragmentBundle.putSerializable(ConstantValue.SELECTED_EXERCISE_LIST, lstSelectedExercise);
+        fragmentBundle.putLong(ConstantValue.EXERCISES_DURATION, practiceTime);
+        fragmentBundle.putLong(ConstantValue.RESTS_DURATION, restTime);
+        addWorkoutActivityIntf.openFragment(StartWorkoutFragment.newInstance(fragmentBundle), ConstantValue.START_WORKOUT);
     }
 
     /**

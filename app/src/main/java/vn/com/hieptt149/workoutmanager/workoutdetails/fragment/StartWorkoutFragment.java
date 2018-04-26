@@ -13,13 +13,26 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
 import vn.com.hieptt149.workoutmanager.model.Exercise;
+import vn.com.hieptt149.workoutmanager.model.History;
 import vn.com.hieptt149.workoutmanager.model.Timer;
+import vn.com.hieptt149.workoutmanager.model.User;
+import vn.com.hieptt149.workoutmanager.model.Workout;
 import vn.com.hieptt149.workoutmanager.utils.CircularSeekBar;
+import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 import vn.com.hieptt149.workoutmanager.utils.Formula;
 import vn.com.hieptt149.workoutmanager.utils.MyCountDownTimer;
 
@@ -34,14 +47,18 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
     private MyCountDownTimer countDownTimer, animationTimer;
     private Handler handler;
     private ArrayList<Timer> lstTimer;
+    private DatabaseReference currUsersHistoryRef, currUserRef;
+    private User currUser;
+    private Calendar cal;
+    private double totalCalBurned;
 
     private enum Status {
         START, STOP, PAUSE
     }
 
     private static Status status;
+    private static Workout usersWorkoutDetails;
     private static long exercisesDuration, restsDuration, timer, animation;
-    private static String workoutTitle;
     private static ArrayList<Exercise> lstExercise;
     private static int currInterval;
 
@@ -54,7 +71,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         StartWorkoutFragment startWorkoutFragment = new StartWorkoutFragment();
         if (bundle != null) {
             startWorkoutFragment.setArguments(bundle);
-            workoutTitle = bundle.getString(ConstantValue.WORKOUT_TITLE);
+            usersWorkoutDetails = (Workout) bundle.getSerializable(ConstantValue.USERS_WORKOUT_DETAILS);
             lstExercise = (ArrayList<Exercise>) bundle.getSerializable(ConstantValue.SELECTED_EXERCISE_LIST);
             exercisesDuration = bundle.getLong(ConstantValue.EXERCISES_DURATION);
             restsDuration = bundle.getLong(ConstantValue.RESTS_DURATION);
@@ -153,6 +170,8 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         ivNextExercise.setOnClickListener(this);
         sbDuration.setOnTouchListener(this);
         handler = new Handler();
+        currUserRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.USER).child(usersWorkoutDetails.getUserId());
+        getUserInfo();
         createTimerList();
         refreshTimer();
         initCountDownTimer();
@@ -219,6 +238,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
                 //Chạy hết interval cuối cùng
                 if (timer < 0 && animation == 0 && currInterval == lstTimer.size() - 1) {
                     animationTimer.cancel();
+                    createWorkoutHistory();
                     refreshTimer();
                 }
             }
@@ -228,6 +248,22 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
 
             }
         };
+    }
+
+    /**
+     * Khởi tạo lại các giá trị của timer
+     */
+    private void refreshTimer() {
+        status = Status.STOP;
+        currInterval = 0;
+        countDownTimer = null;
+        animationTimer = null;
+        handler = new Handler();
+        timer = lstTimer.get(currInterval).getDuration();
+        animation = lstTimer.get(currInterval).getDuration();
+        tvDuration.setText(Formula.msTimeFormatter(0));
+        tvExerciseName.setText(usersWorkoutDetails.getTitle());
+        sbDuration.setProgress(0);
     }
 
     private void createTimerList() {
@@ -243,16 +279,62 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         }
     }
 
-    private void refreshTimer() {
-        status = Status.STOP;
-        currInterval = 0;
-        countDownTimer = null;
-        animationTimer = null;
-        handler = new Handler();
-        timer = lstTimer.get(currInterval).getDuration();
-        animation = lstTimer.get(currInterval).getDuration();
-        tvDuration.setText(Formula.msTimeFormatter(0));
-        tvExerciseName.setText(workoutTitle);
-        sbDuration.setProgress(0);
+    /**
+     * Thêm dữ liệu vào lịch sử workout
+     */
+    private void createWorkoutHistory() {
+        cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        cal.setTime(new Date());
+        cal.set(Calendar.HOUR, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        currUsersHistoryRef = FirebaseDatabase.getInstance().getReference()
+                .child(ConstantValue.HISTORY).child(usersWorkoutDetails.getUserId()).child(String.valueOf(cal.getTimeInMillis()));
+        currUsersHistoryRef.child(usersWorkoutDetails.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    History workoutHistory = dataSnapshot.getValue(History.class);
+                    workoutHistory.setCaloriesBurn(workoutHistory.getCaloriesBurn() + totalCalBurned);
+                    workoutHistory.setCurrHeight(currUser.getHeight());
+                    workoutHistory.setCurrWeight(currUser.getWeight());
+                    currUsersHistoryRef.child(usersWorkoutDetails.getId())
+                            .setValue(workoutHistory);
+                } else {
+                    currUsersHistoryRef.child(usersWorkoutDetails.getId())
+                            .setValue(new History(totalCalBurned, currUser.getHeight(), currUser.getWeight()));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void getUserInfo() {
+        DisplayView.showProgressDialog(getContext());
+        currUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                currUser = dataSnapshot.getValue(User.class);
+                currUser.setId(dataSnapshot.getKey());
+                calculateWorkoutsCaloriesBurned();
+                DisplayView.dismissProgressDialog();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                DisplayView.dismissProgressDialog();
+            }
+        });
+    }
+
+    private void calculateWorkoutsCaloriesBurned() {
+        for (Exercise exercise : lstExercise) {
+            totalCalBurned = totalCalBurned + Formula.calculateCaloriesBurned(exercise.getMetsRate(), currUser.getWeight(), exercisesDuration);
+        }
     }
 }

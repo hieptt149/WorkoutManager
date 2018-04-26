@@ -10,39 +10,27 @@ import java.io.Serializable;
 
 public class History implements Serializable {
 
-    private String id, userId, workoutId;
+    private String userId, workoutId;
     private double caloriesBurn, currHeight, currWeight;
-    private long practiceDate, timePracticed;
+    private long practiceDate;
 
     public History() {
     }
 
-    public History(double caloriesBurn, double currHeight, double currWeight, long practiceDate, long timePracticed) {
+    public History(double caloriesBurn, double currHeight, double currWeight) {
         this.caloriesBurn = caloriesBurn;
         this.currHeight = currHeight;
         this.currWeight = currWeight;
-        this.practiceDate = practiceDate;
-        this.timePracticed = timePracticed;
     }
 
-    public History(String id, String userId, String workoutId, double caloriesBurn, double currHeight,
-                   double currWeight, long practiceDate, long timePracticed) {
-        this.id = id;
+    public History(String userId, String workoutId, double caloriesBurn, double currHeight,
+                   double currWeight, long practiceDate) {
         this.userId = userId;
         this.workoutId = workoutId;
         this.caloriesBurn = caloriesBurn;
         this.currHeight = currHeight;
         this.currWeight = currWeight;
         this.practiceDate = practiceDate;
-        this.timePracticed = timePracticed;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getUserId() {
@@ -91,23 +79,11 @@ public class History implements Serializable {
         this.currWeight = currWeight;
     }
 
-    @PropertyName("practice_date")
     public long getPracticeDate() {
         return practiceDate;
     }
 
-    @PropertyName("practice_date")
     public void setPracticeDate(long practiceDate) {
         this.practiceDate = practiceDate;
-    }
-
-    @PropertyName("time_practiced")
-    public long getTimePracticed() {
-        return timePracticed;
-    }
-
-    @PropertyName("time_practiced")
-    public void setTimePracticed(long timePracticed) {
-        this.timePracticed = timePracticed;
     }
 }
