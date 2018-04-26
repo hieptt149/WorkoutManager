@@ -11,23 +11,24 @@ import java.io.Serializable;
 public class History implements Serializable {
 
     private String userId, workoutId;
-    private double caloriesBurn, currHeight, currWeight;
-    private long practiceDate;
+    private String practiceDate;
+    private int workoutTimes;
+    private double currHeight, currWeight;
 
     public History() {
     }
 
-    public History(double caloriesBurn, double currHeight, double currWeight) {
-        this.caloriesBurn = caloriesBurn;
+    public History(int workoutTimes, double currHeight, double currWeight) {
+        this.workoutTimes = workoutTimes;
         this.currHeight = currHeight;
         this.currWeight = currWeight;
     }
 
-    public History(String userId, String workoutId, double caloriesBurn, double currHeight,
-                   double currWeight, long practiceDate) {
+    public History(String userId, String workoutId, int workoutTimes, double currHeight,
+                   double currWeight, String practiceDate) {
         this.userId = userId;
         this.workoutId = workoutId;
-        this.caloriesBurn = caloriesBurn;
+        this.workoutTimes = workoutTimes;
         this.currHeight = currHeight;
         this.currWeight = currWeight;
         this.practiceDate = practiceDate;
@@ -49,14 +50,21 @@ public class History implements Serializable {
         this.workoutId = workoutId;
     }
 
-    @PropertyName("calories_burn")
-    public double getCaloriesBurn() {
-        return caloriesBurn;
+    public String getPracticeDate() {
+        return practiceDate;
     }
 
-    @PropertyName("calories_burn")
-    public void setCaloriesBurn(double caloriesBurn) {
-        this.caloriesBurn = caloriesBurn;
+    public void setPracticeDate(String practiceDate) {
+        this.practiceDate = practiceDate;
+    }
+    @PropertyName("workout_times")
+    public int getWorkoutTimes() {
+        return workoutTimes;
+    }
+
+    @PropertyName("workout_times")
+    public void setWorkoutTimes(int workoutTimes) {
+        this.workoutTimes = workoutTimes;
     }
 
     @PropertyName("curr_height")
@@ -77,13 +85,5 @@ public class History implements Serializable {
     @PropertyName("curr_weight")
     public void setCurrWeight(double currWeight) {
         this.currWeight = currWeight;
-    }
-
-    public long getPracticeDate() {
-        return practiceDate;
-    }
-
-    public void setPracticeDate(long practiceDate) {
-        this.practiceDate = practiceDate;
     }
 }

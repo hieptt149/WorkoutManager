@@ -32,7 +32,6 @@ import vn.com.hieptt149.workoutmanager.model.Timer;
 import vn.com.hieptt149.workoutmanager.model.User;
 import vn.com.hieptt149.workoutmanager.model.Workout;
 import vn.com.hieptt149.workoutmanager.utils.CircularSeekBar;
-import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 import vn.com.hieptt149.workoutmanager.utils.Formula;
 import vn.com.hieptt149.workoutmanager.utils.MyCountDownTimer;
 
@@ -47,15 +46,14 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
     private MyCountDownTimer countDownTimer, animationTimer;
     private Handler handler;
     private ArrayList<Timer> lstTimer;
-    private DatabaseReference currUsersHistoryRef, currUserRef;
-    private User currUser;
+    private DatabaseReference currUsersHistoryRef;
     private Calendar cal;
-    private double totalCalBurned;
 
     private enum Status {
         START, STOP, PAUSE
     }
 
+    private static User currUser;
     private static Status status;
     private static Workout usersWorkoutDetails;
     private static long exercisesDuration, restsDuration, timer, animation;
@@ -71,6 +69,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         StartWorkoutFragment startWorkoutFragment = new StartWorkoutFragment();
         if (bundle != null) {
             startWorkoutFragment.setArguments(bundle);
+            currUser = (User) bundle.getSerializable(ConstantValue.CURRENT_USER);
             usersWorkoutDetails = (Workout) bundle.getSerializable(ConstantValue.USERS_WORKOUT_DETAILS);
             lstExercise = (ArrayList<Exercise>) bundle.getSerializable(ConstantValue.SELECTED_EXERCISE_LIST);
             exercisesDuration = bundle.getLong(ConstantValue.EXERCISES_DURATION);
@@ -170,8 +169,6 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         ivNextExercise.setOnClickListener(this);
         sbDuration.setOnTouchListener(this);
         handler = new Handler();
-        currUserRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.USER).child(usersWorkoutDetails.getUserId());
-        getUserInfo();
         createTimerList();
         refreshTimer();
         initCountDownTimer();
@@ -238,7 +235,9 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
                 //Chạy hết interval cuối cùng
                 if (timer < 0 && animation == 0 && currInterval == lstTimer.size() - 1) {
                     animationTimer.cancel();
-                    createWorkoutHistory();
+                    if (currUser != null) {
+                        createWorkoutHistory();
+                    }
                     refreshTimer();
                 }
             }
@@ -296,14 +295,12 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     History workoutHistory = dataSnapshot.getValue(History.class);
-                    workoutHistory.setCaloriesBurn(workoutHistory.getCaloriesBurn() + totalCalBurned);
+                    workoutHistory.setWorkoutTimes(workoutHistory.getWorkoutTimes() + 1);
                     workoutHistory.setCurrHeight(currUser.getHeight());
                     workoutHistory.setCurrWeight(currUser.getWeight());
-                    currUsersHistoryRef.child(usersWorkoutDetails.getId())
-                            .setValue(workoutHistory);
+                    currUsersHistoryRef.child(usersWorkoutDetails.getId()).setValue(workoutHistory);
                 } else {
-                    currUsersHistoryRef.child(usersWorkoutDetails.getId())
-                            .setValue(new History(totalCalBurned, currUser.getHeight(), currUser.getWeight()));
+                    currUsersHistoryRef.child(usersWorkoutDetails.getId()).setValue(new History(1, currUser.getHeight(), currUser.getWeight()));
                 }
             }
 
@@ -312,29 +309,5 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
 
             }
         });
-    }
-
-    private void getUserInfo() {
-        DisplayView.showProgressDialog(getContext());
-        currUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                currUser = dataSnapshot.getValue(User.class);
-                currUser.setId(dataSnapshot.getKey());
-                calculateWorkoutsCaloriesBurned();
-                DisplayView.dismissProgressDialog();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                DisplayView.dismissProgressDialog();
-            }
-        });
-    }
-
-    private void calculateWorkoutsCaloriesBurned() {
-        for (Exercise exercise : lstExercise) {
-            totalCalBurned = totalCalBurned + Formula.calculateCaloriesBurned(exercise.getMetsRate(), currUser.getWeight(), exercisesDuration);
-        }
     }
 }

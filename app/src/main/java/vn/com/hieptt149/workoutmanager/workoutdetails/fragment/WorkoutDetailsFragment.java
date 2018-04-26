@@ -21,8 +21,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -30,6 +33,7 @@ import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.adapter.ExercisePreviewAdapter;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
 import vn.com.hieptt149.workoutmanager.model.Exercise;
+import vn.com.hieptt149.workoutmanager.model.User;
 import vn.com.hieptt149.workoutmanager.model.Workout;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 import vn.com.hieptt149.workoutmanager.utils.Formula;
@@ -43,7 +47,8 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
 
     private FirebaseAuth auth;
     private AddWorkoutActivityIntf addWorkoutActivityIntf;
-    private DatabaseReference currUsersWorkoutRef;
+    private DatabaseReference currUsersWorkoutRef, currUserRef;
+    private User currUser;
     private SharedPreferences sharedPreferences;
     private TextView tvAddWorkoutToolbarTitle, tvTotalExercise, tvTotalTime, tvClickToChoose, tvExerciseDescription;
     private ProgressBar pbCardio, pbStrength, pbMobility;
@@ -58,6 +63,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     private int totalExercise, cadioRate = 0, strengthRate = 0, mobilityRate = 0;
     private boolean isFirstTime = true;
     private Bundle fragmentBundle;
+    private double totalCalBurned;
 
     private static Workout usersWorkoutDetails;
     private static String tag;
@@ -185,6 +191,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     private void startWorkout() {
         isFirstTime = false;
         fragmentBundle = new Bundle();
+        fragmentBundle.putSerializable(ConstantValue.CURRENT_USER,currUser);
         fragmentBundle.putSerializable(ConstantValue.USERS_WORKOUT_DETAILS, usersWorkoutDetails);
         fragmentBundle.putSerializable(ConstantValue.SELECTED_EXERCISE_LIST, lstSelectedExercise);
         fragmentBundle.putLong(ConstantValue.EXERCISES_DURATION, practiceTime);
@@ -205,10 +212,10 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Workout newWorkout = new Workout(edtWorkoutTitle.getText().toString(),
-                                (String) ivChooseWorkoutIcon.getTag(), lstSelectedExercise, cadioRate, strengthRate, mobilityRate);
+                                (String) ivChooseWorkoutIcon.getTag(), lstSelectedExercise, cadioRate, strengthRate, mobilityRate, totalCalBurned);
                         if (tag.equals(ConstantValue.ADD_WORKOUT)) {
                             currUsersWorkoutRef = FirebaseDatabase.getInstance().getReference()
-                                    .child(ConstantValue.WORKOUT).child(auth.getCurrentUser().getUid());
+                                    .child(ConstantValue.WORKOUT).child(currUser.getId());
                             currUsersWorkoutRef.push().setValue(newWorkout);
                         } else if (tag.equals(ConstantValue.WORKOUT_DETAILS)) {
                             currUsersWorkoutRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.WORKOUT).
@@ -315,6 +322,31 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         isFirstTime = false;
     }
 
+    private void getCurrUserInfo() {
+        DisplayView.showProgressDialog(getContext());
+        currUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                currUser = dataSnapshot.getValue(User.class);
+                currUser.setId(dataSnapshot.getKey());
+                DisplayView.dismissProgressDialog();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                DisplayView.dismissProgressDialog();
+            }
+        });
+    }
+
+    private void calculateWorkoutsCaloriesBurned() {
+        if (lstSelectedExercise != null) {
+            for (Exercise exercise : lstSelectedExercise) {
+                totalCalBurned = totalCalBurned + Formula.calculateCaloriesBurned(exercise.getMetsRate(), currUser.getWeight(), practiceTime);
+            }
+        }
+    }
+
     private void init(View view) {
         tvAddWorkoutToolbarTitle = getActivity().findViewById(R.id.tv_addworkout_toolbar_title);
         tvTotalExercise = view.findViewById(R.id.tv_total_exercise);
@@ -338,8 +370,11 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         ivSave.setOnClickListener(this);
         ivDelete.setOnClickListener(this);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        auth = FirebaseAuth.getInstance();
         practiceTime = sharedPreferences.getLong(ConstantValue.EXERCISES_DURATION, ConstantValue.DEFAULT_EXERCISES_DURATION);
         restTime = sharedPreferences.getLong(ConstantValue.RESTS_DURATION, ConstantValue.DEFAULT_RESTS_DURATION);
+        auth = FirebaseAuth.getInstance();
+        currUserRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.USER).child(auth.getCurrentUser().getUid());
+        getCurrUserInfo();
+        calculateWorkoutsCaloriesBurned();
     }
 }
