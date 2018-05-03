@@ -19,7 +19,6 @@ public class Workout implements Serializable {
     private int cadioRate;
     private int strength_rate;
     private int mobility_rate;
-    private double caloriesBurn;
 
     public Workout() {
     }
@@ -31,7 +30,6 @@ public class Workout implements Serializable {
         this.cadioRate = cadioRate;
         this.strength_rate = strength_rate;
         this.mobility_rate = mobility_rate;
-        this.caloriesBurn = caloriesBurn;
     }
 
     public Workout(String id, String userId, String title, String icon, ArrayList<Exercise> lstUsersExercises, int cadioRate, int strength_rate, int mobility_rate, double caloriesBurn) {
@@ -43,7 +41,6 @@ public class Workout implements Serializable {
         this.cadioRate = cadioRate;
         this.strength_rate = strength_rate;
         this.mobility_rate = mobility_rate;
-        this.caloriesBurn = caloriesBurn;
     }
 
     public String getId() {
@@ -120,15 +117,5 @@ public class Workout implements Serializable {
     @PropertyName("mobility_rate")
     public void setMobilityRate(int mobility_rate) {
         this.mobility_rate = mobility_rate;
-    }
-
-    @PropertyName("calories_burn")
-    public double getCaloriesBurn() {
-        return caloriesBurn;
-    }
-
-    @PropertyName("calories_burn")
-    public void setCaloriesBurn(double caloriesBurn) {
-        this.caloriesBurn = caloriesBurn;
     }
 }

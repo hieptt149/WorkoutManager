@@ -191,8 +191,8 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     private void startWorkout() {
         isFirstTime = false;
         fragmentBundle = new Bundle();
-        fragmentBundle.putSerializable(ConstantValue.CURRENT_USER,currUser);
-        fragmentBundle.putSerializable(ConstantValue.USERS_WORKOUT_DETAILS, usersWorkoutDetails);
+        fragmentBundle.putSerializable(ConstantValue.CURRENT_USER, currUser);
+        fragmentBundle.putString(ConstantValue.WORKOUT_TITLE, edtWorkoutTitle.getText().toString());
         fragmentBundle.putSerializable(ConstantValue.SELECTED_EXERCISE_LIST, lstSelectedExercise);
         fragmentBundle.putLong(ConstantValue.EXERCISES_DURATION, practiceTime);
         fragmentBundle.putLong(ConstantValue.RESTS_DURATION, restTime);
@@ -339,14 +339,6 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         });
     }
 
-    private void calculateWorkoutsCaloriesBurned() {
-        if (lstSelectedExercise != null) {
-            for (Exercise exercise : lstSelectedExercise) {
-                totalCalBurned = totalCalBurned + Formula.calculateCaloriesBurned(exercise.getMetsRate(), currUser.getWeight(), practiceTime);
-            }
-        }
-    }
-
     private void init(View view) {
         tvAddWorkoutToolbarTitle = getActivity().findViewById(R.id.tv_addworkout_toolbar_title);
         tvTotalExercise = view.findViewById(R.id.tv_total_exercise);
@@ -373,8 +365,9 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         practiceTime = sharedPreferences.getLong(ConstantValue.EXERCISES_DURATION, ConstantValue.DEFAULT_EXERCISES_DURATION);
         restTime = sharedPreferences.getLong(ConstantValue.RESTS_DURATION, ConstantValue.DEFAULT_RESTS_DURATION);
         auth = FirebaseAuth.getInstance();
-        currUserRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.USER).child(auth.getCurrentUser().getUid());
-        getCurrUserInfo();
-        calculateWorkoutsCaloriesBurned();
+        if (auth.getCurrentUser() != null) {
+            currUserRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.USER).child(auth.getCurrentUser().getUid());
+            getCurrUserInfo();
+        }
     }
 }

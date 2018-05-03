@@ -30,7 +30,6 @@ import vn.com.hieptt149.workoutmanager.model.Exercise;
 import vn.com.hieptt149.workoutmanager.model.History;
 import vn.com.hieptt149.workoutmanager.model.Timer;
 import vn.com.hieptt149.workoutmanager.model.User;
-import vn.com.hieptt149.workoutmanager.model.Workout;
 import vn.com.hieptt149.workoutmanager.utils.CircularSeekBar;
 import vn.com.hieptt149.workoutmanager.utils.Formula;
 import vn.com.hieptt149.workoutmanager.utils.MyCountDownTimer;
@@ -48,14 +47,15 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
     private ArrayList<Timer> lstTimer;
     private DatabaseReference currUsersHistoryRef;
     private Calendar cal;
+    private double caloriesBurn;
 
     private enum Status {
         START, STOP, PAUSE
     }
 
+    private static String workoutTitle;
     private static User currUser;
     private static Status status;
-    private static Workout usersWorkoutDetails;
     private static long exercisesDuration, restsDuration, timer, animation;
     private static ArrayList<Exercise> lstExercise;
     private static int currInterval;
@@ -70,7 +70,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         if (bundle != null) {
             startWorkoutFragment.setArguments(bundle);
             currUser = (User) bundle.getSerializable(ConstantValue.CURRENT_USER);
-            usersWorkoutDetails = (Workout) bundle.getSerializable(ConstantValue.USERS_WORKOUT_DETAILS);
+            workoutTitle = bundle.getString(ConstantValue.WORKOUT_TITLE);
             lstExercise = (ArrayList<Exercise>) bundle.getSerializable(ConstantValue.SELECTED_EXERCISE_LIST);
             exercisesDuration = bundle.getLong(ConstantValue.EXERCISES_DURATION);
             restsDuration = bundle.getLong(ConstantValue.RESTS_DURATION);
@@ -169,8 +169,10 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         ivNextExercise.setOnClickListener(this);
         sbDuration.setOnTouchListener(this);
         handler = new Handler();
+        tvAddWorkoutToolbarTitle.setText(!workoutTitle.equals("") ? workoutTitle : getString(R.string.start_workout));
         createTimerList();
         refreshTimer();
+        calculateWorkoutsCaloriesBurned();
         initCountDownTimer();
         initAnimation();
     }
@@ -261,7 +263,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         timer = lstTimer.get(currInterval).getDuration();
         animation = lstTimer.get(currInterval).getDuration();
         tvDuration.setText(Formula.msTimeFormatter(0));
-        tvExerciseName.setText(usersWorkoutDetails.getTitle());
+        tvExerciseName.setText(!workoutTitle.equals("") ? workoutTitle : getString(R.string.start_workout));
         sbDuration.setProgress(0);
     }
 
@@ -289,8 +291,8 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
         currUsersHistoryRef = FirebaseDatabase.getInstance().getReference()
-                .child(ConstantValue.HISTORY).child(usersWorkoutDetails.getUserId()).child(String.valueOf(cal.getTimeInMillis()));
-        currUsersHistoryRef.child(usersWorkoutDetails.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                .child(ConstantValue.HISTORY).child(currUser.getId()).child(String.valueOf(cal.getTimeInMillis()));
+        currUsersHistoryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -298,9 +300,10 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
                     workoutHistory.setWorkoutTimes(workoutHistory.getWorkoutTimes() + 1);
                     workoutHistory.setCurrHeight(currUser.getHeight());
                     workoutHistory.setCurrWeight(currUser.getWeight());
-                    currUsersHistoryRef.child(usersWorkoutDetails.getId()).setValue(workoutHistory);
+                    workoutHistory.setCaloriesBurn(workoutHistory.getCaloriesBurn() + caloriesBurn);
+                    currUsersHistoryRef.setValue(workoutHistory);
                 } else {
-                    currUsersHistoryRef.child(usersWorkoutDetails.getId()).setValue(new History(1, currUser.getHeight(), currUser.getWeight()));
+                    currUsersHistoryRef.setValue(new History(1, currUser.getHeight(), currUser.getWeight(), caloriesBurn));
                 }
             }
 
@@ -309,5 +312,13 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
 
             }
         });
+    }
+
+    private void calculateWorkoutsCaloriesBurned() {
+        if (lstExercise != null) {
+            for (Exercise exercise : lstExercise) {
+                caloriesBurn = caloriesBurn + Formula.calculateCaloriesBurned(exercise.getMetsRate(), currUser.getWeight(), exercisesDuration);
+            }
+        }
     }
 }

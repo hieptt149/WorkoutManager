@@ -10,28 +10,30 @@ import java.io.Serializable;
 
 public class History implements Serializable {
 
-    private String userId, workoutId;
+    private String userId;
     private String practiceDate;
     private int workoutTimes;
     private double currHeight, currWeight;
+    private double caloriesBurn;
 
     public History() {
     }
 
-    public History(int workoutTimes, double currHeight, double currWeight) {
+    public History(int workoutTimes, double currHeight, double currWeight, double caloriesBurn) {
         this.workoutTimes = workoutTimes;
         this.currHeight = currHeight;
         this.currWeight = currWeight;
+        this.caloriesBurn = caloriesBurn;
     }
 
-    public History(String userId, String workoutId, int workoutTimes, double currHeight,
-                   double currWeight, String practiceDate) {
+    public History(String userId, int workoutTimes, double currHeight,
+                   double currWeight, String practiceDate, double caloriesBurn) {
         this.userId = userId;
-        this.workoutId = workoutId;
         this.workoutTimes = workoutTimes;
         this.currHeight = currHeight;
         this.currWeight = currWeight;
         this.practiceDate = practiceDate;
+        this.caloriesBurn = caloriesBurn;
     }
 
     public String getUserId() {
@@ -42,14 +44,6 @@ public class History implements Serializable {
         this.userId = userId;
     }
 
-    public String getWorkoutId() {
-        return workoutId;
-    }
-
-    public void setWorkoutId(String workoutId) {
-        this.workoutId = workoutId;
-    }
-
     public String getPracticeDate() {
         return practiceDate;
     }
@@ -57,6 +51,7 @@ public class History implements Serializable {
     public void setPracticeDate(String practiceDate) {
         this.practiceDate = practiceDate;
     }
+
     @PropertyName("workout_times")
     public int getWorkoutTimes() {
         return workoutTimes;
@@ -85,5 +80,15 @@ public class History implements Serializable {
     @PropertyName("curr_weight")
     public void setCurrWeight(double currWeight) {
         this.currWeight = currWeight;
+    }
+
+    @PropertyName("calories_burn")
+    public double getCaloriesBurn() {
+        return caloriesBurn;
+    }
+
+    @PropertyName("calories_burn")
+    public void setCaloriesBurn(double caloriesBurn) {
+        this.caloriesBurn = caloriesBurn;
     }
 }
