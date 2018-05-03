@@ -14,8 +14,8 @@ import com.bumptech.glide.request.RequestOptions;
 import java.util.ArrayList;
 
 import vn.com.hieptt149.workoutmanager.R;
-import vn.com.hieptt149.workoutmanager.workoutdetails.fragment.AddExerciseFragmentIntf;
 import vn.com.hieptt149.workoutmanager.model.Exercise;
+import vn.com.hieptt149.workoutmanager.workoutdetails.fragment.AddExerciseFragmentIntf;
 
 /**
  * Created by Administrator on 03/28/2018.
@@ -61,19 +61,6 @@ public class ExerciseListAdapter extends RecyclerView.Adapter<ExerciseListAdapte
                 .load(exercise.getUrl())
                 .apply(options)
                 .into(holder.ivExerciseIcon);
-        holder.ivSelectExercise.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (exercise.isAdded() == true) {
-                    addExerciseFragmentIntf.removeExercise(exercise);
-                    exercise.setAdded(false);
-                } else {
-                    exercise.setAdded(true);
-                    addExerciseFragmentIntf.addExercise(exercise);
-                }
-                notifyDataSetChanged();
-            }
-        });
     }
 
     @Override
@@ -91,6 +78,19 @@ public class ExerciseListAdapter extends RecyclerView.Adapter<ExerciseListAdapte
             ivExerciseIcon = itemView.findViewById(R.id.iv_exercise_icon);
             ivSelectExercise = itemView.findViewById(R.id.iv_select_exercise);
             tvExerciseName = itemView.findViewById(R.id.tv_exercise_name);
+            ivSelectExercise.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (lstExercises.get(getAdapterPosition()).isAdded() == true) {
+                        addExerciseFragmentIntf.removeExercise(lstExercises.get(getAdapterPosition()));
+                        lstExercises.get(getAdapterPosition()).setAdded(false);
+                    } else {
+                        lstExercises.get(getAdapterPosition()).setAdded(true);
+                        addExerciseFragmentIntf.addExercise(lstExercises.get(getAdapterPosition()));
+                    }
+                    notifyDataSetChanged();
+                }
+            });
         }
     }
 }
