@@ -96,76 +96,104 @@
             </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/workout_info_height"
-            android:layout_marginTop="@dimen/large_space"
-            android:orientation="vertical"
-            android:weightSum="10">
-
-            <ImageView
-                android:id="@+id/iv_choose_icon"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_gravity="center"
-                android:layout_weight="5.5"
-                android:src="@drawable/no_image"
-                android:tag="no_image" />
-
-            <TextView
-                android:id="@+id/tv_click_to_choose"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/click_iv_to_choose"
-                android:textStyle="italic" />
-
-            <EditText
-                android:id="@+id/edt_title"
-                android:layout_width="@dimen/workout_details_image_view_width"
-                android:layout_height="0dp"
-                android:layout_gravity="center"
-                android:layout_weight="2"
-                android:backgroundTint="@android:color/transparent"
-                android:gravity="center"
-                android:hint="Workout Name"
-                android:singleLine="true" />
+            android:layout_marginTop="@dimen/large_space">
 
             <LinearLayout
-                android:id="@+id/ln_btn_save_delete"
+                android:id="@+id/ln_workout_info"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1.5"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:weightSum="10">
 
                 <ImageView
-                    android:id="@+id/iv_delete"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:adjustViewBounds="true"
-                    android:src="@drawable/ic_delete"
-                    android:visibility="gone" />
+                    android:id="@+id/iv_choose_icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="5.5"
+                    android:src="@drawable/no_image"
+                    android:tag="no_image" />
 
-                <ImageView
-                    android:id="@+id/iv_save"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:adjustViewBounds="true"
-                    android:src="@drawable/ic_save"
-                    android:visibility="gone" />
+                <TextView
+                    android:id="@+id/tv_click_to_choose"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/click_iv_to_choose"
+                    android:textStyle="italic" />
 
-                <ImageView
-                    android:id="@+id/iv_start"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:adjustViewBounds="true"
-                    android:src="@drawable/ic_start"
-                    android:visibility="gone" />
+                <EditText
+                    android:id="@+id/edt_title"
+                    android:layout_width="@dimen/workout_details_image_view_width"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="2"
+                    android:backgroundTint="@android:color/transparent"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    android:hint="Workout Name"
+                    android:singleLine="true" />
+
+                <LinearLayout
+                    android:id="@+id/ln_btn_save_delete"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1.5"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/iv_delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/ic_delete"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/iv_save"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/ic_save"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/iv_start"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/ic_start"
+                        android:visibility="gone" />
+                </LinearLayout>
+
             </LinearLayout>
+            <LinearLayout
+                android:id="@+id/ln_exercise_detail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:weightSum="10">
+                <ImageView
+                    android:id="@+id/iv_exercise_preview"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="8"/>
+                <TextView
+                    android:id="@+id/tv_exercise_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2"
+                    android:textSize="@dimen/big_text_size"
+                    android:textStyle="bold"
+                    android:gravity="center"/>
+            </LinearLayout>
+        </RelativeLayout>
 
-        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -241,10 +269,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/large_space"
             android:background="@drawable/bg_button"
             android:padding="@dimen/medium_space"
             android:text="@string/add_exercise"
-            android:layout_marginTop="@dimen/large_space"
             android:textColor="@android:color/white" />
     </LinearLayout>
 

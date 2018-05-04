@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -17,6 +19,7 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
 
     private Context context;
     private ArrayList<History> lstHistories;
+    private NumberFormat nf = new DecimalFormat("#.##");
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
     public HistoryListAdapter(Context context, ArrayList<History> lstHistories) {
@@ -35,7 +38,7 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
         History history = lstHistories.get(position);
         holder.tvPracticeDate.setText(sdf.format(Long.parseLong(history.getPracticeDate())));
         holder.tvWorkoutTimes.setText(context.getString(R.string.workout_times) + " " + history.getWorkoutTimes());
-        holder.tvCaloriesBurn.setText(context.getString(R.string.total_calories_burned) + " " + history.getCaloriesBurn() + " cal");
+        holder.tvCaloriesBurn.setText(context.getString(R.string.total_calories_burned) + " " + nf.format(history.getCaloriesBurn()) + " cal");
         holder.tvHeight.setText(context.getString(R.string.height) + ": " + history.getCurrHeight() + " cm");
         holder.tvWeight.setText(context.getString(R.string.weight) + ": " + history.getCurrWeight() + " kg");
     }

@@ -28,7 +28,7 @@ public class Formula {
         } else {
             bmr = 655.1 + (4.35 * weight * 2.20462262) + (4.7 * height * 3.2808399) - (4.7 * age);
         }
-        return (bmr * 1.725);
+        return (bmr * 1.9);
     }
 
     /**

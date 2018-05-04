@@ -10,8 +10,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.LimitLine;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -22,6 +26,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +49,7 @@ public class HistoryFragment extends Fragment {
     private DatabaseReference currUserHistoryRef;
     private LineChart chartHistory;
     private RecyclerView rvHistory;
+    private TextView tvCaloriesBurnADay;
     private ArrayList<History> lstHistories;
     private List<Entry> lstChartEntries;
     private HistoryListAdapter historyListAdapter;
@@ -52,6 +59,7 @@ public class HistoryFragment extends Fragment {
     private LineData lineData;
     private double caloriesBurnADay;
     private User currUser;
+    private NumberFormat nf = new DecimalFormat("#.##");
 
     public static HistoryFragment newInstance() {
         HistoryFragment historyFragment = new HistoryFragment();
@@ -81,9 +89,6 @@ public class HistoryFragment extends Fragment {
             currUserHistoryRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.HISTORY)
                     .child(auth.getCurrentUser().getUid());
             getCurrUserInfo();
-//            setupChartAxes();
-//            setupChartData();
-            getWorkoutHistory();
         }
     }
 
@@ -95,26 +100,27 @@ public class HistoryFragment extends Fragment {
         }
     }
 
-//    private void setupChartAxes() {
-//        XAxis xAxis = chartHistory.getXAxis();
-//        xAxis.setDrawGridLines(false);
-//        xAxis.setAvoidFirstLastClipping(true);
-//        xAxis.setEnabled(true);
-//
-//        YAxis leftYAxis = chartHistory.getAxisLeft();
-//        leftYAxis.setDrawGridLines(true);
-//
-//        YAxis rightYAxis = chartHistory.getAxisRight();
-//        rightYAxis.setEnabled(false);
-//
-//        LimitLine ll = new LimitLine((float) caloriesBurnADay, "cal/day");
-//        ll.setLineWidth(2f);
-//        ll.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-//        ll.setTextSize(10f);
-//        leftYAxis.removeAllLimitLines();
-//        leftYAxis.addLimitLine(ll);
-//        leftYAxis.setDrawLimitLinesBehindData(true);
-//    }
+    private void setupChartAxes() {
+        XAxis xAxis = chartHistory.getXAxis();
+        xAxis.setDrawGridLines(false);
+        xAxis.setAvoidFirstLastClipping(true);
+        xAxis.setEnabled(false);
+
+        YAxis leftYAxis = chartHistory.getAxisLeft();
+        leftYAxis.setDrawGridLines(true);
+        leftYAxis.setAxisMinimum(0f);
+
+        YAxis rightYAxis = chartHistory.getAxisRight();
+        rightYAxis.setEnabled(false);
+
+        LimitLine ll = new LimitLine((float) caloriesBurnADay, "cal/day");
+        ll.setLineWidth(3f);
+        ll.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+        ll.setTextSize(12f);
+        leftYAxis.removeAllLimitLines();
+        leftYAxis.addLimitLine(ll);
+        leftYAxis.setDrawLimitLinesBehindData(true);
+    }
 
     private void setupChartData() {
 //        lineDataSet = new LineDataSet(null,"Workout history");
@@ -135,6 +141,10 @@ public class HistoryFragment extends Fragment {
                 currUser = dataSnapshot.getValue(User.class);
                 currUser.setId(dataSnapshot.getKey());
                 caloriesBurnADay = Formula.calculateCaloriesBurnADay(currUser.getGender(), currUser.getAge(), currUser.getHeight(), currUser.getWeight());
+                tvCaloriesBurnADay.setText("Calories need to burn a day: " + nf.format(caloriesBurnADay));
+                setupChartAxes();
+//                setupChartData();
+                getWorkoutHistory();
                 DisplayView.dismissProgressDialog();
             }
 
@@ -152,28 +162,28 @@ public class HistoryFragment extends Fragment {
 //                lineData = chartHistory.getData();
                 lstChartEntries.clear();
                 lstHistories.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    History history = snapshot.getValue(History.class);
-                    history.setUserId(auth.getCurrentUser().getUid());
-                    history.setPracticeDate(snapshot.getKey());
+                if (dataSnapshot.hasChildren()) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        History history = snapshot.getValue(History.class);
+                        history.setUserId(auth.getCurrentUser().getUid());
+                        history.setPracticeDate(snapshot.getKey());
 //                    lineData.addEntry(new Entry(Float.parseFloat(history.getPracticeDate()), (float) history.getCaloriesBurn()),0);
-                    lstHistories.add(history);
-                    lstChartEntries.add(new Entry(Float.parseFloat(history.getPracticeDate()), (float) history.getCaloriesBurn()));
+                        lstHistories.add(history);
+                        lstChartEntries.add(new Entry(Float.parseFloat(history.getPracticeDate()), (float) history.getCaloriesBurn()));
+                    }
+                    historyListAdapter.notifyDataSetChanged();
+                    lineDataSet = new LineDataSet(lstChartEntries, "Workout history");
+                    lineData = new LineData(lineDataSet);
+                    chartHistory.setData(lineData);
+                    chartHistory.invalidate();
                 }
-                historyListAdapter.notifyDataSetChanged();
-                lineDataSet = new LineDataSet(lstChartEntries,"Workout history");
-                lineData = new LineData(lineDataSet);
-                chartHistory.setData(lineData);
-                chartHistory.invalidate();
 //                lineData.notifyDataChanged();
 //                chartHistory.notifyDataSetChanged();
 //                chartHistory.invalidate();
-                DisplayView.dismissProgressDialog();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                DisplayView.dismissProgressDialog();
             }
         });
     }
@@ -181,6 +191,7 @@ public class HistoryFragment extends Fragment {
     private void init(View view) {
         chartHistory = view.findViewById(R.id.chart_history);
         rvHistory = view.findViewById(R.id.rv_history);
+        tvCaloriesBurnADay = view.findViewById(R.id.tv_calories_burn_a_day);
         auth = FirebaseAuth.getInstance();
         lstHistories = new ArrayList<>();
         lstChartEntries = new ArrayList<>();
@@ -191,5 +202,6 @@ public class HistoryFragment extends Fragment {
         rvHistory.setLayoutManager(linearLayoutManager);
         rvHistory.addItemDecoration(dividerItemDecoration);
         rvHistory.setAdapter(historyListAdapter);
+        chartHistory.setDrawGridBackground(false);
     }
 }

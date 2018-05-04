@@ -43,18 +43,18 @@ import vn.com.hieptt149.workoutmanager.workoutdetails.AddWorkoutActivityIntf;
  * A simple {@link Fragment} subclass.
  */
 public class WorkoutDetailsFragment extends Fragment implements View.OnClickListener, WorkoutDetailsFragmentIntf,
-        SelectIconDialogFragment.SelectIconDialogListener, View.OnFocusChangeListener {
+        SelectIconDialogFragment.SelectIconDialogListener {
 
     private FirebaseAuth auth;
     private AddWorkoutActivityIntf addWorkoutActivityIntf;
     private DatabaseReference currUsersWorkoutRef, currUserRef;
     private User currUser;
     private SharedPreferences sharedPreferences;
-    private TextView tvAddWorkoutToolbarTitle, tvTotalExercise, tvTotalTime, tvClickToChoose, tvExerciseDescription;
+    private TextView tvAddWorkoutToolbarTitle, tvExerciseName,tvTotalExercise, tvTotalTime, tvClickToChoose, tvExerciseDescription;
     private ProgressBar pbCardio, pbStrength, pbMobility;
-    private ImageView ivChooseWorkoutIcon, ivStart, ivSave, ivDelete;
+    private ImageView ivChooseWorkoutIcon,ivExercisePreview, ivStart, ivSave, ivDelete;
     private EditText edtWorkoutTitle;
-    private LinearLayout lnExercisesInfo;
+    private LinearLayout lnExercisesInfo,lnWorkoutInfo,lnExerciseDetail;
     private RecyclerView rvPreviewSelectedExercise;
     private Button btnAddExercise;
     private ExercisePreviewAdapter exercisePreviewAdapter;
@@ -173,11 +173,6 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         imgTag = tag;
         ivChooseWorkoutIcon.setTag(imgTag);
         ivChooseWorkoutIcon.setImageResource(imgRes);
-    }
-
-    @Override
-    public void onFocusChange(View view, boolean hasFocus) {
-        if (!hasFocus) Formula.hideSoftKeyboard(getActivity());
     }
 
     /**
@@ -348,25 +343,29 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         tvAddWorkoutToolbarTitle = getActivity().findViewById(R.id.tv_addworkout_toolbar_title);
         tvTotalExercise = view.findViewById(R.id.tv_total_exercise);
         tvTotalTime = view.findViewById(R.id.tv_total_time);
+        tvExerciseName = view.findViewById(R.id.tv_exercise_name);
         pbCardio = view.findViewById(R.id.pb_cardio);
         pbStrength = view.findViewById(R.id.pb_strength);
         pbMobility = view.findViewById(R.id.pb_mobility);
         ivChooseWorkoutIcon = view.findViewById(R.id.iv_choose_icon);
+        ivExercisePreview = view.findViewById(R.id.iv_exercise_preview);
         ivDelete = view.findViewById(R.id.iv_delete);
         ivSave = view.findViewById(R.id.iv_save);
         ivStart = view.findViewById(R.id.iv_start);
         tvClickToChoose = view.findViewById(R.id.tv_click_to_choose);
         edtWorkoutTitle = view.findViewById(R.id.edt_title);
         lnExercisesInfo = view.findViewById(R.id.ln_exercises_info);
+        lnWorkoutInfo = view.findViewById(R.id.ln_workout_info);
+        lnExerciseDetail = view.findViewById(R.id.ln_exercise_detail);
         rvPreviewSelectedExercise = view.findViewById(R.id.rv_preview_selected_exercise);
         tvExerciseDescription = view.findViewById(R.id.tv_exercise_description);
         btnAddExercise = view.findViewById(R.id.btn_add_exercise);
-        edtWorkoutTitle.setOnFocusChangeListener(this);
         btnAddExercise.setOnClickListener(this);
         ivChooseWorkoutIcon.setOnClickListener(this);
         ivStart.setOnClickListener(this);
         ivSave.setOnClickListener(this);
         ivDelete.setOnClickListener(this);
+        lnExerciseDetail.setVisibility(View.GONE);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         practiceTime = sharedPreferences.getLong(ConstantValue.EXERCISES_DURATION, ConstantValue.DEFAULT_EXERCISES_DURATION);
         restTime = sharedPreferences.getLong(ConstantValue.RESTS_DURATION, ConstantValue.DEFAULT_RESTS_DURATION);

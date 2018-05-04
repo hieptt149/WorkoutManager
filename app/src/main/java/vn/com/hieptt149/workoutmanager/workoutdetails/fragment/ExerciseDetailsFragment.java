@@ -15,8 +15,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -28,9 +26,9 @@ import com.bumptech.glide.request.target.Target;
 
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
-import vn.com.hieptt149.workoutmanager.workoutdetails.AddWorkoutActivityIntf;
 import vn.com.hieptt149.workoutmanager.model.Exercise;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;
+import vn.com.hieptt149.workoutmanager.workoutdetails.AddWorkoutActivityIntf;
 
 /**
  * Created by Administrator on 03/28/2018.
@@ -39,18 +37,18 @@ import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 public class ExerciseDetailsFragment extends Fragment {
 
     private AddWorkoutActivityIntf addWorkoutActivityIntf;
-    private TextView tvAddWorkoutToolbarTitle, tvTotalExercise, tvTotalTime, tvClickToChoose, tvExerciseDescription;
+    private TextView tvAddWorkoutToolbarTitle, tvTotalExercise, tvTotalTime, tvClickToChoose, tvExerciseDescription, tvExerciseName;
     private ProgressBar pbCardio, pbStrength, pbMobility;
-    private ImageView ivExercisePreview,ivStart,ivSave,ivDelete;
+    private ImageView ivExercisePreview, ivStart, ivSave, ivDelete;
     private EditText edtWorkoutTitle;
-    private LinearLayout lnExercisesInfo;
+    private LinearLayout lnWorkoutInfo, lnExerciseDetail, lnExercisesInfo;
     private RecyclerView rvPreviewSelectedExercise;
     private Button btnAddExercise;
     private static Exercise selectedExercise;
 
     public static ExerciseDetailsFragment newInstance(Bundle bundle) {
         ExerciseDetailsFragment exerciseDetailsFragment = new ExerciseDetailsFragment();
-        if (bundle != null){
+        if (bundle != null) {
             selectedExercise = (Exercise) bundle.getSerializable(ConstantValue.SELECTED_EXERCISE);
         }
         return exerciseDetailsFragment;
@@ -78,13 +76,14 @@ public class ExerciseDetailsFragment extends Fragment {
     private void showExerciseDetails() {
         DisplayView.showProgressDialog(getContext());
         tvAddWorkoutToolbarTitle.setText(selectedExercise.getName());
+        lnWorkoutInfo.setVisibility(View.GONE);
         lnExercisesInfo.setVisibility(View.GONE);
         tvExerciseDescription.setVisibility(View.VISIBLE);
         btnAddExercise.setVisibility(View.GONE);
         tvClickToChoose.setVisibility(View.GONE);
         edtWorkoutTitle.setEnabled(false);
         ivExercisePreview.setTag(null);
-        edtWorkoutTitle.setText(selectedExercise.getName());
+        tvExerciseName.setText(selectedExercise.getName());
         pbCardio.setProgress(selectedExercise.getCardioRate());
         pbStrength.setProgress(selectedExercise.getStrengthRate());
         pbMobility.setProgress(selectedExercise.getMobilityRate());
@@ -114,16 +113,19 @@ public class ExerciseDetailsFragment extends Fragment {
         tvAddWorkoutToolbarTitle = getActivity().findViewById(R.id.tv_addworkout_toolbar_title);
         tvTotalExercise = view.findViewById(R.id.tv_total_exercise);
         tvTotalTime = view.findViewById(R.id.tv_total_time);
+        tvExerciseName = view.findViewById(R.id.tv_exercise_name);
         pbCardio = view.findViewById(R.id.pb_cardio);
         pbStrength = view.findViewById(R.id.pb_strength);
         pbMobility = view.findViewById(R.id.pb_mobility);
-        ivExercisePreview = view.findViewById(R.id.iv_choose_icon);
+        ivExercisePreview = view.findViewById(R.id.iv_exercise_preview);
         ivDelete = view.findViewById(R.id.iv_delete);
         ivSave = view.findViewById(R.id.iv_save);
         ivStart = view.findViewById(R.id.iv_start);
         tvClickToChoose = view.findViewById(R.id.tv_click_to_choose);
         edtWorkoutTitle = view.findViewById(R.id.edt_title);
         lnExercisesInfo = view.findViewById(R.id.ln_exercises_info);
+        lnExerciseDetail = view.findViewById(R.id.ln_exercise_detail);
+        lnWorkoutInfo = view.findViewById(R.id.ln_workout_info);
         rvPreviewSelectedExercise = view.findViewById(R.id.rv_preview_selected_exercise);
         tvExerciseDescription = view.findViewById(R.id.tv_exercise_description);
         btnAddExercise = view.findViewById(R.id.btn_add_exercise);
