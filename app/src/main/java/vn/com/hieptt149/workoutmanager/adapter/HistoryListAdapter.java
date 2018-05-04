@@ -35,9 +35,9 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
         History history = lstHistories.get(position);
         holder.tvPracticeDate.setText(sdf.format(Long.parseLong(history.getPracticeDate())));
         holder.tvWorkoutTimes.setText(context.getString(R.string.workout_times) + " " + history.getWorkoutTimes());
-        holder.tvCaloriesBurn.setText(context.getString(R.string.total_calories_burned) + " " + history.getCaloriesBurn());
-        holder.tvHeight.setText(context.getString(R.string.height) + ": " + history.getCurrHeight());
-        holder.tvWeight.setText(context.getString(R.string.weight) + ": " + history.getCurrWeight());
+        holder.tvCaloriesBurn.setText(context.getString(R.string.total_calories_burned) + " " + history.getCaloriesBurn() + " cal");
+        holder.tvHeight.setText(context.getString(R.string.height) + ": " + history.getCurrHeight() + " cm");
+        holder.tvWeight.setText(context.getString(R.string.weight) + ": " + history.getCurrWeight() + " kg");
     }
 
     @Override

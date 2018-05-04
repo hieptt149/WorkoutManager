@@ -1,5 +1,9 @@
 package vn.com.hieptt149.workoutmanager.utils;
 
+import android.app.Activity;
+import android.content.Context;
+import android.view.inputmethod.InputMethodManager;
+
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -63,5 +67,15 @@ public class Formula {
                 TimeUnit.MILLISECONDS.toMinutes(milliseconds) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(milliseconds)),
                 TimeUnit.MILLISECONDS.toSeconds(milliseconds) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(milliseconds)));
         return hms;
+    }
+
+    /**
+     * Ẩn keyboard
+     */
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (activity.getCurrentFocus() != null) {
+            inputManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 }

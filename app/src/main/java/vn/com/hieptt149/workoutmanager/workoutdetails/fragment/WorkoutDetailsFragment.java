@@ -43,7 +43,7 @@ import vn.com.hieptt149.workoutmanager.workoutdetails.AddWorkoutActivityIntf;
  * A simple {@link Fragment} subclass.
  */
 public class WorkoutDetailsFragment extends Fragment implements View.OnClickListener, WorkoutDetailsFragmentIntf,
-        SelectIconDialogFragment.SelectIconDialogListener {
+        SelectIconDialogFragment.SelectIconDialogListener, View.OnFocusChangeListener {
 
     private FirebaseAuth auth;
     private AddWorkoutActivityIntf addWorkoutActivityIntf;
@@ -173,6 +173,11 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         imgTag = tag;
         ivChooseWorkoutIcon.setTag(imgTag);
         ivChooseWorkoutIcon.setImageResource(imgRes);
+    }
+
+    @Override
+    public void onFocusChange(View view, boolean hasFocus) {
+        if (!hasFocus) Formula.hideSoftKeyboard(getActivity());
     }
 
     /**
@@ -356,6 +361,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         rvPreviewSelectedExercise = view.findViewById(R.id.rv_preview_selected_exercise);
         tvExerciseDescription = view.findViewById(R.id.tv_exercise_description);
         btnAddExercise = view.findViewById(R.id.btn_add_exercise);
+        edtWorkoutTitle.setOnFocusChangeListener(this);
         btnAddExercise.setOnClickListener(this);
         ivChooseWorkoutIcon.setOnClickListener(this);
         ivStart.setOnClickListener(this);
