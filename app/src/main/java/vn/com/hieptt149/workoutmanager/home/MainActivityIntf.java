@@ -9,5 +9,6 @@ import android.support.v4.app.Fragment;
  */
 
 public interface MainActivityIntf {
-    void showBottomSheetDialogFragment(Fragment targetFragment, DialogFragment dialogFragment, String tag);
+
+    void showDialogFragment(Fragment targetFragment, DialogFragment dialogFragment, String tag);
 }

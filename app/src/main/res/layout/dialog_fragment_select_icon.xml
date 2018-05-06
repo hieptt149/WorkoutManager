@@ -9,8 +9,8 @@
 
     <GridView
         android:id="@+id/gv_icon"
-        android:layout_width="@dimen/select_icon_dialog_width"
-        android:layout_height="@dimen/select_icon_dialog_height"
+        android:layout_width="@dimen/dialog_width"
+        android:layout_height="@dimen/dialog_height"
         android:gravity="center"
         android:numColumns="auto_fit"
         android:verticalSpacing="@dimen/medium_space"

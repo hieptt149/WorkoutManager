@@ -64,6 +64,15 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/tv_update_height_weight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/large_space"
+            android:gravity="center_horizontal"
+            android:text="@string/update_height_weight"
+            android:textStyle="italic"/>
+
+        <TextView
             android:id="@+id/tv_change_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

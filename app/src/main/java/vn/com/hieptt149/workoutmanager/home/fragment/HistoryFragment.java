@@ -96,7 +96,16 @@ public class HistoryFragment extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-
+            if (auth.getCurrentUser() == null && (lstChartEntries != null || lstHistories != null)) {
+                lstHistories.clear();
+                lstChartEntries.clear();
+                chartHistory.clear();
+                historyListAdapter.notifyDataSetChanged();
+                lineDataSet.notifyDataSetChanged();
+                lineData.notifyDataChanged();
+                chartHistory.notifyDataSetChanged();
+                tvCaloriesBurnADay.setText("");
+            }
         }
     }
 
@@ -123,15 +132,19 @@ public class HistoryFragment extends Fragment {
     }
 
     private void setupChartData() {
-//        lineDataSet = new LineDataSet(null,"Workout history");
-//        lineData = new LineData();
-//        lineDataSet.setLineWidth(2f);
-//        lineDataSet.setCircleRadius(4f);
-//        lineDataSet.setValueTextSize(10f);
-//        // To show values of each point
-//        lineDataSet.setDrawValues(true);
-//        chartHistory.setData(lineData);
-//        chartHistory.invalidate();
+        if (lstChartEntries != null) {
+//            lineDataSet = new LineDataSet(lstChartEntries, "Workout history");
+//            lineData = new LineData(lineDataSet);
+            lineDataSet.setLineWidth(2f);
+            lineDataSet.setCircleRadius(8f);
+            lineDataSet.setValueTextSize(12f);
+            // To show values of each point
+            lineDataSet.setDrawValues(true);
+            lineDataSet.notifyDataSetChanged();
+            lineData.notifyDataChanged();
+            chartHistory.setData(lineData);
+            chartHistory.invalidate();
+        }
     }
 
     private void getCurrUserInfo() {
@@ -143,7 +156,6 @@ public class HistoryFragment extends Fragment {
                 caloriesBurnADay = Formula.calculateCaloriesBurnADay(currUser.getGender(), currUser.getAge(), currUser.getHeight(), currUser.getWeight());
                 tvCaloriesBurnADay.setText("Calories need to burn a day: " + nf.format(caloriesBurnADay));
                 setupChartAxes();
-//                setupChartData();
                 getWorkoutHistory();
                 DisplayView.dismissProgressDialog();
             }
@@ -172,14 +184,8 @@ public class HistoryFragment extends Fragment {
                         lstChartEntries.add(new Entry(Float.parseFloat(history.getPracticeDate()), (float) history.getCaloriesBurn()));
                     }
                     historyListAdapter.notifyDataSetChanged();
-                    lineDataSet = new LineDataSet(lstChartEntries, "Workout history");
-                    lineData = new LineData(lineDataSet);
-                    chartHistory.setData(lineData);
-                    chartHistory.invalidate();
+                    setupChartData();
                 }
-//                lineData.notifyDataChanged();
-//                chartHistory.notifyDataSetChanged();
-//                chartHistory.invalidate();
             }
 
             @Override
@@ -203,5 +209,7 @@ public class HistoryFragment extends Fragment {
         rvHistory.addItemDecoration(dividerItemDecoration);
         rvHistory.setAdapter(historyListAdapter);
         chartHistory.setDrawGridBackground(false);
+        lineDataSet = new LineDataSet(lstChartEntries, "Workout history");
+        lineData = new LineData(lineDataSet);
     }
 }

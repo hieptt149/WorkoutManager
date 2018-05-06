@@ -12,8 +12,8 @@
     <dimen name="activity_toolbar_title_width">200dp</dimen>
     <dimen name="workout_details_item_width">125dp</dimen>
     <dimen name="workout_details_item_height">150dp</dimen>
-    <dimen name="select_icon_dialog_width">300dp</dimen>
-    <dimen name="select_icon_dialog_height">300dp</dimen>
+    <dimen name="dialog_width">300dp</dimen>
+    <dimen name="dialog_height">300dp</dimen>
     <dimen name="select_icon_item_dimen">60dp</dimen>
     <dimen name="user_info_dialog_width">300dp</dimen>
     <dimen name="user_setting_item_height">150dp</dimen>

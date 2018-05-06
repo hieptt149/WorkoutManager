@@ -51,6 +51,7 @@ public class SettingsBottomSheetDialogFragment extends BottomSheetDialogFragment
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setCancelable(false);
         init(view);
         if (isExercisesDuration) {
             setupView(exerscisesDuration, 15000, 15, 5000.0);

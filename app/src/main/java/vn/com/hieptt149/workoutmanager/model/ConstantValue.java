@@ -20,6 +20,7 @@ public class ConstantValue {
     public static final String EXERCISES_DURATION = "exercises_duration";
     public static final String RESTS_DURATION = "rests_duration";
     public static final String START_WORKOUT = "start_workout";
+    public static final String UPDATE_USER_INFO = "update_user_info";
 
     //key
     public static final String TAG = "tag";
@@ -32,6 +33,7 @@ public class ConstantValue {
     public static final String WORKOUT_TITLE = "workout_title";
     public static final String TOTAL_TIME = "total_time";
     public static final String USERS_WORKOUT_DETAILS = "users_workout_details";
+    public static final String CHANGE_PASSWORD = "change_password";
 
     public static final String validemail = "[a-zA-Z0-9._-]{1,100}+@[a-zA-Z0-9]+\\.+[a-zA-Z0-9.]+";
     public static final int MAX_EXERSCISE_DURATION = 90000;

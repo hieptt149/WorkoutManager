@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/large_space"
+    android:gravity="center">
+    <TextView
+        android:id="@+id/tv_update_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="@dimen/big_text_size"
+        android:gravity="center_horizontal"/>
+    <EditText
+        android:id="@+id/edt_old"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/large_space"
+        android:drawablePadding="@dimen/small_space"
+        android:inputType="textPassword"/>
+    <EditText
+        android:id="@+id/edt_new"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/medium_space"
+        android:drawablePadding="@dimen/small_space"
+        android:inputType="textPassword"/>
+    <Button
+        android:id="@+id/btn_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/medium_space"
+        android:text="@string/confirm" />
+</LinearLayout>

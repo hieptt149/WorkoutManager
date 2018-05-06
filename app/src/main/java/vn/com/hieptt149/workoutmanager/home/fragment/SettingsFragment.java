@@ -43,7 +43,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
     private Switch swSounds;
     private LinearLayout lnUsersSettings, lnExercisesDuration, lnRestsDuration;
     private TextView tvUsersName, tvUsersAge, tvUsersGender, tvUsersHeight, tvUsersWeight, tvChangePassword,
-            tvExercisesDuration, tvRestsDuration, tvLogin;
+            tvExercisesDuration, tvRestsDuration, tvLogin, tvUpdateHeightWeight;
     private Spinner spnThemes;
     private long exerscisesDuration, restsDuration;
     private Bundle bundle;
@@ -88,6 +88,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
         } else {
             isLogin = false;
             lnUsersSettings.setVisibility(View.GONE);
+            tvUpdateHeightWeight.setVisibility(View.GONE);
             tvChangePassword.setVisibility(View.GONE);
             tvLogin.setText(R.string.login);
         }
@@ -95,19 +96,28 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
 
     @Override
     public void onClick(View view) {
+        bundle = new Bundle();
         switch (view.getId()) {
+            case R.id.tv_update_height_weight:
+                bundle.putBoolean(ConstantValue.CHANGE_PASSWORD,false);
+                mainActivityIntf.showDialogFragment(SettingsFragment.this,
+                        UpdateUserInfoDialogFragment.newInstance(bundle),ConstantValue.UPDATE_USER_INFO);
+                break;
             case R.id.tv_change_password:
+                bundle.putBoolean(ConstantValue.CHANGE_PASSWORD,true);
+                mainActivityIntf.showDialogFragment(SettingsFragment.this,
+                        UpdateUserInfoDialogFragment.newInstance(bundle),ConstantValue.UPDATE_USER_INFO);
                 break;
             case R.id.ln_exercises_duration:
                 bundle.putLong(ConstantValue.EXERCISES_DURATION, exerscisesDuration);
                 bundle.putBoolean(ConstantValue.DURATION_SETTINGS_TYPE, true);
-                mainActivityIntf.showBottomSheetDialogFragment(SettingsFragment.this,
+                mainActivityIntf.showDialogFragment(SettingsFragment.this,
                         SettingsBottomSheetDialogFragment.newInstance(bundle), ConstantValue.EXERCISES_DURATION);
                 break;
             case R.id.ln_rests_duration:
                 bundle.putLong(ConstantValue.RESTS_DURATION, restsDuration);
                 bundle.putBoolean(ConstantValue.DURATION_SETTINGS_TYPE, false);
-                mainActivityIntf.showBottomSheetDialogFragment(SettingsFragment.this,
+                mainActivityIntf.showDialogFragment(SettingsFragment.this,
                         SettingsBottomSheetDialogFragment.newInstance(bundle), ConstantValue.RESTS_DURATION);
                 break;
             case R.id.tv_login:
@@ -120,6 +130,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
                             auth.signOut();
                             isLogin = false;
                             lnUsersSettings.setVisibility(View.GONE);
+                            tvUpdateHeightWeight.setVisibility(View.GONE);
                             tvChangePassword.setVisibility(View.GONE);
                             tvLogin.setText(R.string.login);
                         }
@@ -159,6 +170,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
                 currUser = dataSnapshot.getValue(User.class);
                 currUser.setId(dataSnapshot.getKey());
                 lnUsersSettings.setVisibility(View.VISIBLE);
+                tvUpdateHeightWeight.setVisibility(View.VISIBLE);
                 tvChangePassword.setVisibility(View.VISIBLE);
                 tvUsersName.setText(auth.getCurrentUser().getDisplayName());
                 tvUsersAge.setText(getString(R.string.age) + ": " + currUser.getAge());
@@ -186,6 +198,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
         tvUsersGender = view.findViewById(R.id.tv_users_gender);
         tvUsersHeight = view.findViewById(R.id.tv_users_height);
         tvUsersWeight = view.findViewById(R.id.tv_users_weight);
+        tvUpdateHeightWeight = view.findViewById(R.id.tv_update_height_weight);
         tvChangePassword = view.findViewById(R.id.tv_change_password);
         lnExercisesDuration = view.findViewById(R.id.ln_exercises_duration);
         tvExercisesDuration = view.findViewById(R.id.tv_exercises_duration);
@@ -193,13 +206,13 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
         tvRestsDuration = view.findViewById(R.id.tv_rests_duration);
         spnThemes = view.findViewById(R.id.spn_themes);
         tvLogin = view.findViewById(R.id.tv_login);
+        tvUpdateHeightWeight.setOnClickListener(this);
         tvChangePassword.setOnClickListener(this);
         lnExercisesDuration.setOnClickListener(this);
         lnRestsDuration.setOnClickListener(this);
         tvLogin.setOnClickListener(this);
         auth = FirebaseAuth.getInstance();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        bundle = new Bundle();
         exerscisesDuration = sharedPreferences.getLong(ConstantValue.EXERCISES_DURATION, ConstantValue.DEFAULT_EXERCISES_DURATION);
         restsDuration = sharedPreferences.getLong(ConstantValue.RESTS_DURATION, ConstantValue.DEFAULT_RESTS_DURATION);
         tvExercisesDuration.setText(exerscisesDuration / 1000 + " sec");
