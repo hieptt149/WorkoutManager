@@ -16,7 +16,7 @@ import android.widget.TextView;
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
 
-public class UpdateUserInfoDialogFragment extends DialogFragment implements View.OnFocusChangeListener, View.OnTouchListener {
+public class UpdateUserInfoDialogFragment extends DialogFragment implements View.OnTouchListener,View.OnFocusChangeListener{
 
     private TextView tvUpdateTitle;
     private EditText edtOld, edtNew;
@@ -119,18 +119,18 @@ public class UpdateUserInfoDialogFragment extends DialogFragment implements View
         if (isChangePassword) {
             tvUpdateTitle.setText(R.string.change_password);
             edtOld.setCompoundDrawablesWithIntrinsicBounds(R.drawable.key, 0, 0, 0);
-            edtOld.setHint(R.string.old_password);
-            edtOld.setOnFocusChangeListener(this);
             edtNew.setCompoundDrawablesWithIntrinsicBounds(R.drawable.key, 0, 0, 0);
+            edtOld.setHint(R.string.old_password);
             edtNew.setHint(R.string.new_password);
+            edtOld.setOnFocusChangeListener(this);
             edtNew.setOnFocusChangeListener(this);
         } else {
             tvUpdateTitle.setText(R.string.update_height_weight);
             edtOld.setInputType(InputType.TYPE_CLASS_NUMBER);
-            edtOld.setCompoundDrawablesWithIntrinsicBounds(R.drawable.height, 0, 0, 0);
-            edtOld.setHint(R.string.height);
             edtNew.setInputType(InputType.TYPE_CLASS_NUMBER);
+            edtOld.setCompoundDrawablesWithIntrinsicBounds(R.drawable.height, 0, 0, 0);
             edtNew.setCompoundDrawablesWithIntrinsicBounds(R.drawable.scale, 0, 0, 0);
+            edtOld.setHint(R.string.height);
             edtNew.setHint(R.string.weight);
         }
     }
