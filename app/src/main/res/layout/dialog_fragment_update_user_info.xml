@@ -20,10 +20,21 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/edt_old"
+            android:id="@+id/edt_age"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/large_space"
+            android:drawableLeft="@drawable/age"
+            android:drawablePadding="@dimen/small_space"
+            android:hint="@string/age"
+            android:inputType="number"
+            android:visibility="gone"/>
+
+        <EditText
+            android:id="@+id/edt_old"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/medium_space"
             android:drawablePadding="@dimen/small_space"
             android:inputType="textPassword" />
 

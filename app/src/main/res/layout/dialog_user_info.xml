@@ -50,7 +50,8 @@
         android:layout_marginTop="@dimen/medium_space"
         android:hint="@string/age"
         android:drawableLeft="@drawable/age"
-        android:drawablePadding="@dimen/small_space"/>
+        android:drawablePadding="@dimen/small_space"
+        android:inputType="number"/>
 
     <EditText
         android:id="@+id/edt_height"

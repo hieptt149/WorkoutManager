@@ -3,9 +3,8 @@ package vn.com.hieptt149.workoutmanager.login;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -18,7 +17,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import vn.com.hieptt149.workoutmanager.R;
@@ -73,24 +71,9 @@ public class UserInfoDialog extends Dialog implements View.OnClickListener {
             return;
         }
         name = edtName.getText().toString();
-        try {
-            age = Integer.parseInt(edtAge.getText().toString());
-        } catch (NumberFormatException e) {
-            edtAge.setError(getContext().getString(R.string.number_format_exception));
-            return;
-        }
-        try {
-            height = Double.parseDouble(edtHeight.getText().toString());
-        } catch (NumberFormatException e) {
-            edtHeight.setError(getContext().getString(R.string.number_format_exception));
-            return;
-        }
-        try {
-            weight = Double.parseDouble(edtWeight.getText().toString());
-        } catch (NumberFormatException e) {
-            edtWeight.setError(getContext().getString(R.string.number_format_exception));
-            return;
-        }
+        age = Integer.parseInt(edtAge.getText().toString());
+        height = Double.parseDouble(edtHeight.getText().toString());
+        weight = Double.parseDouble(edtWeight.getText().toString());
         if (rdbtnMale.isChecked()) {
             gender = true;
         } else if (rdbtnFemale.isChecked()) {

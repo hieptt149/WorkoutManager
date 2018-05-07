@@ -25,11 +25,14 @@
     <string name="themes">Themes</string>
     <string name="done">Done</string>
     <string name="change_password">Change password</string>
-    <string name="update_height_weight">Update height/weight</string>
+    <string name="update_info">Update info</string>
     <string name="old_password">Old password</string>
     <string name="new_password">New password</string>
     <string name="enter_your_old_pass">Enter your old password</string>
-    <string name="endter_your_new_pass">Enter your new password</string>
+    <string name="enter_your_new_pass">Enter your new password</string>
+    <string name="password_updated">Password is updated</string>
+    <string name="update_password_failed">Failed to update password</string>
+    <string name="update_info_failed">Failed to update info</string>
 
     <!--Workout Details Fragment-->
     <string name="back">Back</string>
