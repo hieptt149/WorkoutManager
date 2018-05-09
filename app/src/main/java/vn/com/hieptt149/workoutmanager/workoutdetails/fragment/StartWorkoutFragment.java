@@ -1,6 +1,7 @@
 package vn.com.hieptt149.workoutmanager.workoutdetails.fragment;
 
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -48,6 +49,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
     private DatabaseReference currUsersHistoryRef;
     private Calendar cal;
     private double caloriesBurn;
+    private MediaPlayer mainAlarm, secondaryAlarm;
 
     private enum Status {
         START, STOP, PAUSE
@@ -188,6 +190,12 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
                 //Chạy tới cuối interval
                 if (timer == 0 && currInterval < lstTimer.size() - 1) {
                     currInterval++;
+                    new Handler().post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mainAlarm.start();
+                        }
+                    });
                     timer = lstTimer.get(currInterval).getDuration();
                     handler.postDelayed(new Runnable() {
                         @Override
@@ -195,6 +203,14 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
                             tvDuration.setText(Formula.msTimeFormatter(lstTimer.get(currInterval).getDuration()));
                         }
                     }, 500);
+                }
+                if (timer < 3000 && timer >= 1000) {
+                    new Handler().post(new Runnable() {
+                        @Override
+                        public void run() {
+                            secondaryAlarm.start();
+                        }
+                    });
                 }
                 timer -= 1000;
                 //Chạy hết interval cuối cùng
@@ -237,6 +253,8 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
                 //Chạy hết interval cuối cùng
                 if (timer < 0 && animation == 0 && currInterval == lstTimer.size() - 1) {
                     animationTimer.cancel();
+                    mainAlarm.release();
+                    secondaryAlarm.release();
                     if (currUser != null) {
                         createWorkoutHistory();
                     }
@@ -260,6 +278,8 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         countDownTimer = null;
         animationTimer = null;
         handler = new Handler();
+        mainAlarm = MediaPlayer.create(getActivity(), R.raw.main_alarm);
+        secondaryAlarm = MediaPlayer.create(getActivity(), R.raw.secondary_alarm);
         timer = lstTimer.get(currInterval).getDuration();
         animation = lstTimer.get(currInterval).getDuration();
         tvDuration.setText(Formula.msTimeFormatter(0));
