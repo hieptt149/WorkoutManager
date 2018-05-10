@@ -1,9 +1,12 @@
 package vn.com.hieptt149.workoutmanager.workoutdetails.fragment;
 
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -50,6 +53,8 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
     private Calendar cal;
     private double caloriesBurn;
     private MediaPlayer mainAlarm, secondaryAlarm;
+    private Vibrator vibrator;
+    private AudioManager audioManager;
 
     private enum Status {
         START, STOP, PAUSE
@@ -171,6 +176,8 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         ivNextExercise.setOnClickListener(this);
         sbDuration.setOnTouchListener(this);
         handler = new Handler();
+        vibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+        audioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
         tvAddWorkoutToolbarTitle.setText(!workoutTitle.equals("") ? workoutTitle : getString(R.string.start_workout));
         createTimerList();
         refreshTimer();
@@ -190,12 +197,16 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
                 //Chạy tới cuối interval
                 if (timer == 0 && currInterval < lstTimer.size() - 1) {
                     currInterval++;
-                    new Handler().post(new Runnable() {
-                        @Override
-                        public void run() {
-                            mainAlarm.start();
-                        }
-                    });
+                    if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
+                        vibrator.vibrate(1000);
+                    } else {
+                        new Handler().post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mainAlarm.start();
+                            }
+                        });
+                    }
                     timer = lstTimer.get(currInterval).getDuration();
                     handler.postDelayed(new Runnable() {
                         @Override
@@ -205,12 +216,14 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
                     }, 500);
                 }
                 if (timer < 3000 && timer >= 1000) {
-                    new Handler().post(new Runnable() {
-                        @Override
-                        public void run() {
-                            secondaryAlarm.start();
-                        }
-                    });
+                    if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                        new Handler().post(new Runnable() {
+                            @Override
+                            public void run() {
+                                secondaryAlarm.start();
+                            }
+                        });
+                    }
                 }
                 timer -= 1000;
                 //Chạy hết interval cuối cùng
@@ -223,7 +236,9 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
             public void onFinish() {
 
             }
-        };
+        }
+
+        ;
     }
 
     /**

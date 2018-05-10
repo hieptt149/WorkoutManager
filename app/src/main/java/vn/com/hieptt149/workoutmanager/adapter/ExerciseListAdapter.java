@@ -8,9 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-
 import java.util.ArrayList;
 
 import vn.com.hieptt149.workoutmanager.R;
@@ -54,13 +51,13 @@ public class ExerciseListAdapter extends RecyclerView.Adapter<ExerciseListAdapte
         } else {
             holder.ivSelectExercise.setImageLevel(0);
         }
-        RequestOptions options = new RequestOptions();
-        options.error(R.drawable.no_connection);
-        Glide.with(context)
-                .asBitmap()
-                .load(exercise.getUrl())
-                .apply(options)
-                .into(holder.ivExerciseIcon);
+//        RequestOptions options = new RequestOptions();
+//        options.error(R.drawable.no_connection);
+//        Glide.with(context)
+//                .asBitmap()
+//                .load(exercise.getUrl())
+//                .apply(options)
+//                .into(holder.ivExerciseIcon);
     }
 
     @Override

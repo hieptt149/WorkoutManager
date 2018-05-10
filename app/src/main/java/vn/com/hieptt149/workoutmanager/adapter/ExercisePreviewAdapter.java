@@ -9,14 +9,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-
 import java.util.ArrayList;
 
 import vn.com.hieptt149.workoutmanager.R;
-import vn.com.hieptt149.workoutmanager.workoutdetails.fragment.WorkoutDetailsFragmentIntf;
 import vn.com.hieptt149.workoutmanager.model.Exercise;
+import vn.com.hieptt149.workoutmanager.workoutdetails.fragment.WorkoutDetailsFragmentIntf;
 
 /**
  * Created by Administrator on 04/01/2018.
@@ -49,13 +46,13 @@ public class ExercisePreviewAdapter extends RecyclerView.Adapter<ExercisePreview
                 workoutDetailsFragmentIntf.onExerciseItemClick(exercise);
             }
         });
-        RequestOptions options = new RequestOptions();
-        options.error(R.drawable.no_connection);
-        Glide.with(context)
-                .asBitmap()
-                .load(exercise.getUrl())
-                .apply(options)
-                .into(holder.ivExercisePreview);
+//        RequestOptions options = new RequestOptions();
+//        options.error(R.drawable.no_connection);
+//        Glide.with(context)
+//                .asBitmap()
+//                .load(exercise.getUrl())
+//                .apply(options)
+//                .into(holder.ivExercisePreview);
         holder.tvExerciseName.setText(exercise.getName());
     }
 

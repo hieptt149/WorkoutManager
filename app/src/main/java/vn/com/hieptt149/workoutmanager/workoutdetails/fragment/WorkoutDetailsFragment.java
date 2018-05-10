@@ -50,11 +50,11 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     private DatabaseReference currUsersWorkoutRef, currUserRef;
     private User currUser;
     private SharedPreferences sharedPreferences;
-    private TextView tvAddWorkoutToolbarTitle, tvExerciseName,tvTotalExercise, tvTotalTime, tvClickToChoose, tvExerciseDescription;
+    private TextView tvAddWorkoutToolbarTitle, tvExerciseName, tvTotalExercise, tvTotalTime, tvClickToChoose, tvExerciseDescription;
     private ProgressBar pbCardio, pbStrength, pbMobility;
-    private ImageView ivChooseWorkoutIcon,ivExercisePreview, ivStart, ivSave, ivDelete;
+    private ImageView ivChooseWorkoutIcon, ivExercisePreview, ivStart, ivSave, ivDelete;
     private EditText edtWorkoutTitle;
-    private LinearLayout lnExercisesInfo,lnWorkoutInfo,lnExerciseDetail;
+    private LinearLayout lnExercisesInfo, lnWorkoutInfo, lnExerciseDetail;
     private RecyclerView rvPreviewSelectedExercise;
     private Button btnAddExercise;
     private ExercisePreviewAdapter exercisePreviewAdapter;

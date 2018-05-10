@@ -1,7 +1,6 @@
 package vn.com.hieptt149.workoutmanager.workoutdetails.fragment;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,17 +16,11 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
+import java.io.InputStream;
 
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
 import vn.com.hieptt149.workoutmanager.model.Exercise;
-import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 import vn.com.hieptt149.workoutmanager.workoutdetails.AddWorkoutActivityIntf;
 
 /**
@@ -39,11 +32,14 @@ public class ExerciseDetailsFragment extends Fragment {
     private AddWorkoutActivityIntf addWorkoutActivityIntf;
     private TextView tvAddWorkoutToolbarTitle, tvTotalExercise, tvTotalTime, tvClickToChoose, tvExerciseDescription, tvExerciseName;
     private ProgressBar pbCardio, pbStrength, pbMobility;
-    private ImageView ivExercisePreview, ivStart, ivSave, ivDelete;
+    private ImageView ivExercisePreview,ivStart, ivSave, ivDelete;
     private EditText edtWorkoutTitle;
     private LinearLayout lnWorkoutInfo, lnExerciseDetail, lnExercisesInfo;
     private RecyclerView rvPreviewSelectedExercise;
     private Button btnAddExercise;
+//    private int imgRes;
+    private byte[] bytes;
+    private InputStream inputStream;
     private static Exercise selectedExercise;
 
     public static ExerciseDetailsFragment newInstance(Bundle bundle) {
@@ -74,7 +70,6 @@ public class ExerciseDetailsFragment extends Fragment {
     }
 
     private void showExerciseDetails() {
-        DisplayView.showProgressDialog(getContext());
         tvAddWorkoutToolbarTitle.setText(selectedExercise.getName());
         lnWorkoutInfo.setVisibility(View.GONE);
         lnExercisesInfo.setVisibility(View.GONE);
@@ -87,25 +82,13 @@ public class ExerciseDetailsFragment extends Fragment {
         pbCardio.setProgress(selectedExercise.getCardioRate());
         pbStrength.setProgress(selectedExercise.getStrengthRate());
         pbMobility.setProgress(selectedExercise.getMobilityRate());
-        RequestOptions options = new RequestOptions();
-        options.error(R.drawable.no_connection);
-        Glide.with(getContext())
-                .load(selectedExercise.getUrl())
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        DisplayView.dismissProgressDialog();
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        DisplayView.dismissProgressDialog();
-                        return false;
-                    }
-                })
-                .apply(options)
-                .into(ivExercisePreview);
+//        imgRes = getResources().getIdentifier(selectedExercise.getPreview(),"drawable",getContext().getPackageName());
+//        RequestOptions options = new RequestOptions();
+//        options.error(R.drawable.no_image);
+//        Glide.with(getContext())
+//                .load(imgRes)
+//                .apply(options)
+//                .into(ivExercisePreview);
         tvExerciseDescription.setText(selectedExercise.getDescription());
     }
 

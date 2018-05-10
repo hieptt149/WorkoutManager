@@ -72,7 +72,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        swSounds = view.findViewById(R.id.sw_sounds);
         init(view);
     }
 
@@ -200,6 +199,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
         tvUsersWeight = view.findViewById(R.id.tv_users_weight);
         tvUpdateHeightWeight = view.findViewById(R.id.tv_update_height_weight);
         tvChangePassword = view.findViewById(R.id.tv_change_password);
+//        swSounds = view.findViewById(R.id.sw_sounds);
         lnExercisesDuration = view.findViewById(R.id.ln_exercises_duration);
         tvExercisesDuration = view.findViewById(R.id.tv_exercises_duration);
         lnRestsDuration = view.findViewById(R.id.ln_rests_duration);

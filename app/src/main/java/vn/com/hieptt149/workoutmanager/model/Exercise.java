@@ -13,7 +13,7 @@ public class Exercise implements Serializable {
     private int id;
     private String name;
     private String description;
-    private String url;
+    private String preview;
     private int cardioRate;
     private int strengthRate;
     private int mobilityRate;
@@ -27,11 +27,11 @@ public class Exercise implements Serializable {
         this.name = name;
     }
 
-    public Exercise(int id, String name, String description, String url, int cardioRate, int strengthRate, int mobilityRate, double metsRate) {
+    public Exercise(int id, String name, String description, String preview, int cardioRate, int strengthRate, int mobilityRate, double metsRate) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.url = url;
+        this.preview = preview;
         this.cardioRate = cardioRate;
         this.strengthRate = strengthRate;
         this.mobilityRate = mobilityRate;
@@ -68,14 +68,14 @@ public class Exercise implements Serializable {
         this.description = description;
     }
 
-    @PropertyName("url")
-    public String getUrl() {
-        return url;
+    @PropertyName("preview")
+    public String getPreview() {
+        return preview;
     }
 
-    @PropertyName("url")
-    public void setUrl(String url) {
-        this.url = url;
+    @PropertyName("preview")
+    public void setPreview(String preview) {
+        this.preview = preview;
     }
 
     @PropertyName("cardio_rate")
