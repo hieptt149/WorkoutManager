@@ -16,11 +16,10 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.io.InputStream;
-
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
 import vn.com.hieptt149.workoutmanager.model.Exercise;
+import vn.com.hieptt149.workoutmanager.utils.GifView;
 import vn.com.hieptt149.workoutmanager.workoutdetails.AddWorkoutActivityIntf;
 
 /**
@@ -32,14 +31,13 @@ public class ExerciseDetailsFragment extends Fragment {
     private AddWorkoutActivityIntf addWorkoutActivityIntf;
     private TextView tvAddWorkoutToolbarTitle, tvTotalExercise, tvTotalTime, tvClickToChoose, tvExerciseDescription, tvExerciseName;
     private ProgressBar pbCardio, pbStrength, pbMobility;
-    private ImageView ivExercisePreview,ivStart, ivSave, ivDelete;
+    private ImageView ivStart, ivSave, ivDelete;
+    private GifView ivExercisePreview;
     private EditText edtWorkoutTitle;
     private LinearLayout lnWorkoutInfo, lnExerciseDetail, lnExercisesInfo;
     private RecyclerView rvPreviewSelectedExercise;
     private Button btnAddExercise;
-//    private int imgRes;
-    private byte[] bytes;
-    private InputStream inputStream;
+    private int imgRes;
     private static Exercise selectedExercise;
 
     public static ExerciseDetailsFragment newInstance(Bundle bundle) {
@@ -82,13 +80,8 @@ public class ExerciseDetailsFragment extends Fragment {
         pbCardio.setProgress(selectedExercise.getCardioRate());
         pbStrength.setProgress(selectedExercise.getStrengthRate());
         pbMobility.setProgress(selectedExercise.getMobilityRate());
-//        imgRes = getResources().getIdentifier(selectedExercise.getPreview(),"drawable",getContext().getPackageName());
-//        RequestOptions options = new RequestOptions();
-//        options.error(R.drawable.no_image);
-//        Glide.with(getContext())
-//                .load(imgRes)
-//                .apply(options)
-//                .into(ivExercisePreview);
+        imgRes = getResources().getIdentifier(selectedExercise.getPreview(), "drawable", getContext().getPackageName());
+        ivExercisePreview.setGifResource(imgRes);
         tvExerciseDescription.setText(selectedExercise.getDescription());
     }
 

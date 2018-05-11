@@ -51,13 +51,8 @@ public class ExerciseListAdapter extends RecyclerView.Adapter<ExerciseListAdapte
         } else {
             holder.ivSelectExercise.setImageLevel(0);
         }
-//        RequestOptions options = new RequestOptions();
-//        options.error(R.drawable.no_connection);
-//        Glide.with(context)
-//                .asBitmap()
-//                .load(exercise.getUrl())
-//                .apply(options)
-//                .into(holder.ivExerciseIcon);
+        int imgRes = context.getResources().getIdentifier(exercise.getPreview(),"drawable",context.getPackageName());
+        holder.ivExerciseIcon.setImageResource(imgRes);
     }
 
     @Override

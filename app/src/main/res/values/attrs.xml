@@ -23,4 +23,12 @@
         <attr name="end_angle" format="float"/>
         <attr name="circle_fill" format="color"/>
     </declare-styleable>
+    <declare-styleable name="GifView">
+        <attr name="gif" format="reference" />
+        <attr name="paused" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="CustomTheme">
+        <attr name="gifViewStyle" format="reference" />
+    </declare-styleable>
+
 </resources>

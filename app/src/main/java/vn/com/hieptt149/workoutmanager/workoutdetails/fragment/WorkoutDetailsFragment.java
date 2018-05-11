@@ -37,6 +37,7 @@ import vn.com.hieptt149.workoutmanager.model.User;
 import vn.com.hieptt149.workoutmanager.model.Workout;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 import vn.com.hieptt149.workoutmanager.utils.Formula;
+import vn.com.hieptt149.workoutmanager.utils.GifView;
 import vn.com.hieptt149.workoutmanager.workoutdetails.AddWorkoutActivityIntf;
 
 /**
@@ -52,7 +53,8 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     private SharedPreferences sharedPreferences;
     private TextView tvAddWorkoutToolbarTitle, tvExerciseName, tvTotalExercise, tvTotalTime, tvClickToChoose, tvExerciseDescription;
     private ProgressBar pbCardio, pbStrength, pbMobility;
-    private ImageView ivChooseWorkoutIcon, ivExercisePreview, ivStart, ivSave, ivDelete;
+    private ImageView ivChooseWorkoutIcon,ivStart, ivSave, ivDelete;
+    private GifView ivExercisePreview;
     private EditText edtWorkoutTitle;
     private LinearLayout lnExercisesInfo, lnWorkoutInfo, lnExerciseDetail;
     private RecyclerView rvPreviewSelectedExercise;

@@ -178,11 +178,12 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:weightSum="10">
-                <ImageView
+                <vn.com.hieptt149.workoutmanager.utils.GifView
                     android:id="@+id/iv_exercise_preview"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="8"/>
+                    android:layout_weight="8"
+                    android:layout_gravity="center_horizontal"/>
                 <TextView
                     android:id="@+id/tv_exercise_name"
                     android:layout_width="match_parent"

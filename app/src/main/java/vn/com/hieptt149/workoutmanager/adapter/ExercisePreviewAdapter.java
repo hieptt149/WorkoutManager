@@ -46,13 +46,8 @@ public class ExercisePreviewAdapter extends RecyclerView.Adapter<ExercisePreview
                 workoutDetailsFragmentIntf.onExerciseItemClick(exercise);
             }
         });
-//        RequestOptions options = new RequestOptions();
-//        options.error(R.drawable.no_connection);
-//        Glide.with(context)
-//                .asBitmap()
-//                .load(exercise.getUrl())
-//                .apply(options)
-//                .into(holder.ivExercisePreview);
+        int imgRes = context.getResources().getIdentifier(exercise.getPreview(),"drawable",context.getPackageName());
+        holder.ivExercisePreview.setImageResource(imgRes);
         holder.tvExerciseName.setText(exercise.getName());
     }
 
