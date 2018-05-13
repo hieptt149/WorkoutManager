@@ -7,7 +7,7 @@
     android:weightSum="10"
     tools:context="vn.com.hieptt149.workoutmanager.workoutdetails.fragment.StartWorkoutFragment">
 
-    <android.support.v4.view.ViewPager
+    <vn.com.hieptt149.workoutmanager.utils.CustomViewPager
         android:id="@+id/vp_exercise_preview"
         android:layout_width="match_parent"
         android:layout_height="0dp"

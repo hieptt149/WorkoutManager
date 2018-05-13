@@ -11,7 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -38,6 +37,7 @@ import vn.com.hieptt149.workoutmanager.model.History;
 import vn.com.hieptt149.workoutmanager.model.Timer;
 import vn.com.hieptt149.workoutmanager.model.User;
 import vn.com.hieptt149.workoutmanager.utils.CircularSeekBar;
+import vn.com.hieptt149.workoutmanager.utils.CustomViewPager;
 import vn.com.hieptt149.workoutmanager.utils.Formula;
 import vn.com.hieptt149.workoutmanager.utils.MyCountDownTimer;
 
@@ -49,7 +49,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
     private TextView tvAddWorkoutToolbarTitle, tvExerciseName, tvDuration;
     private ImageView ivPreviousExercise, ivNextExercise;
     //    private GifView ivExercisePreview;
-    private ViewPager vpExercisePreview;
+    private CustomViewPager vpExercisePreview;
     private CircularSeekBar sbDuration;
     private MyCountDownTimer countDownTimer, animationTimer;
     private Handler handler;
@@ -219,12 +219,12 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
                         mainAlarm.start();
                     }
                     timer = lstTimer.get(currInterval).getDuration();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            tvDuration.setText(Formula.msTimeFormatter(lstTimer.get(currInterval).getDuration()));
-                        }
-                    }, 500);
+//                    handler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            tvDuration.setText(Formula.msTimeFormatter(lstTimer.get(currInterval).getDuration()));
+//                        }
+//                    }, 500);
                 }
                 if (timer < 3000 && timer >= 1000) {
                     if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
@@ -242,9 +242,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
             public void onFinish() {
 
             }
-        }
-
-        ;
+        };
     }
 
     /**
@@ -267,9 +265,14 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
                     if (currInterval == lstTimer.size() - 1) {
                         ivNextExercise.setVisibility(View.INVISIBLE);
                     }
+                    if (currInterval % 2 == 0 && currInterval != 0) {
+                        currExercisePreview.pauseGifAnimation();
+                        vpExercisePreview.setCurrentItem(currInterval / 2);
+                        currExercisePreview = (ExercisePreviewFragment) exercisePreviewPagerAdapter.getItem(vpExercisePreview.getCurrentItem());
+                        currExercisePreview.playGifAnimation();
+                    }
 //                    imgRes = getResources().getIdentifier(lstTimer.get(currInterval).getPreview(), "drawable", getContext().getPackageName());
 //                    ivExercisePreview.setGifResource(imgRes);
-                    currExercisePreview = (ExercisePreviewFragment) exercisePreviewPagerAdapter.getItem(vpExercisePreview.getCurrentItem());
                     sbDuration.setMax((int) lstTimer.get(currInterval).getDuration());
                     tvExerciseName.setText(lstTimer.get(currInterval).getExerciseName());
                 }
