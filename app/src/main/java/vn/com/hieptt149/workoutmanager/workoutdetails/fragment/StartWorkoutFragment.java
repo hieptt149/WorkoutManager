@@ -10,6 +10,8 @@ import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,6 +31,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import vn.com.hieptt149.workoutmanager.R;
+import vn.com.hieptt149.workoutmanager.adapter.ExercisePreviewPagerAdapter;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
 import vn.com.hieptt149.workoutmanager.model.Exercise;
 import vn.com.hieptt149.workoutmanager.model.History;
@@ -44,17 +47,22 @@ import vn.com.hieptt149.workoutmanager.utils.MyCountDownTimer;
 public class StartWorkoutFragment extends Fragment implements View.OnClickListener, View.OnTouchListener {
 
     private TextView tvAddWorkoutToolbarTitle, tvExerciseName, tvDuration;
-    private ImageView ivExercisePreview, ivPreviousExercise, ivNextExercise;
+    private ImageView ivPreviousExercise, ivNextExercise;
+    //    private GifView ivExercisePreview;
+    private ViewPager vpExercisePreview;
     private CircularSeekBar sbDuration;
     private MyCountDownTimer countDownTimer, animationTimer;
     private Handler handler;
     private ArrayList<Timer> lstTimer;
     private DatabaseReference currUsersHistoryRef;
     private Calendar cal;
-    private double caloriesBurn;
     private MediaPlayer mainAlarm, secondaryAlarm;
     private Vibrator vibrator;
     private AudioManager audioManager;
+    private ArrayList<Fragment> lstExercisePreviewFragments;
+    private FragmentPagerAdapter exercisePreviewPagerAdapter;
+    private int gifRes;
+    private double caloriesBurn;
 
     private enum Status {
         START, STOP, PAUSE
@@ -66,7 +74,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
     private static long exercisesDuration, restsDuration, timer, animation;
     private static ArrayList<Exercise> lstExercise;
     private static int currInterval;
-
+    private static ExercisePreviewFragment currExercisePreview;
 
     public StartWorkoutFragment() {
         // Required empty public constructor
@@ -127,14 +135,20 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
                     status = Status.START;
                     initCountDownTimer();
                     initAnimation();
+                    currExercisePreview.playGifAnimation();
+//                    ivExercisePreview.play();
                     countDownTimer.start();
                     animationTimer.start();
                 } else if (status == Status.START) {
                     status = Status.PAUSE;
+                    currExercisePreview.pauseGifAnimation();
+//                    ivExercisePreview.pause();
                     countDownTimer.pause();
                     animationTimer.pause();
                 } else if (status == Status.PAUSE) {
                     status = Status.START;
+//                    ivExercisePreview.play();
+                    currExercisePreview.playGifAnimation();
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -165,7 +179,8 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
 
     private void init(View view) {
         tvAddWorkoutToolbarTitle = getActivity().findViewById(R.id.tv_addworkout_toolbar_title);
-        ivExercisePreview = view.findViewById(R.id.iv_exercise_preview);
+//        ivExercisePreview = view.findViewById(R.id.iv_exercise_preview);
+        vpExercisePreview = view.findViewById(R.id.vp_exercise_preview);
         tvExerciseName = view.findViewById(R.id.tv_exercise_name);
         ivPreviousExercise = view.findViewById(R.id.iv_previous_exercise);
         sbDuration = view.findViewById(R.id.sb_duration);
@@ -180,6 +195,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         audioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
         tvAddWorkoutToolbarTitle.setText(!workoutTitle.equals("") ? workoutTitle : getString(R.string.start_workout));
         createTimerList();
+        createExercisePreviewList();
         refreshTimer();
         calculateWorkoutsCaloriesBurned();
         initCountDownTimer();
@@ -198,14 +214,9 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
                 if (timer == 0 && currInterval < lstTimer.size() - 1) {
                     currInterval++;
                     if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
-                        vibrator.vibrate(1000);
+                        vibrator.vibrate(500);
                     } else {
-                        new Handler().post(new Runnable() {
-                            @Override
-                            public void run() {
-                                mainAlarm.start();
-                            }
-                        });
+                        mainAlarm.start();
                     }
                     timer = lstTimer.get(currInterval).getDuration();
                     handler.postDelayed(new Runnable() {
@@ -217,12 +228,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
                 }
                 if (timer < 3000 && timer >= 1000) {
                     if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-                        new Handler().post(new Runnable() {
-                            @Override
-                            public void run() {
-                                secondaryAlarm.start();
-                            }
-                        });
+                        secondaryAlarm.start();
                     }
                 }
                 timer -= 1000;
@@ -261,6 +267,9 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
                     if (currInterval == lstTimer.size() - 1) {
                         ivNextExercise.setVisibility(View.INVISIBLE);
                     }
+//                    imgRes = getResources().getIdentifier(lstTimer.get(currInterval).getPreview(), "drawable", getContext().getPackageName());
+//                    ivExercisePreview.setGifResource(imgRes);
+                    currExercisePreview = (ExercisePreviewFragment) exercisePreviewPagerAdapter.getItem(vpExercisePreview.getCurrentItem());
                     sbDuration.setMax((int) lstTimer.get(currInterval).getDuration());
                     tvExerciseName.setText(lstTimer.get(currInterval).getExerciseName());
                 }
@@ -289,14 +298,19 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
      */
     private void refreshTimer() {
         status = Status.STOP;
+        vpExercisePreview.setCurrentItem(0);
         currInterval = 0;
         countDownTimer = null;
         animationTimer = null;
+//        imgRes = getResources().getIdentifier(lstTimer.get(currInterval).getPreview(), "drawable", getContext().getPackageName());
         handler = new Handler();
         mainAlarm = MediaPlayer.create(getActivity(), R.raw.main_alarm);
         secondaryAlarm = MediaPlayer.create(getActivity(), R.raw.secondary_alarm);
+        currExercisePreview = (ExercisePreviewFragment) exercisePreviewPagerAdapter.getItem(vpExercisePreview.getCurrentItem());
         timer = lstTimer.get(currInterval).getDuration();
         animation = lstTimer.get(currInterval).getDuration();
+//        ivExercisePreview.setGifResource(imgRes);
+//        ivExercisePreview.pause();
         tvDuration.setText(Formula.msTimeFormatter(0));
         tvExerciseName.setText(!workoutTitle.equals("") ? workoutTitle : getString(R.string.start_workout));
         sbDuration.setProgress(0);
@@ -306,13 +320,27 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         lstTimer = new ArrayList<>();
         for (int i = 0; i < lstExercise.size(); i++) {
             if (i == 0) {
-                lstTimer.add(0, new Timer(getString(R.string.ready), 3000));
-                lstTimer.add(1, new Timer(lstExercise.get(0).getName(), exercisesDuration));
+                lstTimer.add(0, new Timer(getString(R.string.ready), lstExercise.get(0).getPreview(), 3000));
+                lstTimer.add(1, new Timer(lstExercise.get(0).getName(), lstExercise.get(0).getPreview(), exercisesDuration));
             } else {
-                lstTimer.add(2 * i, new Timer(getString(R.string.next) + " " + lstExercise.get(i).getName(), restsDuration));
-                lstTimer.add((2 * i) + 1, new Timer(lstExercise.get(i).getName(), exercisesDuration));
+                lstTimer.add(2 * i, new Timer(getString(R.string.next) + " " + lstExercise.get(i).getName(), lstExercise.get(i).getPreview(), restsDuration));
+                lstTimer.add((2 * i) + 1, new Timer(lstExercise.get(i).getName(), lstExercise.get(i).getPreview(), exercisesDuration));
             }
         }
+    }
+
+    private void createExercisePreviewList() {
+        lstExercisePreviewFragments = new ArrayList<>();
+        for (Exercise exercise : lstExercise) {
+            gifRes = getResources().getIdentifier(exercise.getPreview(), "drawable", getContext().getPackageName());
+            Bundle bundle = new Bundle();
+            bundle.putInt(ConstantValue.GIF_RESOURCE, gifRes);
+            ExercisePreviewFragment exercisePreviewFragment = new ExercisePreviewFragment();
+            exercisePreviewFragment.setArguments(bundle);
+            lstExercisePreviewFragments.add(exercisePreviewFragment);
+        }
+        exercisePreviewPagerAdapter = new ExercisePreviewPagerAdapter(getChildFragmentManager(), lstExercisePreviewFragments);
+        vpExercisePreview.setAdapter(exercisePreviewPagerAdapter);
     }
 
     /**

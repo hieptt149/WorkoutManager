@@ -20,8 +20,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".workoutdetails.AddWorkoutActivity"
-            android:hardwareAccelerated="false"></activity>
+            android:name=".workoutdetails.AddWorkoutActivity"></activity>
         <activity android:name=".login.LoginActivity" />
     </application>
 
