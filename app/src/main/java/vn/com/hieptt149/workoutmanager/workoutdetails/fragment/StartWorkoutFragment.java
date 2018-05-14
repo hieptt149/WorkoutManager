@@ -48,7 +48,6 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
 
     private TextView tvAddWorkoutToolbarTitle, tvExerciseName, tvDuration;
     private ImageView ivPreviousExercise, ivNextExercise;
-    //    private GifView ivExercisePreview;
     private CustomViewPager vpExercisePreview;
     private CircularSeekBar sbDuration;
     private MyCountDownTimer countDownTimer, animationTimer;
@@ -136,18 +135,15 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
                     initCountDownTimer();
                     initAnimation();
                     currExercisePreview.playGifAnimation();
-//                    ivExercisePreview.play();
                     countDownTimer.start();
                     animationTimer.start();
                 } else if (status == Status.START) {
                     status = Status.PAUSE;
                     currExercisePreview.pauseGifAnimation();
-//                    ivExercisePreview.pause();
                     countDownTimer.pause();
                     animationTimer.pause();
                 } else if (status == Status.PAUSE) {
                     status = Status.START;
-//                    ivExercisePreview.play();
                     currExercisePreview.playGifAnimation();
                     handler.postDelayed(new Runnable() {
                         @Override
@@ -179,7 +175,6 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
 
     private void init(View view) {
         tvAddWorkoutToolbarTitle = getActivity().findViewById(R.id.tv_addworkout_toolbar_title);
-//        ivExercisePreview = view.findViewById(R.id.iv_exercise_preview);
         vpExercisePreview = view.findViewById(R.id.vp_exercise_preview);
         tvExerciseName = view.findViewById(R.id.tv_exercise_name);
         ivPreviousExercise = view.findViewById(R.id.iv_previous_exercise);
@@ -249,7 +244,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
      * Khởi tạo animation cho timer
      */
     private void initAnimation() {
-        animationTimer = new MyCountDownTimer(Long.MAX_VALUE, 100) {
+        animationTimer = new MyCountDownTimer(Long.MAX_VALUE, 500) {
             @Override
             public void onTick(long millisUntilFinished) {
                 sbDuration.setProgress((int) animation);
@@ -271,8 +266,6 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
                         currExercisePreview = (ExercisePreviewFragment) exercisePreviewPagerAdapter.getItem(vpExercisePreview.getCurrentItem());
                         currExercisePreview.playGifAnimation();
                     }
-//                    imgRes = getResources().getIdentifier(lstTimer.get(currInterval).getPreview(), "drawable", getContext().getPackageName());
-//                    ivExercisePreview.setGifResource(imgRes);
                     sbDuration.setMax((int) lstTimer.get(currInterval).getDuration());
                     tvExerciseName.setText(lstTimer.get(currInterval).getExerciseName());
                 }
@@ -305,15 +298,12 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         currInterval = 0;
         countDownTimer = null;
         animationTimer = null;
-//        imgRes = getResources().getIdentifier(lstTimer.get(currInterval).getPreview(), "drawable", getContext().getPackageName());
         handler = new Handler();
         mainAlarm = MediaPlayer.create(getActivity(), R.raw.main_alarm);
         secondaryAlarm = MediaPlayer.create(getActivity(), R.raw.secondary_alarm);
         currExercisePreview = (ExercisePreviewFragment) exercisePreviewPagerAdapter.getItem(vpExercisePreview.getCurrentItem());
         timer = lstTimer.get(currInterval).getDuration();
         animation = lstTimer.get(currInterval).getDuration();
-//        ivExercisePreview.setGifResource(imgRes);
-//        ivExercisePreview.pause();
         tvDuration.setText(Formula.msTimeFormatter(0));
         tvExerciseName.setText(!workoutTitle.equals("") ? workoutTitle : getString(R.string.start_workout));
         sbDuration.setProgress(0);

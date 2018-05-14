@@ -8,6 +8,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -23,7 +24,7 @@ import vn.com.hieptt149.workoutmanager.utils.CustomViewPager;
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, MainActivityIntf {
 
     private BottomNavigationView bottomNavigationView;
-    private CustomViewPager vpAppContainer;
+    private ViewPager vpAppContainer;
     private HomeScreenPagerAdapter homeScreenPagerAdapter;
     private TextView tvAppToolbarTitle;
     private SharedPreferences sharedPreferences;
