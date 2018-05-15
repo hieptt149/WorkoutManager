@@ -36,7 +36,7 @@ import vn.com.hieptt149.workoutmanager.model.Exercise;
 import vn.com.hieptt149.workoutmanager.model.User;
 import vn.com.hieptt149.workoutmanager.model.Workout;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;
-import vn.com.hieptt149.workoutmanager.utils.Formula;
+import vn.com.hieptt149.workoutmanager.utils.Common;
 import vn.com.hieptt149.workoutmanager.utils.GifView;
 import vn.com.hieptt149.workoutmanager.workoutdetails.AddWorkoutActivityIntf;
 
@@ -290,7 +290,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         } else {
             tvTotalExercise.setText(totalExercise + " exercise");
         }
-        tvTotalTime.setText(Formula.msTimeFormatter(totalTime));
+        tvTotalTime.setText(Common.msTimeFormatter(totalTime));
         if (imgTag != null) {
             int imgRes = getResources().getIdentifier(imgTag, "drawable", getContext().getPackageName());
             ivChooseWorkoutIcon.setTag(imgTag);

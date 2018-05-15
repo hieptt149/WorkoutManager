@@ -82,6 +82,7 @@ public class ExerciseDetailsFragment extends Fragment {
         pbMobility.setProgress(selectedExercise.getMobilityRate());
         imgRes = getResources().getIdentifier(selectedExercise.getPreview(), "drawable", getContext().getPackageName());
         ivExercisePreview.setGifResource(imgRes);
+        ivExercisePreview.play();
         tvExerciseDescription.setText(selectedExercise.getDescription());
     }
 

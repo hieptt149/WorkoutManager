@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
  * Created by Administrator on 04/03/2018.
  */
 
-public class Formula {
+public class Common {
 
     /**
      * Tính lượng calo cần đốt cháy để duy trì cân năng hiện tại

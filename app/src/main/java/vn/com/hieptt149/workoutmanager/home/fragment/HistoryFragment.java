@@ -37,7 +37,7 @@ import vn.com.hieptt149.workoutmanager.model.ConstantValue;
 import vn.com.hieptt149.workoutmanager.model.History;
 import vn.com.hieptt149.workoutmanager.model.User;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;
-import vn.com.hieptt149.workoutmanager.utils.Formula;
+import vn.com.hieptt149.workoutmanager.utils.Common;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -153,7 +153,7 @@ public class HistoryFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 currUser = dataSnapshot.getValue(User.class);
                 currUser.setId(dataSnapshot.getKey());
-                caloriesBurnADay = Formula.calculateCaloriesBurnADay(currUser.getGender(), currUser.getAge(), currUser.getHeight(), currUser.getWeight());
+                caloriesBurnADay = Common.calculateCaloriesBurnADay(currUser.getGender(), currUser.getAge(), currUser.getHeight(), currUser.getWeight());
                 tvCaloriesBurnADay.setText("Calories need to burn a day: " + nf.format(caloriesBurnADay));
                 setupChartAxes();
                 getWorkoutHistory();
