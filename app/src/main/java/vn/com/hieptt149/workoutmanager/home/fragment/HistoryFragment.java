@@ -1,9 +1,11 @@
 package vn.com.hieptt149.workoutmanager.home.fragment;
 
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,13 +14,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.LimitLine;
+import com.github.mikephil.charting.components.MarkerImage;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.LargeValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -42,7 +49,7 @@ import vn.com.hieptt149.workoutmanager.utils.Common;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HistoryFragment extends Fragment {
+public class HistoryFragment extends Fragment implements OnChartValueSelectedListener {
 
     private FirebaseAuth auth;
     private DatabaseReference currUserRef;
@@ -109,42 +116,110 @@ public class HistoryFragment extends Fragment {
         }
     }
 
-    private void setupChartAxes() {
-        XAxis xAxis = chartHistory.getXAxis();
-        xAxis.setDrawGridLines(false);
-        xAxis.setAvoidFirstLastClipping(true);
-        xAxis.setEnabled(false);
-
-        YAxis leftYAxis = chartHistory.getAxisLeft();
-        leftYAxis.setDrawGridLines(true);
-        leftYAxis.setAxisMinimum(0f);
-
-        YAxis rightYAxis = chartHistory.getAxisRight();
-        rightYAxis.setEnabled(false);
-
-        LimitLine ll = new LimitLine((float) caloriesBurnADay, "cal/day");
-        ll.setLineWidth(3f);
-        ll.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-        ll.setTextSize(12f);
-        leftYAxis.removeAllLimitLines();
-        leftYAxis.addLimitLine(ll);
-        leftYAxis.setDrawLimitLinesBehindData(true);
+    @Override
+    public void onValueSelected(Entry e, Highlight h) {
+        rvHistory.scrollToPosition(lineDataSet.getEntryIndex(e));
+        historyListAdapter.setItemHighlight(lineDataSet.getEntryIndex(e));
+        historyListAdapter.notifyDataSetChanged();
     }
+
+    @Override
+    public void onNothingSelected() {
+
+    }
+
+//    private void setupChartAxes() {
+//        XAxis xAxis = chartHistory.getXAxis();
+//        xAxis.setDrawGridLines(false);
+//        xAxis.setAvoidFirstLastClipping(true);
+//        xAxis.setEnabled(false);
+//
+//        YAxis leftYAxis = chartHistory.getAxisLeft();
+//        leftYAxis.setDrawGridLines(true);
+//        leftYAxis.setAxisMinimum(0f);
+//
+//        YAxis rightYAxis = chartHistory.getAxisRight();
+//        rightYAxis.setEnabled(false);
+//
+//        LimitLine ll = new LimitLine((float) caloriesBurnADay, "cal/day");
+//        ll.setLineWidth(3f);
+//        ll.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+//        ll.setTextSize(12f);
+//        leftYAxis.removeAllLimitLines();
+//        leftYAxis.addLimitLine(ll);
+//        leftYAxis.setDrawLimitLinesBehindData(true);
+//    }
 
     private void setupChartData() {
         if (lstChartEntries != null) {
-//            lineDataSet = new LineDataSet(lstChartEntries, "Workout history");
-//            lineData = new LineData(lineDataSet);
-            lineDataSet.setLineWidth(2f);
-            lineDataSet.setCircleRadius(8f);
-            lineDataSet.setValueTextSize(12f);
-            // To show values of each point
+            lineDataSet = new LineDataSet(lstChartEntries, "Workout history");
+            lineDataSet.setColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
+            lineDataSet.setHighlightEnabled(true);
+            lineDataSet.setDrawHighlightIndicators(false);
             lineDataSet.setDrawValues(true);
-            lineDataSet.notifyDataSetChanged();
-            lineData.notifyDataChanged();
+
+            lineData = new LineData(lineDataSet);
+
             chartHistory.setData(lineData);
             chartHistory.invalidate();
+            chartHistory.getDescription().setEnabled(false);
+            chartHistory.getLegend().setEnabled(false);
+            chartHistory.getAxisRight().setEnabled(false);
+
+            YAxis yAxis = chartHistory.getAxisLeft();
+            yAxis.setDrawGridLines(true);
+            yAxis.setTextColor(Color.GRAY);
+            yAxis.setAxisMinimum(0.0f);
+
+            XAxis xAxis = chartHistory.getXAxis();
+            xAxis.setDrawGridLines(false);
+            xAxis.setAvoidFirstLastClipping(true);
+            xAxis.setEnabled(false);
+
+            LimitLine ll = new LimitLine((float) caloriesBurnADay, "cal/day");
+            ll.setLineWidth(2f);
+            ll.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+            ll.setTextSize(12f);
+            yAxis.addLimitLine(ll);
+            yAxis.setDrawLimitLinesBehindData(true);
+
+            chartHistory.animateX(1500, Easing.EasingOption.EaseInBack);
+            chartHistory.fitScreen();
+            chartHistory.setPinchZoom(false);
+            chartHistory.setDoubleTapToZoomEnabled(false);
+            chartHistory.setOnChartValueSelectedListener(this);
         }
+//        if (lstChartEntries != null) {
+////            lineDataSet = new LineDataSet(lstChartEntries, "Workout history");
+////            lineData = new LineData(lineDataSet);
+//            lineDataSet.setHighlightEnabled(true);
+//            lineDataSet.setDrawHighlightIndicators(false);
+//            lineDataSet.setDrawCircles(false);
+//            lineDataSet.setLineWidth(2f);
+////            lineDataSet.setCircleRadius(8f);
+//            lineDataSet.setValueTextSize(12f);
+//            // To show values of each point
+//            lineDataSet.setDrawValues(true);
+//            lineDataSet.notifyDataSetChanged();
+//
+//            lineData.notifyDataChanged();
+//
+//            MarkerImage markerImage = new MarkerImage(getActivity(),R.drawable.star);
+//            markerImage.setOffset(-10f,-12f);
+//
+//            chartHistory.getDescription().setEnabled(false);
+//            chartHistory.getLegend().setEnabled(false);
+//            chartHistory.setMarker(markerImage);
+//            chartHistory.setPinchZoom(false);
+//            chartHistory.setDoubleTapToZoomEnabled(false);
+//            chartHistory.fitScreen();
+//            chartHistory.setData(lineData);
+////            arrHighlights = new Highlight[lstHighlights.size()];
+////            arrHighlights = lstHighlights.toArray(arrHighlights);
+////            chartHistory.highlightValues(arrHighlights);
+////            chartHistory.highlightValue(highlight, false);
+//            chartHistory.invalidate();
+//        }
     }
 
     private void getCurrUserInfo() {
@@ -155,7 +230,7 @@ public class HistoryFragment extends Fragment {
                 currUser.setId(dataSnapshot.getKey());
                 caloriesBurnADay = Common.calculateCaloriesBurnADay(currUser.getGender(), currUser.getAge(), currUser.getHeight(), currUser.getWeight());
                 tvCaloriesBurnADay.setText("Calories need to burn a day: " + nf.format(caloriesBurnADay));
-                setupChartAxes();
+//                setupChartAxes();
                 getWorkoutHistory();
                 DisplayView.dismissProgressDialog();
             }
@@ -179,9 +254,12 @@ public class HistoryFragment extends Fragment {
                         History history = snapshot.getValue(History.class);
                         history.setUserId(auth.getCurrentUser().getUid());
                         history.setPracticeDate(snapshot.getKey());
-//                    lineData.addEntry(new Entry(Float.parseFloat(history.getPracticeDate()), (float) history.getCaloriesBurn()),0);
                         lstHistories.add(history);
-                        lstChartEntries.add(new Entry(Float.parseFloat(history.getPracticeDate()), (float) history.getCaloriesBurn()));
+                        if (history.getCaloriesBurn() > caloriesBurnADay) {
+                            lstChartEntries.add(new Entry(Float.parseFloat(history.getPracticeDate()), (float) history.getCaloriesBurn(),getResources().getDrawable(R.drawable.star)));
+                        } else {
+                            lstChartEntries.add(new Entry(Float.parseFloat(history.getPracticeDate()), (float) history.getCaloriesBurn()));
+                        }
                     }
                     historyListAdapter.notifyDataSetChanged();
                     setupChartData();

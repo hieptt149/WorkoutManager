@@ -24,7 +24,7 @@ import vn.com.hieptt149.workoutmanager.utils.CustomViewPager;
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, MainActivityIntf {
 
     private BottomNavigationView bottomNavigationView;
-    private ViewPager vpAppContainer;
+    private CustomViewPager vpAppContainer;
     private HomeScreenPagerAdapter homeScreenPagerAdapter;
     private TextView tvAppToolbarTitle;
     private SharedPreferences sharedPreferences;

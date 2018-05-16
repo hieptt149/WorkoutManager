@@ -133,7 +133,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
             case R.id.tv_duration:
                 if (status == Status.STOP) {
                     status = Status.START;
-                    initCountDownTimer();
+//                    initCountDownTimer();
 //                    initAnimation();
                     currExercisePreview.playGifAnimation();
                     countDownTimer.start();
@@ -146,12 +146,13 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
                 } else if (status == Status.PAUSE) {
                     status = Status.START;
                     currExercisePreview.playGifAnimation();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            countDownTimer.resume();
-                        }
-                    }, animation - timer);
+                    countDownTimer.resume();
+//                    handler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            countDownTimer.resume();
+//                        }
+//                    }, animation - timer);
 //                    animationTimer.resume();
                 }
                 break;
@@ -327,7 +328,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         animation = lstTimer.get(currInterval).getDuration();
         tvDuration.setText(Common.msTimeFormatter(0));
         tvExerciseName.setText(!workoutTitle.equals("") ? workoutTitle : getString(R.string.start_workout));
-        sbDuration.setProgress(0);
+        sbDuration.setMax((int) lstTimer.get(currInterval).getDuration());
     }
 
     private void createTimerList() {

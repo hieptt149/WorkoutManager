@@ -12,11 +12,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -42,6 +44,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
     private SharedPreferences sharedPreferences;
     private Switch swSounds;
     private LinearLayout lnUsersSettings, lnExercisesDuration, lnRestsDuration;
+    private ImageView ivUserAvatar;
     private TextView tvUsersName, tvUsersAge, tvUsersGender, tvUsersHeight, tvUsersWeight, tvChangePassword,
             tvExercisesDuration, tvRestsDuration, tvLogin, tvUpdateHeightWeight;
     private Spinner spnThemes;
@@ -171,6 +174,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
                 lnUsersSettings.setVisibility(View.VISIBLE);
                 tvUpdateHeightWeight.setVisibility(View.VISIBLE);
                 tvChangePassword.setVisibility(View.VISIBLE);
+                Glide.with(getContext()).load(auth.getCurrentUser().getPhotoUrl()).into(ivUserAvatar);
                 tvUsersName.setText(auth.getCurrentUser().getDisplayName());
                 tvUsersAge.setText(getString(R.string.age) + ": " + currUser.getAge());
                 if (currUser.getGender()) {
@@ -192,6 +196,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
 
     private void init(View view) {
         lnUsersSettings = view.findViewById(R.id.ln_users_settings);
+        ivUserAvatar = view.findViewById(R.id.iv_user_avatar);
         tvUsersName = view.findViewById(R.id.tv_users_name);
         tvUsersAge = view.findViewById(R.id.tv_users_age);
         tvUsersGender = view.findViewById(R.id.tv_users_gender);

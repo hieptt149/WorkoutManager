@@ -17,6 +17,7 @@
             android:weightSum="10"
             android:padding="@dimen/small_space">
             <ImageView
+                android:id="@+id/iv_user_avatar"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="3"

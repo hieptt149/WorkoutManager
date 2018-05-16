@@ -1,10 +1,12 @@
 package vn.com.hieptt149.workoutmanager.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
@@ -21,6 +23,7 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
     private ArrayList<History> lstHistories;
     private NumberFormat nf = new DecimalFormat("#.##");
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    private int itemHighlight = -1;
 
     public HistoryListAdapter(Context context, ArrayList<History> lstHistories) {
         this.lstHistories = lstHistories;
@@ -41,6 +44,11 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
         holder.tvCaloriesBurn.setText(context.getString(R.string.total_calories_burned) + " " + nf.format(history.getCaloriesBurn()) + " cal");
         holder.tvHeight.setText(context.getString(R.string.height) + ": " + history.getCurrHeight() + " cm");
         holder.tvWeight.setText(context.getString(R.string.weight) + ": " + history.getCurrWeight() + " kg");
+        if (itemHighlight == position){
+            holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.itemFocused));
+        } else {
+            holder.itemView.setBackgroundColor(Color.TRANSPARENT);
+        }
     }
 
     @Override
@@ -60,5 +68,13 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
             tvHeight = itemView.findViewById(R.id.tv_height);
             tvWeight = itemView.findViewById(R.id.tv_weight);
         }
+    }
+
+    public int getItemHighlight() {
+        return itemHighlight;
+    }
+
+    public void setItemHighlight(int itemHighlight) {
+        this.itemHighlight = itemHighlight;
     }
 }
