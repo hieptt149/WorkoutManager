@@ -52,7 +52,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
     private CustomViewPager vpExercisePreview;
     private CircularSeekBar sbDuration;
     private MyCountDownTimer countDownTimer;
-//            animationTimer;
+    //            animationTimer;
     private Handler handler;
     private ArrayList<Timer> lstTimer;
     private DatabaseReference currUsersHistoryRef;
@@ -187,7 +187,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         createTimerList();
         createExercisePreviewList();
         refreshTimer();
-        if (currUser!=null){
+        if (currUser != null) {
             calculateWorkoutsCaloriesBurned();
         }
         initCountDownTimer();
@@ -232,7 +232,9 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
                         currExercisePreview = (ExercisePreviewFragment) exercisePreviewPagerAdapter.getItem(vpExercisePreview.getCurrentItem());
                         currExercisePreview.playGifAnimation();
                     }
-                    sbDuration.setMax((int) lstTimer.get(currInterval).getDuration());
+                    if (currInterval != 0) {
+                        sbDuration.setMax((int) lstTimer.get(currInterval).getDuration());
+                    }
                     tvExerciseName.setText(lstTimer.get(currInterval).getExerciseName());
                 }
                 timer -= 1000;
@@ -380,7 +382,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                DisplayView.showToast(getContext(),"Can't save your history to server. Please check your connection and try again");
+                DisplayView.showToast(getContext(), "Can't save your history to server. Please check your connection and try again");
             }
         });
     }
