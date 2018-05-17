@@ -17,13 +17,11 @@ import android.widget.TextView;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.LimitLine;
-import com.github.mikephil.charting.components.MarkerImage;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.LargeValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -58,7 +56,7 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
     private RecyclerView rvHistory;
     private TextView tvCaloriesBurnADay;
     private ArrayList<History> lstHistories;
-    private List<Entry> lstChartEntries;
+    private List<Entry> lstHistoryChartEntries;
     private HistoryListAdapter historyListAdapter;
     private LinearLayoutManager linearLayoutManager;
     private DividerItemDecoration dividerItemDecoration;
@@ -104,9 +102,9 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             if (auth != null) {
-                if (auth.getCurrentUser() == null && (lstChartEntries.size() != 0 || lstHistories.size() != 0)) {
+                if (auth.getCurrentUser() == null && (lstHistoryChartEntries.size() != 0 || lstHistories.size() != 0)) {
                     lstHistories.clear();
-                    lstChartEntries.clear();
+                    lstHistoryChartEntries.clear();
                     chartHistory.clear();
                     historyListAdapter.notifyDataSetChanged();
                     lineDataSet.notifyDataSetChanged();
@@ -130,31 +128,9 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
 
     }
 
-//    private void setupChartAxes() {
-//        XAxis xAxis = chartHistory.getXAxis();
-//        xAxis.setDrawGridLines(false);
-//        xAxis.setAvoidFirstLastClipping(true);
-//        xAxis.setEnabled(false);
-//
-//        YAxis leftYAxis = chartHistory.getAxisLeft();
-//        leftYAxis.setDrawGridLines(true);
-//        leftYAxis.setAxisMinimum(0f);
-//
-//        YAxis rightYAxis = chartHistory.getAxisRight();
-//        rightYAxis.setEnabled(false);
-//
-//        LimitLine ll = new LimitLine((float) caloriesBurnADay, "cal/day");
-//        ll.setLineWidth(3f);
-//        ll.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-//        ll.setTextSize(12f);
-//        leftYAxis.removeAllLimitLines();
-//        leftYAxis.addLimitLine(ll);
-//        leftYAxis.setDrawLimitLinesBehindData(true);
-//    }
-
     private void setupChartData() {
-        if (lstChartEntries != null) {
-            lineDataSet = new LineDataSet(lstChartEntries, "Workout history");
+        if (lstHistoryChartEntries != null) {
+            lineDataSet = new LineDataSet(lstHistoryChartEntries, "Workout history");
             lineDataSet.setColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
             lineDataSet.setHighlightEnabled(true);
             lineDataSet.setDrawHighlightIndicators(false);
@@ -221,7 +197,7 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
 //                lineData = chartHistory.getData();
                 if (isAdded()) {
                     lstHistories.clear();
-                    lstChartEntries.clear();
+                    lstHistoryChartEntries.clear();
                     chartHistory.clear();
                     if (dataSnapshot.hasChildren()) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -230,9 +206,9 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
                             history.setPracticeDate(snapshot.getKey());
                             lstHistories.add(history);
                             if (history.getCaloriesBurn() > caloriesBurnADay) {
-                                lstChartEntries.add(new Entry(Float.parseFloat(history.getPracticeDate()), (float) history.getCaloriesBurn(), getResources().getDrawable(R.drawable.star)));
+                                lstHistoryChartEntries.add(new Entry(Float.parseFloat(history.getPracticeDate()), (float) history.getCaloriesBurn(), getResources().getDrawable(R.drawable.star)));
                             } else {
-                                lstChartEntries.add(new Entry(Float.parseFloat(history.getPracticeDate()), (float) history.getCaloriesBurn()));
+                                lstHistoryChartEntries.add(new Entry(Float.parseFloat(history.getPracticeDate()), (float) history.getCaloriesBurn()));
                             }
                         }
                         historyListAdapter.notifyDataSetChanged();
@@ -260,7 +236,7 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
         tvCaloriesBurnADay = view.findViewById(R.id.tv_calories_burn_a_day);
         auth = FirebaseAuth.getInstance();
         lstHistories = new ArrayList<>();
-        lstChartEntries = new ArrayList<>();
+        lstHistoryChartEntries = new ArrayList<>();
         linearLayoutManager = new LinearLayoutManager(getContext());
         dividerItemDecoration = new DividerItemDecoration(getContext(), linearLayoutManager.getOrientation());
         historyListAdapter = new HistoryListAdapter(getContext(), lstHistories);
@@ -269,7 +245,7 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
         rvHistory.addItemDecoration(dividerItemDecoration);
         rvHistory.setAdapter(historyListAdapter);
         chartHistory.setDrawGridBackground(false);
-        lineDataSet = new LineDataSet(lstChartEntries, "Workout history");
+        lineDataSet = new LineDataSet(lstHistoryChartEntries, "Workout history");
         lineData = new LineData(lineDataSet);
     }
 }

@@ -56,10 +56,10 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
     private SharedPreferences sharedPreferences;
     private Switch swSounds;
     private LinearLayout lnUsersSettings, lnExercisesDuration, lnRestsDuration;
-    private ImageView ivUserAvatar;
+    private ImageView ivUserAvatar, ivWeightChart;
     private TextView tvUsersName, tvUsersAge, tvUsersGender, tvUsersHeight, tvUsersWeight, tvChangePassword,
             tvExercisesDuration, tvRestsDuration, tvLogin, tvUpdateHeightWeight;
-//    private Spinner spnThemes;
+    //    private Spinner spnThemes;
     private long exerscisesDuration, restsDuration;
     private Bundle bundle;
     private User currUser;
@@ -112,6 +112,11 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
     public void onClick(View view) {
         bundle = new Bundle();
         switch (view.getId()) {
+            case R.id.iv_weight_chart:
+                bundle.putSerializable(ConstantValue.CURRENT_USER, currUser);
+                mainActivityIntf.showDialogFragment(SettingsFragment.this,
+                        WeightHistoryDialogFragment.newInstance(bundle), ConstantValue.WEIGHT_HISTORY);
+                break;
             case R.id.tv_update_height_weight:
                 bundle.putBoolean(ConstantValue.CHANGE_PASSWORD, false);
                 mainActivityIntf.showDialogFragment(SettingsFragment.this,
@@ -206,7 +211,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         ivUserAvatar.setImageResource(R.drawable.avatar);
-                        DisplayView.showToast(getContext(),"Can't load your Google's avatar");
+                        DisplayView.showToast(getContext(), "Can't load your Google's avatar");
                     }
                 });
                 Volley.newRequestQueue(getContext()).add(request);
@@ -224,7 +229,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                DisplayView.showToast(getContext(),"Can't get your information. Please check your connection");
+                DisplayView.showToast(getContext(), "Can't get your information. Please check your connection");
                 DisplayView.dismissProgressDialog();
             }
         });
@@ -238,6 +243,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
         tvUsersGender = view.findViewById(R.id.tv_users_gender);
         tvUsersHeight = view.findViewById(R.id.tv_users_height);
         tvUsersWeight = view.findViewById(R.id.tv_users_weight);
+        ivWeightChart = view.findViewById(R.id.iv_weight_chart);
         tvUpdateHeightWeight = view.findViewById(R.id.tv_update_height_weight);
         tvChangePassword = view.findViewById(R.id.tv_change_password);
 //        swSounds = view.findViewById(R.id.sw_sounds);
@@ -247,6 +253,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
         tvRestsDuration = view.findViewById(R.id.tv_rests_duration);
 //        spnThemes = view.findViewById(R.id.spn_themes);
         tvLogin = view.findViewById(R.id.tv_login);
+        ivWeightChart.setOnClickListener(this);
         tvUpdateHeightWeight.setOnClickListener(this);
         tvChangePassword.setOnClickListener(this);
         lnExercisesDuration.setOnClickListener(this);
