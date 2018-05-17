@@ -132,10 +132,10 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
         if (lstHistoryChartEntries != null) {
             lineDataSet = new LineDataSet(lstHistoryChartEntries, "Workout history");
             lineDataSet.setColor(Color.BLACK);
+            lineDataSet.setDrawValues(false);
             lineDataSet.setHighlightEnabled(true);
             lineDataSet.setDrawHighlightIndicators(false);
-            lineDataSet.setDrawValues(true);
-            lineDataSet.setCircleRadius(5f);
+            lineDataSet.setCircleRadius(6f);
             lineDataSet.setCircleColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
 
             lineData = new LineData(lineDataSet);
@@ -150,11 +150,13 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
             yAxis.setDrawGridLines(true);
             yAxis.setTextColor(Color.GRAY);
             yAxis.setAxisMinimum(0.0f);
+            yAxis.setAxisLineColor(Color.BLACK);
 
             XAxis xAxis = chartHistory.getXAxis();
             xAxis.setDrawGridLines(false);
             xAxis.setAvoidFirstLastClipping(true);
             xAxis.setEnabled(false);
+            xAxis.setAxisLineColor(Color.BLACK);
 
             LimitLine ll = new LimitLine((float) caloriesBurnADay, "cal/day");
             ll.setLineWidth(2f);

@@ -33,6 +33,7 @@
     <string name="password_updated">Password is updated</string>
     <string name="update_password_failed">Failed to update password</string>
     <string name="update_info_failed">Failed to update info. Please check your connection</string>
+    <string name="click_chart_item">(Click item to show details)</string>
 
     <!--Workout Details Fragment-->
     <string name="back">Back</string>

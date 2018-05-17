@@ -14,7 +14,6 @@ import android.view.Window;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -28,12 +27,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
 import vn.com.hieptt149.workoutmanager.model.History;
 import vn.com.hieptt149.workoutmanager.model.User;
+import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 
 public class WeightHistoryDialogFragment extends DialogFragment implements OnChartValueSelectedListener {
 
@@ -42,6 +43,7 @@ public class WeightHistoryDialogFragment extends DialogFragment implements OnCha
     private ArrayList<Entry> lstWeightChartEntries;
     private LineDataSet lineDataSet;
     private LineData lineData;
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
     private static User currUser;
 
@@ -77,7 +79,7 @@ public class WeightHistoryDialogFragment extends DialogFragment implements OnCha
 
     @Override
     public void onValueSelected(Entry e, Highlight h) {
-
+        DisplayView.showToast(getContext(), "Date: " + sdf.format((long) e.getX()) + "\nWeight: " + e.getY() + " kg");
     }
 
     @Override
@@ -122,9 +124,8 @@ public class WeightHistoryDialogFragment extends DialogFragment implements OnCha
             lineDataSet = new LineDataSet(lstWeightChartEntries, "Weight");
             lineDataSet.setColor(Color.BLACK);
             lineDataSet.setHighlightEnabled(true);
-            lineDataSet.setDrawHighlightIndicators(false);
-            lineDataSet.setDrawValues(true);
-            lineDataSet.setCircleRadius(5f);
+            lineDataSet.setDrawHighlightIndicators(true);
+            lineDataSet.setCircleRadius(6f);
             lineDataSet.setCircleColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
 
             lineData = new LineData(lineDataSet);
