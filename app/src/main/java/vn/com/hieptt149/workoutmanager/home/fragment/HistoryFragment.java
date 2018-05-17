@@ -128,13 +128,15 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
 
     }
 
-    private void setupChartData() {
+    private void setupHistoryChartData() {
         if (lstHistoryChartEntries != null) {
             lineDataSet = new LineDataSet(lstHistoryChartEntries, "Workout history");
-            lineDataSet.setColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
+            lineDataSet.setColor(Color.BLACK);
             lineDataSet.setHighlightEnabled(true);
             lineDataSet.setDrawHighlightIndicators(false);
             lineDataSet.setDrawValues(true);
+            lineDataSet.setCircleRadius(5f);
+            lineDataSet.setCircleColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
 
             lineData = new LineData(lineDataSet);
 
@@ -212,7 +214,7 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
                             }
                         }
                         historyListAdapter.notifyDataSetChanged();
-                        setupChartData();
+                        setupHistoryChartData();
                     } else {
                         historyListAdapter.notifyDataSetChanged();
                         lineDataSet.notifyDataSetChanged();

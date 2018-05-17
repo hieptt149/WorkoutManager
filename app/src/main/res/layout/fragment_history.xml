@@ -16,10 +16,6 @@
         android:paddingRight="@dimen/medium_space"
         android:paddingBottom="@dimen/medium_space"></com.github.mikephil.charting.charts.LineChart>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray" />
 
     <TextView
         android:id="@+id/tv_calories_burn_a_day"

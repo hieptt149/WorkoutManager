@@ -6,13 +6,13 @@
     tools:context=".home.fragment.WeightHistoryDialogFragment">
 
     <LinearLayout
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="400dp"
         android:orientation="vertical"
         android:padding="@dimen/small_space">
 
         <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/weight_chart"
+            android:id="@+id/chart_weight"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>

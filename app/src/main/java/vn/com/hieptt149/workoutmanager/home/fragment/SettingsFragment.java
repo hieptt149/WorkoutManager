@@ -26,6 +26,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.github.mikephil.charting.data.Entry;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,6 +37,8 @@ import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.home.MainActivityIntf;
@@ -54,7 +57,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
     private FirebaseAuth auth;
     private MainActivityIntf mainActivityIntf;
     private SharedPreferences sharedPreferences;
-    private Switch swSounds;
+//    private Switch swSounds;
     private LinearLayout lnUsersSettings, lnExercisesDuration, lnRestsDuration;
     private ImageView ivUserAvatar, ivWeightChart;
     private TextView tvUsersName, tvUsersAge, tvUsersGender, tvUsersHeight, tvUsersWeight, tvChangePassword,
