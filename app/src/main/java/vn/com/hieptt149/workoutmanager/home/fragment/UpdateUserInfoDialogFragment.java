@@ -212,7 +212,6 @@ public class UpdateUserInfoDialogFragment extends DialogFragment implements View
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                     DisplayView.showToast(getContext(), getString(R.string.update_info_failed));
-                    dismiss();
                     DisplayView.dismissProgressDialog();
                 }
             });

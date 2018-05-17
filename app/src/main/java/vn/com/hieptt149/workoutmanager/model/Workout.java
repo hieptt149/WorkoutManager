@@ -23,7 +23,7 @@ public class Workout implements Serializable {
     public Workout() {
     }
 
-    public Workout(String title, String icon, ArrayList<Exercise> lstUsersExercises, int cadioRate, int strength_rate, int mobility_rate, double caloriesBurn) {
+    public Workout(String title, String icon, ArrayList<Exercise> lstUsersExercises, int cadioRate, int strength_rate, int mobility_rate) {
         this.title = title;
         this.icon = icon;
         this.lstUsersExercises = lstUsersExercises;

@@ -160,7 +160,9 @@
                         android:layout_height="match_parent"
                         android:adjustViewBounds="true"
                         android:src="@drawable/ic_save"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        android:layout_marginLeft="@dimen/medium_space"
+                        android:layout_marginRight="@dimen/medium_space"/>
 
                     <ImageView
                         android:id="@+id/iv_start"

@@ -25,6 +25,7 @@ import java.util.ArrayList;
 
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.adapter.WorkoutPreviewAdapter;
+import vn.com.hieptt149.workoutmanager.model.User;
 import vn.com.hieptt149.workoutmanager.workoutdetails.AddWorkoutActivity;
 import vn.com.hieptt149.workoutmanager.home.MainActivityIntf;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
@@ -43,6 +44,8 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener, A
     private ArrayList<Workout> lstUsersWorkout;
     private DatabaseReference usersWorkoutRef;
     private MainActivityIntf mainActivityIntf;
+    private DatabaseReference currUserRef;
+    private User currUser;
 
     public WorkoutFragment() {
     }
@@ -76,26 +79,7 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener, A
         super.onResume();
         DisplayView.showProgressDialog(getContext());
         if (auth.getCurrentUser() != null) {
-            usersWorkoutRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.WORKOUT).child(auth.getCurrentUser().getUid());
-            usersWorkoutRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    lstUsersWorkout.clear();
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        Workout usersWorkout = snapshot.getValue(Workout.class);
-                        usersWorkout.setId(snapshot.getKey());
-                        usersWorkout.setUserId(auth.getCurrentUser().getUid());
-                        lstUsersWorkout.add(usersWorkout);
-                    }
-                    workoutPreviewAdapter.notifyDataSetChanged();
-                    DisplayView.dismissProgressDialog();
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    DisplayView.dismissProgressDialog();
-                }
-            });
+            getListWorkout();
         } else {
             DisplayView.dismissProgressDialog();
         }
@@ -105,7 +89,7 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener, A
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            if (auth != null){
+            if (auth != null) {
                 if (auth.getCurrentUser() == null && lstUsersWorkout.size() != 0) {
                     lstUsersWorkout.clear();
                     workoutPreviewAdapter.notifyDataSetChanged();
@@ -117,6 +101,7 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener, A
     @Override
     public void onClick(View view) {
         Intent i = new Intent(getActivity(), AddWorkoutActivity.class);
+        i.putExtra(ConstantValue.CURRENT_USER,currUser);
         i.putExtra(ConstantValue.TAG, ConstantValue.ADD_WORKOUT);
         startActivity(i);
     }
@@ -124,9 +109,50 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener, A
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         Intent i = new Intent(getActivity(), AddWorkoutActivity.class);
+        i.putExtra(ConstantValue.CURRENT_USER,currUser);
         i.putExtra(ConstantValue.SELECTED_WORKOUT, lstUsersWorkout.get(position));
         i.putExtra(ConstantValue.TAG, ConstantValue.WORKOUT_DETAILS);
         startActivity(i);
+    }
+
+    private void getCurrUserInfo() {
+        currUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                currUser = dataSnapshot.getValue(User.class);
+                currUser.setId(dataSnapshot.getKey());
+                DisplayView.dismissProgressDialog();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                DisplayView.dismissProgressDialog();
+            }
+        });
+    }
+
+    private void getListWorkout() {
+        usersWorkoutRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.WORKOUT).child(auth.getCurrentUser().getUid());
+        usersWorkoutRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                lstUsersWorkout.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Workout usersWorkout = snapshot.getValue(Workout.class);
+                    usersWorkout.setId(snapshot.getKey());
+                    usersWorkout.setUserId(auth.getCurrentUser().getUid());
+                    lstUsersWorkout.add(usersWorkout);
+                }
+                workoutPreviewAdapter.notifyDataSetChanged();
+                DisplayView.dismissProgressDialog();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                DisplayView.showToast(getContext(), "Can't get your workouts. Please check your connection");
+                DisplayView.dismissProgressDialog();
+            }
+        });
     }
 
     private void init(View view) {
@@ -138,5 +164,9 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener, A
         lstUsersWorkout = new ArrayList<>();
         workoutPreviewAdapter = new WorkoutPreviewAdapter(getContext(), lstUsersWorkout);
         gvPreviewWorkout.setAdapter(workoutPreviewAdapter);
+        if (auth.getCurrentUser() != null) {
+            currUserRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.USER).child(auth.getCurrentUser().getUid());
+            getCurrUserInfo();
+        }
     }
 }

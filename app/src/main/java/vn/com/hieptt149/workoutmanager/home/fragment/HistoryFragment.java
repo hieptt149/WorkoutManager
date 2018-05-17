@@ -103,15 +103,17 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            if (auth.getCurrentUser() == null && (lstChartEntries != null || lstHistories != null)) {
-                lstHistories.clear();
-                lstChartEntries.clear();
-                chartHistory.clear();
-                historyListAdapter.notifyDataSetChanged();
-                lineDataSet.notifyDataSetChanged();
-                lineData.notifyDataChanged();
-                chartHistory.notifyDataSetChanged();
-                tvCaloriesBurnADay.setText("");
+            if (auth != null) {
+                if (auth.getCurrentUser() == null && (lstChartEntries.size() != 0 || lstHistories.size() != 0)) {
+                    lstHistories.clear();
+                    lstChartEntries.clear();
+                    chartHistory.clear();
+                    historyListAdapter.notifyDataSetChanged();
+                    lineDataSet.notifyDataSetChanged();
+                    lineData.notifyDataChanged();
+                    chartHistory.notifyDataSetChanged();
+                    tvCaloriesBurnADay.setText("");
+                }
             }
         }
     }
@@ -189,37 +191,6 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
             chartHistory.setDoubleTapToZoomEnabled(false);
             chartHistory.setOnChartValueSelectedListener(this);
         }
-//        if (lstChartEntries != null) {
-////            lineDataSet = new LineDataSet(lstChartEntries, "Workout history");
-////            lineData = new LineData(lineDataSet);
-//            lineDataSet.setHighlightEnabled(true);
-//            lineDataSet.setDrawHighlightIndicators(false);
-//            lineDataSet.setDrawCircles(false);
-//            lineDataSet.setLineWidth(2f);
-////            lineDataSet.setCircleRadius(8f);
-//            lineDataSet.setValueTextSize(12f);
-//            // To show values of each point
-//            lineDataSet.setDrawValues(true);
-//            lineDataSet.notifyDataSetChanged();
-//
-//            lineData.notifyDataChanged();
-//
-//            MarkerImage markerImage = new MarkerImage(getActivity(),R.drawable.star);
-//            markerImage.setOffset(-10f,-12f);
-//
-//            chartHistory.getDescription().setEnabled(false);
-//            chartHistory.getLegend().setEnabled(false);
-//            chartHistory.setMarker(markerImage);
-//            chartHistory.setPinchZoom(false);
-//            chartHistory.setDoubleTapToZoomEnabled(false);
-//            chartHistory.fitScreen();
-//            chartHistory.setData(lineData);
-////            arrHighlights = new Highlight[lstHighlights.size()];
-////            arrHighlights = lstHighlights.toArray(arrHighlights);
-////            chartHistory.highlightValues(arrHighlights);
-////            chartHistory.highlightValue(highlight, false);
-//            chartHistory.invalidate();
-//        }
     }
 
     private void getCurrUserInfo() {
@@ -237,6 +208,7 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                DisplayView.showToast(getContext(), "Can't get your history. Please check your connection");
                 DisplayView.dismissProgressDialog();
             }
         });
@@ -247,27 +219,37 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 //                lineData = chartHistory.getData();
-                lstChartEntries.clear();
-                lstHistories.clear();
-                if (dataSnapshot.hasChildren()) {
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        History history = snapshot.getValue(History.class);
-                        history.setUserId(auth.getCurrentUser().getUid());
-                        history.setPracticeDate(snapshot.getKey());
-                        lstHistories.add(history);
-                        if (history.getCaloriesBurn() > caloriesBurnADay) {
-                            lstChartEntries.add(new Entry(Float.parseFloat(history.getPracticeDate()), (float) history.getCaloriesBurn(),getResources().getDrawable(R.drawable.star)));
-                        } else {
-                            lstChartEntries.add(new Entry(Float.parseFloat(history.getPracticeDate()), (float) history.getCaloriesBurn()));
+                if (isAdded()) {
+                    lstHistories.clear();
+                    lstChartEntries.clear();
+                    chartHistory.clear();
+                    if (dataSnapshot.hasChildren()) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            History history = snapshot.getValue(History.class);
+                            history.setUserId(auth.getCurrentUser().getUid());
+                            history.setPracticeDate(snapshot.getKey());
+                            lstHistories.add(history);
+                            if (history.getCaloriesBurn() > caloriesBurnADay) {
+                                lstChartEntries.add(new Entry(Float.parseFloat(history.getPracticeDate()), (float) history.getCaloriesBurn(), getResources().getDrawable(R.drawable.star)));
+                            } else {
+                                lstChartEntries.add(new Entry(Float.parseFloat(history.getPracticeDate()), (float) history.getCaloriesBurn()));
+                            }
                         }
+                        historyListAdapter.notifyDataSetChanged();
+                        setupChartData();
+                    } else {
+                        historyListAdapter.notifyDataSetChanged();
+                        lineDataSet.notifyDataSetChanged();
+                        lineData.notifyDataChanged();
+                        chartHistory.notifyDataSetChanged();
+                        tvCaloriesBurnADay.setText("");
                     }
-                    historyListAdapter.notifyDataSetChanged();
-                    setupChartData();
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+
             }
         });
     }

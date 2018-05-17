@@ -39,6 +39,7 @@ import vn.com.hieptt149.workoutmanager.model.User;
 import vn.com.hieptt149.workoutmanager.utils.CircularSeekBar;
 import vn.com.hieptt149.workoutmanager.utils.Common;
 import vn.com.hieptt149.workoutmanager.utils.CustomViewPager;
+import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 import vn.com.hieptt149.workoutmanager.utils.MyCountDownTimer;
 
 /**
@@ -109,14 +110,6 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-//            case R.id.iv_previous_exercise:
-//                countDownTimer.cancel();
-//                if (isWorkout) {
-//                    isWorkout = false;
-//                } else {
-//
-//                }
-//                break;
             case R.id.iv_next_exercise:
                 if (countDownTimer != null) {
                     countDownTimer.cancel();
@@ -387,7 +380,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                DisplayView.showToast(getContext(),"Can't save your history to server. Please check your connection and try again");
             }
         });
     }

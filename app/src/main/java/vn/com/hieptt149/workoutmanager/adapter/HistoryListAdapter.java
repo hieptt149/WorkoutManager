@@ -42,8 +42,8 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
         holder.tvPracticeDate.setText(sdf.format(Long.parseLong(history.getPracticeDate())));
         holder.tvWorkoutTimes.setText(context.getString(R.string.workout_times) + " " + history.getWorkoutTimes());
         holder.tvCaloriesBurn.setText(context.getString(R.string.total_calories_burned) + " " + nf.format(history.getCaloriesBurn()) + " cal");
-        holder.tvHeight.setText(context.getString(R.string.height) + ": " + history.getCurrHeight() + " cm");
-        holder.tvWeight.setText(context.getString(R.string.weight) + ": " + history.getCurrWeight() + " kg");
+//        holder.tvHeight.setText(context.getString(R.string.height) + ": " + history.getCurrHeight() + " cm");
+//        holder.tvWeight.setText(context.getString(R.string.weight) + ": " + history.getCurrWeight() + " kg");
         if (itemHighlight == position){
             holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.itemFocused));
         } else {
@@ -58,15 +58,15 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tvPracticeDate, tvWorkoutTimes, tvCaloriesBurn, tvHeight, tvWeight;
+        private TextView tvPracticeDate, tvWorkoutTimes, tvCaloriesBurn;
 
         public ViewHolder(View itemView) {
             super(itemView);
             tvPracticeDate = itemView.findViewById(R.id.tv_practice_date);
             tvWorkoutTimes = itemView.findViewById(R.id.tv_workout_times);
             tvCaloriesBurn = itemView.findViewById(R.id.tv_calories_burn);
-            tvHeight = itemView.findViewById(R.id.tv_height);
-            tvWeight = itemView.findViewById(R.id.tv_weight);
+//            tvHeight = itemView.findViewById(R.id.tv_height);
+//            tvWeight = itemView.findViewById(R.id.tv_weight);
         }
     }
 

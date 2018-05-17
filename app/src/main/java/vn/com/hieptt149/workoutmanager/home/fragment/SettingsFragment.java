@@ -18,19 +18,31 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.JsonObject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.home.MainActivityIntf;
 import vn.com.hieptt149.workoutmanager.login.LoginActivity;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
 import vn.com.hieptt149.workoutmanager.model.User;
+import vn.com.hieptt149.workoutmanager.utils.Common;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 
 /**
@@ -47,7 +59,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
     private ImageView ivUserAvatar;
     private TextView tvUsersName, tvUsersAge, tvUsersGender, tvUsersHeight, tvUsersWeight, tvChangePassword,
             tvExercisesDuration, tvRestsDuration, tvLogin, tvUpdateHeightWeight;
-    private Spinner spnThemes;
+//    private Spinner spnThemes;
     private long exerscisesDuration, restsDuration;
     private Bundle bundle;
     private User currUser;
@@ -101,14 +113,14 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
         bundle = new Bundle();
         switch (view.getId()) {
             case R.id.tv_update_height_weight:
-                bundle.putBoolean(ConstantValue.CHANGE_PASSWORD,false);
+                bundle.putBoolean(ConstantValue.CHANGE_PASSWORD, false);
                 mainActivityIntf.showDialogFragment(SettingsFragment.this,
-                        UpdateUserInfoDialogFragment.newInstance(bundle),ConstantValue.UPDATE_USER_INFO);
+                        UpdateUserInfoDialogFragment.newInstance(bundle), ConstantValue.UPDATE_USER_INFO);
                 break;
             case R.id.tv_change_password:
-                bundle.putBoolean(ConstantValue.CHANGE_PASSWORD,true);
+                bundle.putBoolean(ConstantValue.CHANGE_PASSWORD, true);
                 mainActivityIntf.showDialogFragment(SettingsFragment.this,
-                        UpdateUserInfoDialogFragment.newInstance(bundle),ConstantValue.UPDATE_USER_INFO);
+                        UpdateUserInfoDialogFragment.newInstance(bundle), ConstantValue.UPDATE_USER_INFO);
                 break;
             case R.id.ln_exercises_duration:
                 bundle.putLong(ConstantValue.EXERCISES_DURATION, exerscisesDuration);
@@ -174,7 +186,30 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
                 lnUsersSettings.setVisibility(View.VISIBLE);
                 tvUpdateHeightWeight.setVisibility(View.VISIBLE);
                 tvChangePassword.setVisibility(View.VISIBLE);
-                Glide.with(getContext()).load(auth.getCurrentUser().getPhotoUrl()).into(ivUserAvatar);
+                String url = "http://picasaweb.google.com/data/entry/api/user/" + auth.getCurrentUser().getEmail() + "?alt=json";
+                JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    JSONObject object = response.getJSONObject("entry").getJSONObject("gphoto$thumbnail");
+                                    String imgUrl = object.getString("$t").replace("s64", "s200");
+                                    RequestOptions requestOptions = new RequestOptions();
+                                    requestOptions.placeholder(R.drawable.avatar);
+                                    requestOptions.circleCrop();
+                                    Glide.with(getContext()).load(imgUrl).apply(requestOptions).into(ivUserAvatar);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        ivUserAvatar.setImageResource(R.drawable.avatar);
+                        DisplayView.showToast(getContext(),"Can't load your Google's avatar");
+                    }
+                });
+                Volley.newRequestQueue(getContext()).add(request);
                 tvUsersName.setText(auth.getCurrentUser().getDisplayName());
                 tvUsersAge.setText(getString(R.string.age) + ": " + currUser.getAge());
                 if (currUser.getGender()) {
@@ -189,6 +224,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                DisplayView.showToast(getContext(),"Can't get your information. Please check your connection");
                 DisplayView.dismissProgressDialog();
             }
         });
@@ -209,7 +245,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
         tvExercisesDuration = view.findViewById(R.id.tv_exercises_duration);
         lnRestsDuration = view.findViewById(R.id.ln_rests_duration);
         tvRestsDuration = view.findViewById(R.id.tv_rests_duration);
-        spnThemes = view.findViewById(R.id.spn_themes);
+//        spnThemes = view.findViewById(R.id.spn_themes);
         tvLogin = view.findViewById(R.id.tv_login);
         tvUpdateHeightWeight.setOnClickListener(this);
         tvChangePassword.setOnClickListener(this);

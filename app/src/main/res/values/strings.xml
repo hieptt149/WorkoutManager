@@ -32,7 +32,7 @@
     <string name="enter_your_new_pass">Enter your new password</string>
     <string name="password_updated">Password is updated</string>
     <string name="update_password_failed">Failed to update password</string>
-    <string name="update_info_failed">Failed to update info</string>
+    <string name="update_info_failed">Failed to update info. Please check your connection</string>
 
     <!--Workout Details Fragment-->
     <string name="back">Back</string>

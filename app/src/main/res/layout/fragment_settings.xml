@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".home.fragment.SettingsFragment">
 
     <LinearLayout
@@ -21,7 +22,8 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
-                android:src="@drawable/avatar" />
+                android:src="@drawable/avatar"
+                android:layout_gravity="center_vertical"/>
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -82,10 +84,7 @@
             android:text="@string/change_password"
             android:textStyle="italic"/>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray" />
+
 
         <!--<LinearLayout-->
             <!--android:layout_width="match_parent"-->
@@ -172,34 +171,34 @@
 
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray" />
+        <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:background="@android:color/darker_gray" />-->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/item_height"
-            android:orientation="horizontal"
-            android:padding="@dimen/medium_space"
-            android:weightSum="10">
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/item_height"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:padding="@dimen/medium_space"-->
+            <!--android:weightSum="10">-->
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="6"
-                android:gravity="center_vertical"
-                android:text="@string/themes"
-                android:textSize="@dimen/normal_text_size" />
+            <!--<TextView-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_weight="6"-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:text="@string/themes"-->
+                <!--android:textSize="@dimen/normal_text_size" />-->
 
-            <Spinner
-                android:id="@+id/spn_themes"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="4"
-                android:gravity="center_vertical|right"></Spinner>
+            <!--<Spinner-->
+                <!--android:id="@+id/spn_themes"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_weight="4"-->
+                <!--android:gravity="center_vertical|right"></Spinner>-->
 
-        </LinearLayout>
+        <!--</LinearLayout>-->
 
         <View
             android:layout_width="match_parent"
