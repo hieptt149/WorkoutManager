@@ -57,7 +57,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
     private FirebaseAuth auth;
     private MainActivityIntf mainActivityIntf;
     private SharedPreferences sharedPreferences;
-//    private Switch swSounds;
+    //    private Switch swSounds;
     private LinearLayout lnUsersSettings, lnExercisesDuration, lnRestsDuration;
     private ImageView ivUserAvatar, ivWeightChart;
     private TextView tvUsersName, tvUsersAge, tvUsersGender, tvUsersHeight, tvUsersWeight, tvChangePassword,
@@ -189,8 +189,13 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
         currUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                currUser = dataSnapshot.getValue(User.class);
-                currUser.setId(dataSnapshot.getKey());
+                if (dataSnapshot.hasChildren()) {
+                    currUser = dataSnapshot.getValue(User.class);
+                    currUser.setId(dataSnapshot.getKey());
+                } else {
+                    currUser = new User();
+                    currUser.setId(auth.getCurrentUser().getUid());
+                }
                 lnUsersSettings.setVisibility(View.VISIBLE);
                 tvUpdateHeightWeight.setVisibility(View.VISIBLE);
                 tvChangePassword.setVisibility(View.VISIBLE);
@@ -217,15 +222,15 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
                     }
                 });
                 Volley.newRequestQueue(getContext()).add(request);
-                tvUsersName.setText(auth.getCurrentUser().getDisplayName());
-                tvUsersAge.setText(getString(R.string.age) + ": " + currUser.getAge());
-                if (currUser.getGender()) {
-                    tvUsersGender.setText(getString(R.string.male));
+                tvUsersName.setText(!auth.getCurrentUser().getDisplayName().equals("") ? auth.getCurrentUser().getDisplayName() : getString(R.string.user));
+                tvUsersAge.setText(currUser.getAge() != 0 ? getString(R.string.age) + ": " + currUser.getAge() : getString(R.string.unknown_age));
+                if (currUser.getAge() != 0) {
+                    tvUsersGender.setText(currUser.getGender() ? getString(R.string.male) : getString(R.string.female));
                 } else {
-                    tvUsersGender.setText(getString(R.string.female));
+                    tvUsersGender.setText(getString(R.string.unknown_gender));
                 }
-                tvUsersHeight.setText(getString(R.string.height) + ": " + currUser.getHeight() + " cm");
-                tvUsersWeight.setText(getString(R.string.weight) + ": " + currUser.getWeight() + " kg");
+                tvUsersHeight.setText(currUser.getHeight() != 0 ? getString(R.string.height) + ": " + currUser.getHeight() + " cm" : getString(R.string.unknown_height));
+                tvUsersWeight.setText(currUser.getWeight() != 0 ? getString(R.string.weight) + ": " + currUser.getWeight() + " kg" : getString(R.string.unknown_weight));
                 DisplayView.dismissProgressDialog();
             }
 

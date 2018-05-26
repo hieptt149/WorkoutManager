@@ -161,7 +161,7 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
             LimitLine ll = new LimitLine((float) caloriesBurnADay, "cal/day");
             ll.setLineWidth(2f);
             ll.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-            ll.setTextSize(12f);
+            ll.setTextSize(14f);
             yAxis.addLimitLine(ll);
             yAxis.setDrawLimitLinesBehindData(true);
 
@@ -177,10 +177,15 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
         currUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                currUser = dataSnapshot.getValue(User.class);
-                currUser.setId(dataSnapshot.getKey());
-                caloriesBurnADay = Common.calculateCaloriesBurnADay(currUser.getGender(), currUser.getAge(), currUser.getHeight(), currUser.getWeight());
-                tvCaloriesBurnADay.setText("Calories need to burn a day: " + nf.format(caloriesBurnADay));
+                if (dataSnapshot.hasChildren()) {
+                    currUser = dataSnapshot.getValue(User.class);
+                    currUser.setId(dataSnapshot.getKey());
+                    caloriesBurnADay = Common.calculateCaloriesBurnADay(currUser.getGender(), currUser.getAge(), currUser.getHeight(), currUser.getWeight());
+                    tvCaloriesBurnADay.setText("Calories need to burn a day: " + nf.format(caloriesBurnADay));
+                } else {
+                    currUser = new User();
+                    currUser.setId(auth.getCurrentUser().getUid());
+                }
 //                setupChartAxes();
                 getWorkoutHistory();
                 DisplayView.dismissProgressDialog();

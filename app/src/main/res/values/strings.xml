@@ -101,4 +101,9 @@
     <string name="ready">Ready</string>
     <string name="next">Next:</string>
     <string name="start_workout">Start Workout</string>
+    <string name="user">User</string>
+    <string name="unknown_age">Unknown Age</string>
+    <string name="unknown_gender">Unknown Gender</string>
+    <string name="unknown_height">Unknown Height</string>
+    <string name="unknown_weight">Unknown Weight</string>
 </resources>
