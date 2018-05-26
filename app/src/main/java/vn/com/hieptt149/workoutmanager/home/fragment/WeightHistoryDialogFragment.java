@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -40,6 +41,7 @@ public class WeightHistoryDialogFragment extends DialogFragment implements OnCha
 
     private DatabaseReference currUserHistoryRef;
     private LineChart chartWeight;
+    private TextView tvClickItem;
     private ArrayList<Entry> lstWeightChartEntries;
     private LineDataSet lineDataSet;
     private LineData lineData;
@@ -73,6 +75,7 @@ public class WeightHistoryDialogFragment extends DialogFragment implements OnCha
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         setCancelable(true);
         chartWeight = view.findViewById(R.id.chart_weight);
+        tvClickItem = view.findViewById(R.id.tv_click_item);
         lstWeightChartEntries = new ArrayList<>();
         showWeightChart();
     }
@@ -103,11 +106,10 @@ public class WeightHistoryDialogFragment extends DialogFragment implements OnCha
                             history.setPracticeDate(snapshot.getKey());
                             lstWeightChartEntries.add(new Entry(Float.parseFloat(history.getPracticeDate()), (float) history.getCurrWeight()));
                         }
+                        tvClickItem.setVisibility(View.VISIBLE);
                         setupWeightChartData();
                     } else {
-                        lineDataSet.notifyDataSetChanged();
-                        lineData.notifyDataChanged();
-                        chartWeight.notifyDataSetChanged();
+                        tvClickItem.setVisibility(View.INVISIBLE);
                     }
                 }
             }

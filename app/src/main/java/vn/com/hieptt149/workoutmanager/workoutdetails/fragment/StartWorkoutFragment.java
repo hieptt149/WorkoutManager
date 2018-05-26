@@ -213,7 +213,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
                     }
                     timer = lstTimer.get(currInterval).getDuration();
                 }
-                if (timer < 3000 && timer >= 1000) {
+                if (timer <= 3000 && timer >= 1000) {
                     if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
                         secondaryAlarm.start();
                     }
