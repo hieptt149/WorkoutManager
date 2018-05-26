@@ -8,10 +8,12 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,6 +28,7 @@ import java.util.ArrayList;
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.adapter.WorkoutPreviewAdapter;
 import vn.com.hieptt149.workoutmanager.model.User;
+import vn.com.hieptt149.workoutmanager.utils.ExpandableChildGridView;
 import vn.com.hieptt149.workoutmanager.workoutdetails.AddWorkoutActivity;
 import vn.com.hieptt149.workoutmanager.home.MainActivityIntf;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
@@ -35,16 +38,19 @@ import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WorkoutFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class WorkoutFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, View.OnTouchListener {
 
     private FirebaseAuth auth;
-    private GridView gvPreviewWorkout;
+    private LinearLayout lnPreviewWorkoutQuickStart, lnPreviewWorkout;
+    private ExpandableChildGridView gvPreviewWorkoutQuickStart, gvPreviewWorkout;
     private FloatingActionButton fabAddWorkout;
-    private WorkoutPreviewAdapter workoutPreviewAdapter;
+    private WorkoutPreviewAdapter workoutPreviewAdapter, quickStartAdapter;
     private ArrayList<Workout> lstUsersWorkout;
+    private ArrayList<Workout> lstQuickStart;
     private DatabaseReference usersWorkoutRef;
     private MainActivityIntf mainActivityIntf;
     private DatabaseReference currUserRef;
+    private DatabaseReference quickStartRef;
     private User currUser;
 
     public WorkoutFragment() {
@@ -77,6 +83,7 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener, A
     @Override
     public void onResume() {
         super.onResume();
+        getListQuickStartWorkout();
         DisplayView.showProgressDialog(getContext());
         if (auth.getCurrentUser() != null) {
             getListWorkout();
@@ -101,7 +108,7 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener, A
     @Override
     public void onClick(View view) {
         Intent i = new Intent(getActivity(), AddWorkoutActivity.class);
-        i.putExtra(ConstantValue.CURRENT_USER,currUser);
+        i.putExtra(ConstantValue.CURRENT_USER, currUser);
         i.putExtra(ConstantValue.TAG, ConstantValue.ADD_WORKOUT);
         startActivity(i);
     }
@@ -109,10 +116,25 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener, A
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         Intent i = new Intent(getActivity(), AddWorkoutActivity.class);
-        i.putExtra(ConstantValue.CURRENT_USER,currUser);
-        i.putExtra(ConstantValue.SELECTED_WORKOUT, lstUsersWorkout.get(position));
-        i.putExtra(ConstantValue.TAG, ConstantValue.WORKOUT_DETAILS);
-        startActivity(i);
+        switch (view.getId()) {
+            case R.id.gv_preview_workout:
+                i.putExtra(ConstantValue.CURRENT_USER, currUser);
+                i.putExtra(ConstantValue.SELECTED_WORKOUT, lstQuickStart.get(position));
+                i.putExtra(ConstantValue.TAG, ConstantValue.WORKOUT_DETAILS);
+                startActivity(i);
+                break;
+            case R.id.gv_preview_workout_quick_start:
+                i.putExtra(ConstantValue.CURRENT_USER, currUser);
+                i.putExtra(ConstantValue.SELECTED_WORKOUT, lstUsersWorkout.get(position));
+                i.putExtra(ConstantValue.TAG, ConstantValue.WORKOUT_DETAILS);
+                startActivity(i);
+                break;
+        }
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        return motionEvent.getAction() == MotionEvent.ACTION_MOVE;
     }
 
     private void getCurrUserInfo() {
@@ -155,15 +177,67 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener, A
         });
     }
 
+
+    private void getListQuickStartWorkout() {
+        quickStartRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.WORKOUT).child(ConstantValue.QUICK_START);
+        quickStartRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                lstQuickStart.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Workout usersWorkout = snapshot.getValue(Workout.class);
+                    usersWorkout.setId(snapshot.getKey());
+                    usersWorkout.setUserId(auth.getCurrentUser().getUid());
+                    lstQuickStart.add(usersWorkout);
+                }
+                quickStartAdapter.notifyDataSetChanged();
+                DisplayView.dismissProgressDialog();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                DisplayView.showToast(getContext(), "Can't get quick start workouts from server. Please check your connection");
+                DisplayView.dismissProgressDialog();
+            }
+        });
+    }
+
     private void init(View view) {
         fabAddWorkout = view.findViewById(R.id.fab_addworkout);
+        lnPreviewWorkout = view.findViewById(R.id.ln_preview_workout);
+        lnPreviewWorkoutQuickStart = view.findViewById(R.id.ln_preview_workout_quick_start);
         gvPreviewWorkout = view.findViewById(R.id.gv_preview_workout);
+        gvPreviewWorkoutQuickStart = view.findViewById(R.id.gv_preview_workout_quick_start);
         fabAddWorkout.setOnClickListener(this);
-        gvPreviewWorkout.setOnItemClickListener(this);
+        gvPreviewWorkoutQuickStart.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(getActivity(), AddWorkoutActivity.class);
+                intent.putExtra(ConstantValue.CURRENT_USER, currUser);
+                intent.putExtra(ConstantValue.SELECTED_WORKOUT, lstQuickStart.get(i));
+                intent.putExtra(ConstantValue.TAG, ConstantValue.WORKOUT_DETAILS);
+                startActivity(intent);
+            }
+        });
+        gvPreviewWorkout.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(getActivity(), AddWorkoutActivity.class);
+                intent.putExtra(ConstantValue.CURRENT_USER, currUser);
+                intent.putExtra(ConstantValue.SELECTED_WORKOUT, lstUsersWorkout.get(i));
+                intent.putExtra(ConstantValue.TAG, ConstantValue.WORKOUT_DETAILS);
+                startActivity(intent);
+            }
+        });
+        gvPreviewWorkoutQuickStart.setOnTouchListener(this);
+        gvPreviewWorkout.setOnTouchListener(this);
         auth = FirebaseAuth.getInstance();
         lstUsersWorkout = new ArrayList<>();
+        lstQuickStart = new ArrayList<>();
+        quickStartAdapter = new WorkoutPreviewAdapter(getContext(), lstQuickStart);
         workoutPreviewAdapter = new WorkoutPreviewAdapter(getContext(), lstUsersWorkout);
         gvPreviewWorkout.setAdapter(workoutPreviewAdapter);
+        gvPreviewWorkoutQuickStart.setAdapter(quickStartAdapter);
         if (auth.getCurrentUser() != null) {
             currUserRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.USER).child(auth.getCurrentUser().getUid());
             getCurrUserInfo();

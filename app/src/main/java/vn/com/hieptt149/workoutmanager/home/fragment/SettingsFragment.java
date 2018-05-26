@@ -214,7 +214,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         ivUserAvatar.setImageResource(R.drawable.avatar);
-                        DisplayView.showToast(getContext(), "Can't load your Google's avatar");
                     }
                 });
                 Volley.newRequestQueue(getContext()).add(request);

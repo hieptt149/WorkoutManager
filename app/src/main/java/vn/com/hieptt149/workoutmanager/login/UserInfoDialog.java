@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
 import vn.com.hieptt149.workoutmanager.model.User;
+import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 
 public class UserInfoDialog extends Dialog implements View.OnClickListener {
 
@@ -54,6 +55,7 @@ public class UserInfoDialog extends Dialog implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
+        DisplayView.showProgressDialog(loginActivity);
         if (edtName.getText().toString().length() == 0 || edtName.getText().toString().isEmpty()) {
             edtName.setError(getContext().getString(R.string.enter_name));
             return;
@@ -84,6 +86,7 @@ public class UserInfoDialog extends Dialog implements View.OnClickListener {
         auth.getCurrentUser().updateProfile(userProfileChangeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
+                DisplayView.dismissProgressDialog();
                 FirebaseDatabase.getInstance().getReference().child(ConstantValue.USER).child(auth.getCurrentUser().getUid()).setValue(user);
                 dismiss();
                 ((Activity) loginActivity).finish();

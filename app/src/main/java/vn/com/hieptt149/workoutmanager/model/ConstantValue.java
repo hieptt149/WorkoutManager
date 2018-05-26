@@ -10,6 +10,7 @@ public class ConstantValue {
     public static final String USER = "user";
     public static final String EXERCISE = "exercise";
     public static final String HISTORY = "history";
+    public static final String QUICK_START = "ZpxO5fAetIYG1axXZteZXZylIGY2";
 
     //tag
     public static final String ADD_EXERCISE = "add_exercise";

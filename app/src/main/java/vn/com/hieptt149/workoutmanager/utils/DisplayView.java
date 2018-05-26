@@ -43,6 +43,10 @@ public class DisplayView {
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
     }
 
+    public static void showLongToast(Context context, String msg) {
+        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+    }
+
     public static int calculateNoOfColumns(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;

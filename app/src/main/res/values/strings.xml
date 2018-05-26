@@ -13,6 +13,8 @@
     <string name="workout_title">Workout Title</string>
     <string name="workout_duration">Workout Duration</string>
     <string name="workout_exercises">Workout&#39;s Exercise</string>
+    <string name="quick_starters">Quick Start</string>
+    <string name="custom_made">Custom Made</string>
 
     <!--History Fragment-->
     <string name="workout_times">Workout times:</string>

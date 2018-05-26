@@ -82,7 +82,7 @@ public class WeightHistoryDialogFragment extends DialogFragment implements OnCha
 
     @Override
     public void onValueSelected(Entry e, Highlight h) {
-        DisplayView.showToast(getContext(), "Date: " + sdf.format((long) e.getX()) + "\nWeight: " + e.getY() + " kg");
+        DisplayView.showLongToast(getContext(), "Date: " + sdf.format((long) e.getX()) + "\nWeight: " + e.getY() + " kg");
     }
 
     @Override

@@ -55,7 +55,6 @@ public class WorkoutPreviewAdapter extends BaseAdapter {
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = layoutInflater.inflate(R.layout.item_preview, null);
             view.setLayoutParams(new GridView.LayoutParams(GridView.AUTO_FIT, (int) (150 * Resources.getSystem().getDisplayMetrics().density)));
-            viewHolder.lnWorkoutItem = view.findViewById(R.id.ln_preview_item);
             viewHolder.ivWorkoutIcon = view.findViewById(R.id.iv_preview_item);
             viewHolder.tvWorkoutTitle = view.findViewById(R.id.tv_item_title);
             view.setTag(viewHolder);
@@ -70,7 +69,6 @@ public class WorkoutPreviewAdapter extends BaseAdapter {
     }
 
     public class ViewHolder {
-        private LinearLayout lnWorkoutItem;
         private ImageView ivWorkoutIcon;
         private TextView tvWorkoutTitle;
     }
