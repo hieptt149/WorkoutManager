@@ -83,8 +83,8 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener, A
     @Override
     public void onResume() {
         super.onResume();
-        getListQuickStartWorkout();
         DisplayView.showProgressDialog(getContext());
+        getListQuickStartWorkout();
         if (auth.getCurrentUser() != null) {
             getListWorkout();
         } else {
@@ -189,7 +189,7 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener, A
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Workout usersWorkout = snapshot.getValue(Workout.class);
                     usersWorkout.setId(snapshot.getKey());
-                    usersWorkout.setUserId(auth.getCurrentUser().getUid());
+                    usersWorkout.setUserId(auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : "");
                     lstQuickStart.add(usersWorkout);
                 }
                 quickStartAdapter.notifyDataSetChanged();

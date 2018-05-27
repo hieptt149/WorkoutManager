@@ -126,7 +126,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
             case R.id.tv_duration:
                 if (status == Status.STOP) {
                     status = Status.START;
-//                    initCountDownTimer();
+                    initCountDownTimer();
 //                    initAnimation();
                     currExercisePreview.playGifAnimation();
                     countDownTimer.start();
@@ -258,55 +258,6 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
     }
 
     /**
-     * Khởi tạo animation cho timer
-     */
-//    private void initAnimation() {
-//        animationTimer = new MyCountDownTimer(Long.MAX_VALUE, 100) {
-//            @Override
-//            public void onTick(long millisUntilFinished) {
-//                sbDuration.setProgress((int) animation);
-//                //Chạy tới cuối interval
-//                if (animation == 0 && currInterval <= lstTimer.size() - 1) {
-//                    animation = lstTimer.get(currInterval).getDuration();
-//                }
-//                //Chạy tới đầu interval
-//                if (animation == lstTimer.get(currInterval).getDuration()) {
-//                    if (currInterval == 0) {
-//                        ivNextExercise.setVisibility(View.VISIBLE);
-//                    }
-//                    if (currInterval == lstTimer.size() - 1) {
-//                        ivNextExercise.setVisibility(View.INVISIBLE);
-//                    }
-//                    if (currInterval % 2 == 0 && currInterval != 0) {
-//                        currExercisePreview.pauseGifAnimation();
-//                        vpExercisePreview.setCurrentItem(currInterval / 2);
-//                        currExercisePreview = (ExercisePreviewFragment) exercisePreviewPagerAdapter.getItem(vpExercisePreview.getCurrentItem());
-//                        currExercisePreview.playGifAnimation();
-//                    }
-//                    sbDuration.setMax((int) lstTimer.get(currInterval).getDuration());
-//                    tvExerciseName.setText(lstTimer.get(currInterval).getExerciseName());
-//                }
-//                animation -= 100;
-//                //Chạy hết interval cuối cùng
-//                if (timer < 0 && animation == 0 && currInterval == lstTimer.size() - 1) {
-//                    animationTimer.cancel();
-//                    mainAlarm.release();
-//                    secondaryAlarm.release();
-//                    if (currUser != null) {
-//                        createWorkoutHistory();
-//                    }
-//                    refreshTimer();
-//                }
-//            }
-//
-//            @Override
-//            public void onFinish() {
-//
-//            }
-//        };
-//    }
-
-    /**
      * Khởi tạo lại các giá trị của timer
      */
     private void refreshTimer() {
@@ -319,6 +270,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         mainAlarm = MediaPlayer.create(getActivity(), R.raw.main_alarm);
         secondaryAlarm = MediaPlayer.create(getActivity(), R.raw.secondary_alarm);
         currExercisePreview = (ExercisePreviewFragment) exercisePreviewPagerAdapter.getItem(vpExercisePreview.getCurrentItem());
+        currExercisePreview.pauseGifAnimation();
         timer = lstTimer.get(currInterval).getDuration();
         animation = lstTimer.get(currInterval).getDuration();
         tvDuration.setText(Common.msTimeFormatter(0));
