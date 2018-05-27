@@ -97,7 +97,7 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener, A
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             if (auth != null) {
-                if (auth.getCurrentUser() == null && lstUsersWorkout.size() != 0) {
+                if (auth.getCurrentUser() == null) {
                     lstUsersWorkout.clear();
                     workoutPreviewAdapter.notifyDataSetChanged();
                     lnPreviewWorkout.setVisibility(View.GONE);

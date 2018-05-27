@@ -201,7 +201,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         DisplayView.dismissProgressDialog();
                         if (task.isSuccessful()) {
-                            UserInfoDialog userInfoDialog = new UserInfoDialog(LoginActivity.this);
+                            UserInfoDialog userInfoDialog = new UserInfoDialog(LoginActivity.this,ConstantValue.LOGIN);
                             userInfoDialog.show();
                         } else {
                             try {

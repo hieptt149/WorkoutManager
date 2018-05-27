@@ -23,6 +23,8 @@ public class ConstantValue {
     public static final String START_WORKOUT = "start_workout";
     public static final String UPDATE_USER_INFO = "update_user_info";
     public static final String WEIGHT_HISTORY = "weight_history";
+    public static final String SETTINGS = "settings";
+    public static final String LOGIN = "login";
 
     //key
     public static final String TAG = "tag";

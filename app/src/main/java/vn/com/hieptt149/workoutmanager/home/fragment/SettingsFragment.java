@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.home.MainActivityIntf;
 import vn.com.hieptt149.workoutmanager.login.LoginActivity;
+import vn.com.hieptt149.workoutmanager.login.UserInfoDialog;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
 import vn.com.hieptt149.workoutmanager.model.User;
 import vn.com.hieptt149.workoutmanager.utils.Common;
@@ -94,8 +95,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
         if (auth.getCurrentUser() != null) {
             currUserRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.USER)
                     .child(auth.getCurrentUser().getUid());
@@ -112,6 +113,10 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+    }
+
+    @Override
     public void onClick(View view) {
         bundle = new Bundle();
         switch (view.getId()) {
@@ -121,9 +126,14 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
                         WeightHistoryDialogFragment.newInstance(bundle), ConstantValue.WEIGHT_HISTORY);
                 break;
             case R.id.tv_update_height_weight:
-                bundle.putBoolean(ConstantValue.CHANGE_PASSWORD, false);
-                mainActivityIntf.showDialogFragment(SettingsFragment.this,
-                        UpdateUserInfoDialogFragment.newInstance(bundle), ConstantValue.UPDATE_USER_INFO);
+                if (auth.getCurrentUser().getDisplayName() != null && currUser.getAge() != 0) {
+                    bundle.putBoolean(ConstantValue.CHANGE_PASSWORD, false);
+                    mainActivityIntf.showDialogFragment(SettingsFragment.this,
+                            UpdateUserInfoDialogFragment.newInstance(bundle), ConstantValue.UPDATE_USER_INFO);
+                } else {
+                    UserInfoDialog userInfoDialog = new UserInfoDialog(getContext(),ConstantValue.SETTINGS);
+                    userInfoDialog.show();
+                }
                 break;
             case R.id.tv_change_password:
                 bundle.putBoolean(ConstantValue.CHANGE_PASSWORD, true);
@@ -222,7 +232,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
                     }
                 });
                 Volley.newRequestQueue(getContext()).add(request);
-                tvUsersName.setText(!auth.getCurrentUser().getDisplayName().equals("") ? auth.getCurrentUser().getDisplayName() : getString(R.string.user));
+                tvUsersName.setText(auth.getCurrentUser().getDisplayName() != null && !auth.getCurrentUser().getDisplayName().equals("") ? auth.getCurrentUser().getDisplayName() : getString(R.string.user));
                 tvUsersAge.setText(currUser.getAge() != 0 ? getString(R.string.age) + ": " + currUser.getAge() : getString(R.string.unknown_age));
                 if (currUser.getAge() != 0) {
                     tvUsersGender.setText(currUser.getGender() ? getString(R.string.male) : getString(R.string.female));

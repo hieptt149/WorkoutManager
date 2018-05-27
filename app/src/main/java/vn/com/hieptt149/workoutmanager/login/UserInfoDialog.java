@@ -3,8 +3,10 @@ package vn.com.hieptt149.workoutmanager.login;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -34,13 +36,15 @@ public class UserInfoDialog extends Dialog implements View.OnClickListener {
     private String name;
     private int age;
     private double height, weight;
-    private Context loginActivity;
+    private Context context;
     private User user;
     private boolean gender;
+    private String tag;
 
-    public UserInfoDialog(@NonNull Context context) {
+    public UserInfoDialog(@NonNull Context context, String tag) {
         super(context);
-        loginActivity = context;
+        this.context = context;
+        this.tag = tag;
     }
 
     @Override
@@ -48,14 +52,25 @@ public class UserInfoDialog extends Dialog implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_user_info);
-        setCanceledOnTouchOutside(false);
-        setCancelable(false);
+//        setCanceledOnTouchOutside(false);
+//        setCancelable(false);
         init();
     }
 
     @Override
+    public void setOnDismissListener(@Nullable OnDismissListener listener) {
+        if (tag.equals(ConstantValue.LOGIN)) {
+            ((Activity) context).finish();
+            Toast.makeText(getContext(), R.string.register_successfully, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
     public void onClick(View view) {
-        DisplayView.showProgressDialog(loginActivity);
+        if (!rdbtnMale.isChecked()&&!rdbtnFemale.isChecked()){
+            DisplayView.showToast(getContext(),"Please select your gender");
+            return;
+        }
         if (edtName.getText().toString().length() == 0 || edtName.getText().toString().isEmpty()) {
             edtName.setError(getContext().getString(R.string.enter_name));
             return;
@@ -63,25 +78,35 @@ public class UserInfoDialog extends Dialog implements View.OnClickListener {
         if (edtAge.getText().toString().length() == 0 || edtAge.getText().toString().isEmpty()) {
             edtAge.setError(getContext().getString(R.string.enter_age));
             return;
+        } else if (edtAge.getText().toString().trim().equals("0")) {
+            edtAge.setError(getContext().getString(R.string.invalid_age));
+            return;
         }
         if (edtHeight.getText().toString().length() == 0 || edtHeight.getText().toString().isEmpty()) {
             edtHeight.setError(getContext().getString(R.string.enter_height));
+            return;
+        } else if (edtHeight.getText().toString().trim().equals("0")) {
+            edtHeight.setError(getContext().getString(R.string.invalid_height));
             return;
         }
         if (edtWeight.getText().toString().length() == 0 || edtWeight.getText().toString().isEmpty()) {
             edtWeight.setError(getContext().getString(R.string.enter_weight));
             return;
+        } else if (edtWeight.getText().toString().trim().equals("0")) {
+            edtWeight.setError(getContext().getString(R.string.invalid_weight));
+            return;
         }
-        name = edtName.getText().toString();
-        age = Integer.parseInt(edtAge.getText().toString());
-        height = Double.parseDouble(edtHeight.getText().toString());
-        weight = Double.parseDouble(edtWeight.getText().toString());
+        name = edtName.getText().toString().trim();
+        age = Integer.parseInt(edtAge.getText().toString().trim());
+        height = Double.parseDouble(edtHeight.getText().toString().trim());
+        weight = Double.parseDouble(edtWeight.getText().toString().trim());
         if (rdbtnMale.isChecked()) {
             gender = true;
         } else if (rdbtnFemale.isChecked()) {
             gender = false;
         }
         user = new User(age, gender, height, weight);
+        DisplayView.showProgressDialog(context);
         UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName(name).build();
         auth.getCurrentUser().updateProfile(userProfileChangeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -89,8 +114,10 @@ public class UserInfoDialog extends Dialog implements View.OnClickListener {
                 DisplayView.dismissProgressDialog();
                 FirebaseDatabase.getInstance().getReference().child(ConstantValue.USER).child(auth.getCurrentUser().getUid()).setValue(user);
                 dismiss();
-                ((Activity) loginActivity).finish();
-                Toast.makeText(getContext(), R.string.register_successfully, Toast.LENGTH_SHORT).show();
+//                if (tag.equals(ConstantValue.LOGIN)) {
+//                    ((Activity) context).finish();
+//                    Toast.makeText(getContext(), R.string.register_successfully, Toast.LENGTH_SHORT).show();
+//                }
             }
         });
     }

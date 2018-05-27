@@ -106,4 +106,7 @@
     <string name="unknown_gender">Unknown Gender</string>
     <string name="unknown_height">Unknown Height</string>
     <string name="unknown_weight">Unknown Weight</string>
+    <string name="invalid_age">Invalid age</string>
+    <string name="invalid_height">Invalid height</string>
+    <string name="invalid_weight">Invalid weight</string>
 </resources>

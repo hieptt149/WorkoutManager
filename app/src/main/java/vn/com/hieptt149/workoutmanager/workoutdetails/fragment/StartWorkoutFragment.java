@@ -243,7 +243,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
                     countDownTimer.cancel();
                     mainAlarm.release();
                     secondaryAlarm.release();
-                    if (currUser != null) {
+                    if (currUser != null && currUser.getAge() != 0) {
                         createWorkoutHistory();
                     }
                     refreshTimer();

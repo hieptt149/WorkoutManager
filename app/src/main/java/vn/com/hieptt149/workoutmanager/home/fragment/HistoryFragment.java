@@ -102,7 +102,7 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             if (auth != null) {
-                if (auth.getCurrentUser() == null && (lstHistoryChartEntries.size() != 0 || lstHistories.size() != 0)) {
+                if (auth.getCurrentUser() == null) {
                     lstHistories.clear();
                     lstHistoryChartEntries.clear();
                     chartHistory.clear();
@@ -185,6 +185,7 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
                 } else {
                     currUser = new User();
                     currUser.setId(auth.getCurrentUser().getUid());
+                    tvCaloriesBurnADay.setText("Please update your information to use this function");
                 }
 //                setupChartAxes();
                 getWorkoutHistory();
@@ -227,7 +228,6 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
                         lineDataSet.notifyDataSetChanged();
                         lineData.notifyDataChanged();
                         chartHistory.notifyDataSetChanged();
-                        tvCaloriesBurnADay.setText("");
                     }
                 }
             }
