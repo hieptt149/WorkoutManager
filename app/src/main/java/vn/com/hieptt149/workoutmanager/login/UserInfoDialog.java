@@ -39,12 +39,10 @@ public class UserInfoDialog extends Dialog implements View.OnClickListener {
     private Context context;
     private User user;
     private boolean gender;
-    private String tag;
 
-    public UserInfoDialog(@NonNull Context context, String tag) {
+    public UserInfoDialog(@NonNull Context context) {
         super(context);
         this.context = context;
-        this.tag = tag;
     }
 
     @Override
@@ -59,16 +57,14 @@ public class UserInfoDialog extends Dialog implements View.OnClickListener {
 
     @Override
     public void setOnDismissListener(@Nullable OnDismissListener listener) {
-        if (tag.equals(ConstantValue.LOGIN)) {
-            ((Activity) context).finish();
-            Toast.makeText(getContext(), R.string.register_successfully, Toast.LENGTH_SHORT).show();
-        }
+        ((Activity) context).finish();
+        Toast.makeText(getContext(), R.string.register_successfully, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onClick(View view) {
-        if (!rdbtnMale.isChecked()&&!rdbtnFemale.isChecked()){
-            DisplayView.showToast(getContext(),"Please select your gender");
+        if (!rdbtnMale.isChecked() && !rdbtnFemale.isChecked()) {
+            DisplayView.showToast(getContext(), "Please select your gender");
             return;
         }
         if (edtName.getText().toString().length() == 0 || edtName.getText().toString().isEmpty()) {
@@ -78,21 +74,21 @@ public class UserInfoDialog extends Dialog implements View.OnClickListener {
         if (edtAge.getText().toString().length() == 0 || edtAge.getText().toString().isEmpty()) {
             edtAge.setError(getContext().getString(R.string.enter_age));
             return;
-        } else if (edtAge.getText().toString().trim().equals("0")) {
+        } else if (Integer.parseInt(edtAge.getText().toString().trim()) <= 0 || Integer.parseInt(edtAge.getText().toString().trim()) > 150) {
             edtAge.setError(getContext().getString(R.string.invalid_age));
             return;
         }
         if (edtHeight.getText().toString().length() == 0 || edtHeight.getText().toString().isEmpty()) {
             edtHeight.setError(getContext().getString(R.string.enter_height));
             return;
-        } else if (edtHeight.getText().toString().trim().equals("0")) {
+        } else if (Double.parseDouble(edtHeight.getText().toString().trim()) <= 0) {
             edtHeight.setError(getContext().getString(R.string.invalid_height));
             return;
         }
         if (edtWeight.getText().toString().length() == 0 || edtWeight.getText().toString().isEmpty()) {
             edtWeight.setError(getContext().getString(R.string.enter_weight));
             return;
-        } else if (edtWeight.getText().toString().trim().equals("0")) {
+        } else if (Double.parseDouble(edtWeight.getText().toString().trim()) <= 0) {
             edtWeight.setError(getContext().getString(R.string.invalid_weight));
             return;
         }
@@ -114,10 +110,6 @@ public class UserInfoDialog extends Dialog implements View.OnClickListener {
                 DisplayView.dismissProgressDialog();
                 FirebaseDatabase.getInstance().getReference().child(ConstantValue.USER).child(auth.getCurrentUser().getUid()).setValue(user);
                 dismiss();
-//                if (tag.equals(ConstantValue.LOGIN)) {
-//                    ((Activity) context).finish();
-//                    Toast.makeText(getContext(), R.string.register_successfully, Toast.LENGTH_SHORT).show();
-//                }
             }
         });
     }

@@ -39,6 +39,11 @@ public class ConstantValue {
     public static final String USERS_WORKOUT_DETAILS = "users_workout_details";
     public static final String CHANGE_PASSWORD = "change_password";
     public static final String GIF_RESOURCE = "gif_resource";
+    public static final String USERS_NAME = "users_name";
+    public static final String USERS_AGE = "users_age";
+    public static final String USERS_GENDER = "users_gender";
+    public static final String USERS_HEIGHT = "users_height";
+    public static final String USERS_WEIGHT = "users_weight";
 
     public static final String validemail = "[a-zA-Z0-9._-]{1,100}+@[a-zA-Z0-9]+\\.+[a-zA-Z0-9.]+";
     public static final int MAX_EXERSCISE_DURATION = 90000;

@@ -14,45 +14,37 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.github.mikephil.charting.data.Entry;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.home.MainActivityIntf;
 import vn.com.hieptt149.workoutmanager.login.LoginActivity;
-import vn.com.hieptt149.workoutmanager.login.UserInfoDialog;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
 import vn.com.hieptt149.workoutmanager.model.User;
-import vn.com.hieptt149.workoutmanager.utils.Common;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SettingsFragment extends Fragment implements View.OnClickListener, SettingsBottomSheetDialogFragment.SettingsBottomSheetDialogListener {
+public class SettingsFragment extends Fragment implements View.OnClickListener,
+        SettingsBottomSheetDialogFragment.SettingsBottomSheetDialogListener, UpdateUserInfoDialogFragment.UpdateUserInfoListener {
 
     private DatabaseReference currUserRef;
     private FirebaseAuth auth;
@@ -126,19 +118,12 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
                         WeightHistoryDialogFragment.newInstance(bundle), ConstantValue.WEIGHT_HISTORY);
                 break;
             case R.id.tv_update_height_weight:
-                if (auth.getCurrentUser().getDisplayName() != null && currUser.getAge() != 0) {
-                    bundle.putBoolean(ConstantValue.CHANGE_PASSWORD, false);
-                    mainActivityIntf.showDialogFragment(SettingsFragment.this,
-                            UpdateUserInfoDialogFragment.newInstance(bundle), ConstantValue.UPDATE_USER_INFO);
-                } else {
-                    UserInfoDialog userInfoDialog = new UserInfoDialog(getContext(),ConstantValue.SETTINGS);
-                    userInfoDialog.show();
-                }
-                break;
-            case R.id.tv_change_password:
-                bundle.putBoolean(ConstantValue.CHANGE_PASSWORD, true);
                 mainActivityIntf.showDialogFragment(SettingsFragment.this,
                         UpdateUserInfoDialogFragment.newInstance(bundle), ConstantValue.UPDATE_USER_INFO);
+                break;
+            case R.id.tv_change_password:
+                mainActivityIntf.showDialogFragment(SettingsFragment.this,
+                        ChangePasswordDialogFragment.newInstance(bundle), ConstantValue.UPDATE_USER_INFO);
                 break;
             case R.id.ln_exercises_duration:
                 bundle.putLong(ConstantValue.EXERCISES_DURATION, exerscisesDuration);
@@ -192,6 +177,17 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
         editor.apply();
     }
 
+    @Override
+    public void updateUserInfo(Bundle bundle) {
+        if (bundle != null) {
+            tvUsersName.setText(bundle.getString(ConstantValue.USERS_NAME));
+            tvUsersAge.setText(getString(R.string.age) + ": " + bundle.getInt(ConstantValue.USERS_AGE));
+            tvUsersGender.setText(bundle.getBoolean(ConstantValue.USERS_GENDER) ? getString(R.string.male) : getString(R.string.female));
+            tvUsersHeight.setText(getString(R.string.height) + ": " + bundle.getDouble(ConstantValue.USERS_HEIGHT) + " cm");
+            tvUsersWeight.setText(getString(R.string.weight) + ": " + bundle.getDouble(ConstantValue.USERS_WEIGHT) + " kg");
+        }
+    }
+
     /**
      * Lấy thông tin của người dùng đã đăng nhập
      */
@@ -232,7 +228,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
                     }
                 });
                 Volley.newRequestQueue(getContext()).add(request);
-                tvUsersName.setText(auth.getCurrentUser().getDisplayName() != null && !auth.getCurrentUser().getDisplayName().equals("") ? auth.getCurrentUser().getDisplayName() : getString(R.string.user));
+                tvUsersName.setText(auth.getCurrentUser().getDisplayName() != null && !auth.getCurrentUser().getDisplayName().equals("") ?
+                        auth.getCurrentUser().getDisplayName() : getString(R.string.user));
                 tvUsersAge.setText(currUser.getAge() != 0 ? getString(R.string.age) + ": " + currUser.getAge() : getString(R.string.unknown_age));
                 if (currUser.getAge() != 0) {
                     tvUsersGender.setText(currUser.getGender() ? getString(R.string.male) : getString(R.string.female));

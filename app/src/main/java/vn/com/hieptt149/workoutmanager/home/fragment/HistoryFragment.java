@@ -174,7 +174,7 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
     }
 
     private void getCurrUserInfo() {
-        currUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        currUserRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChildren()) {
@@ -212,7 +212,7 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
                     if (dataSnapshot.hasChildren()) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             History history = snapshot.getValue(History.class);
-                            history.setUserId(auth.getCurrentUser().getUid());
+                            history.setUserId(auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : "0");
                             history.setPracticeDate(snapshot.getKey());
                             lstHistories.add(history);
                             if (history.getCaloriesBurn() > caloriesBurnADay) {
