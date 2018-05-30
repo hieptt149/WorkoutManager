@@ -7,6 +7,6 @@
     <color name="colorLightOrange">#FFE082</color>
     <color name="colorGrey">#424242</color>
     <color name="colorRed">#F44336</color>
-    <color name="itemFocused">#CFD8DC</color>
     <color name="colorDeepPurple">#6200EA</color>
+    <color name="itemFocused">#CFD8DC</color>
 </resources>
