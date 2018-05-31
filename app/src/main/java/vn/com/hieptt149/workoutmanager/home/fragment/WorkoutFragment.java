@@ -117,17 +117,18 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener, A
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         Intent i = new Intent(getActivity(), AddWorkoutActivity.class);
+        i.putExtra(ConstantValue.TAG, ConstantValue.WORKOUT_DETAILS);
         switch (adapterView.getId()) {
             case R.id.gv_preview_workout:
                 i.putExtra(ConstantValue.CURRENT_USER, currUser);
                 i.putExtra(ConstantValue.SELECTED_WORKOUT, lstUsersWorkout.get(position));
-                i.putExtra(ConstantValue.TAG, ConstantValue.WORKOUT_DETAILS);
+                i.putExtra(ConstantValue.WORKOUT_TYPE,false);
                 startActivity(i);
                 break;
             case R.id.gv_preview_workout_quick_start:
                 i.putExtra(ConstantValue.CURRENT_USER, currUser);
                 i.putExtra(ConstantValue.SELECTED_WORKOUT, lstQuickStart.get(position));
-                i.putExtra(ConstantValue.TAG, ConstantValue.WORKOUT_DETAILS);
+                i.putExtra(ConstantValue.WORKOUT_TYPE,true);
                 startActivity(i);
                 break;
         }

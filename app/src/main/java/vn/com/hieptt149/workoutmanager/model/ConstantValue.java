@@ -25,6 +25,7 @@ public class ConstantValue {
     public static final String WEIGHT_HISTORY = "weight_history";
     public static final String SETTINGS = "settings";
     public static final String LOGIN = "login";
+    public static final String WORKOUT_TYPE = "workout_type";
 
     //key
     public static final String TAG = "tag";

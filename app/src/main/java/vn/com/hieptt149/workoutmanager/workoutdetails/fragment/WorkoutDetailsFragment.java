@@ -72,6 +72,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     private static Workout usersWorkoutDetails;
     private static String tag;
     private static String imgTag;
+    private static boolean isQuickStart;
 
     public static WorkoutDetailsFragment newInstance(Bundle bundle) {
         WorkoutDetailsFragment workoutDetailsFragment = new WorkoutDetailsFragment();
@@ -80,6 +81,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
             currUser = (User) bundle.getSerializable(ConstantValue.CURRENT_USER);
             usersWorkoutDetails = (Workout) bundle.getSerializable(ConstantValue.SELECTED_WORKOUT);
             tag = bundle.getString(ConstantValue.TAG);
+            isQuickStart = bundle.getBoolean(ConstantValue.WORKOUT_TYPE);
         }
         return workoutDetailsFragment;
     }
@@ -104,7 +106,9 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         //Trường hợp user xem chi tiết workout
         if (tag.equals(ConstantValue.WORKOUT_DETAILS)) {
             tvAddWorkoutToolbarTitle.setText(usersWorkoutDetails.getTitle());
-            ivDelete.setVisibility(View.VISIBLE);
+            if (!isQuickStart) {
+                ivDelete.setVisibility(View.VISIBLE);
+            }
             //Nếu người dùng mới mở màn hình chi tiết lần đầu
             if (isFirstTime) {
                 edtWorkoutTitle.setText(usersWorkoutDetails.getTitle());
@@ -113,7 +117,9 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
             }
             if (lstSelectedExercise.size() != 0) {
                 ivStart.setVisibility(View.VISIBLE);
-                ivSave.setVisibility(View.VISIBLE);
+                if (!isQuickStart) {
+                    ivSave.setVisibility(View.VISIBLE);
+                }
             }
             showUsersWorkoutDetails();
         }
