@@ -226,7 +226,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      * Gửi hướng dẫn reset mật khẩu
      */
     private void sendResetPasswordInstructions() {
-        DisplayView.showAlertDialog(this, "Is " + email + " your email?" + getString(R.string.send_reset_password),
+        DisplayView.showConfirmAlertDialog(this, "Is " + email + " your email?" + getString(R.string.send_reset_password),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {

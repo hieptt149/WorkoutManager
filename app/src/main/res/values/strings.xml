@@ -95,6 +95,8 @@
     <string name="send_reset_password">\nWe will send password reset instructions to this email?</string>
     <string name="send_reset_password_success">We have sent you instructions to reset your password</string>
     <string name="send_reset_password_failed">Failed to send reset email</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
     <!--StartWorkoutFragment-->
     <string name="demo_time">00:00</string>

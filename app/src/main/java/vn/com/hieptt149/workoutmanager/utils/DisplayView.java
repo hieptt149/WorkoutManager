@@ -26,6 +26,14 @@ public class DisplayView {
                 .show();
     }
 
+    public static void showConfirmAlertDialog(Context context, String msg, DialogInterface.OnClickListener positiveButtonOnClick, DialogInterface.OnClickListener negativeButtonOnClick) {
+        builder = new AlertDialog.Builder(context);
+        builder.setMessage(msg)
+                .setPositiveButton(R.string.yes, positiveButtonOnClick)
+                .setNegativeButton(R.string.no, negativeButtonOnClick)
+                .show();
+    }
+
     public static void showProgressDialog(Context context) {
         progressDialog = new ProgressDialog(context);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);

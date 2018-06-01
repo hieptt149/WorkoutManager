@@ -262,13 +262,14 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
      * Xoá workout trong db
      */
     private void deleteWorkout() {
-        DisplayView.showAlertDialog(getContext(), getString(R.string.confirm_delete),
+        DisplayView.showConfirmAlertDialog(getContext(), getString(R.string.confirm_delete),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         currUsersWorkoutRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.WORKOUT).
                                 child(usersWorkoutDetails.getUserId()).child(usersWorkoutDetails.getId());
                         currUsersWorkoutRef.removeValue();
+                        dialogInterface.dismiss();
                         getActivity().onBackPressed();
                     }
                 }, new DialogInterface.OnClickListener() {
