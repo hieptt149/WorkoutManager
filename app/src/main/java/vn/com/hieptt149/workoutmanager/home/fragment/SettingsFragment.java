@@ -141,7 +141,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener,
                 if (!isLogin) {
                     startActivity(new Intent(getActivity(), LoginActivity.class));
                 } else {
-                    DisplayView.showAlertDialog(getContext(), getString(R.string.confirm_logout), new DialogInterface.OnClickListener() {
+                    DisplayView.showConfirmAlertDialog(getContext(), getString(R.string.confirm_logout), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             auth.signOut();

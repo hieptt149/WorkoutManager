@@ -94,5 +94,6 @@
         app:fabSize="auto"
         app:layout_anchor="@id/sv_container"
         app:layout_anchorGravity="bottom|right|end"
-        app:rippleColor="@android:color/white" />
+        app:rippleColor="@android:color/white"
+        app:backgroundTint="@color/colorBlueDark"/>
 </android.support.design.widget.CoordinatorLayout>
