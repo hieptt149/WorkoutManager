@@ -225,8 +225,15 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
                         Workout newWorkout = new Workout(edtWorkoutTitle.getText().toString(),
                                 (String) ivChooseWorkoutIcon.getTag(), lstSelectedExercise, cadioRate, strengthRate, mobilityRate);
                         if (tag.equals(ConstantValue.ADD_WORKOUT)) {
-                            currUsersWorkoutRef = FirebaseDatabase.getInstance().getReference()
-                                    .child(ConstantValue.WORKOUT).child(currUser.getId());
+                            if (currUser != null) {
+                                currUsersWorkoutRef = FirebaseDatabase.getInstance().getReference()
+                                        .child(ConstantValue.WORKOUT).child(currUser.getId());
+                            } else {
+                                if (auth.getCurrentUser() != null) {
+                                    currUsersWorkoutRef = FirebaseDatabase.getInstance().getReference()
+                                            .child(ConstantValue.WORKOUT).child(auth.getCurrentUser().getUid());
+                                }
+                            }
                             currUsersWorkoutRef.push().setValue(newWorkout).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {

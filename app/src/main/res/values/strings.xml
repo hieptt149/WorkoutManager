@@ -39,7 +39,7 @@
 
     <!--Workout Details Fragment-->
     <string name="back">Back</string>
-    <string name="cardio">Cardio</string>
+    <string name="cardioRate">Cardio</string>
     <string name="strength">Strength</string>
     <string name="mobility">Mobility</string>
     <string name="total_exercise">0 exercise</string>

@@ -36,11 +36,11 @@ public class UserInfoDialog extends Dialog implements View.OnClickListener {
     private String name;
     private int age;
     private double height, weight;
-    private Context context;
+    private Activity context;
     private User user;
     private boolean gender;
 
-    public UserInfoDialog(@NonNull Context context) {
+    public UserInfoDialog(@NonNull Activity context) {
         super(context);
         this.context = context;
     }
@@ -53,12 +53,6 @@ public class UserInfoDialog extends Dialog implements View.OnClickListener {
 //        setCanceledOnTouchOutside(false);
 //        setCancelable(false);
         init();
-    }
-
-    @Override
-    public void setOnDismissListener(@Nullable OnDismissListener listener) {
-        ((Activity) context).finish();
-        Toast.makeText(getContext(), R.string.register_successfully, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -102,7 +96,7 @@ public class UserInfoDialog extends Dialog implements View.OnClickListener {
             gender = false;
         }
         user = new User(age, gender, height, weight);
-        DisplayView.showProgressDialog(context);
+        DisplayView.showProgressDialog(getContext());
         UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName(name).build();
         auth.getCurrentUser().updateProfile(userProfileChangeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

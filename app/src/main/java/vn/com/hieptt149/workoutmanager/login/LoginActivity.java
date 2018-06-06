@@ -202,6 +202,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         DisplayView.dismissProgressDialog();
                         if (task.isSuccessful()) {
                             UserInfoDialog userInfoDialog = new UserInfoDialog(LoginActivity.this);
+                            userInfoDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                @Override
+                                public void onDismiss(DialogInterface dialog) {
+                                    finish();
+                                    Toast.makeText(LoginActivity.this, R.string.register_successfully, Toast.LENGTH_SHORT).show();
+                                }
+                            });
                             userInfoDialog.show();
                         } else {
                             try {

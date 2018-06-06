@@ -16,31 +16,31 @@ public class Workout implements Serializable {
     private String title;
     private String icon;
     private ArrayList<Exercise> lstUsersExercises;
-    private int cadioRate;
-    private int strength_rate;
-    private int mobility_rate;
+    private int cardioRate;
+    private int strengthRate;
+    private int mobilityRate;
 
     public Workout() {
     }
 
-    public Workout(String title, String icon, ArrayList<Exercise> lstUsersExercises, int cadioRate, int strength_rate, int mobility_rate) {
+    public Workout(String title, String icon, ArrayList<Exercise> lstUsersExercises, int cardioRate, int strengthRate, int mobilityRate) {
         this.title = title;
         this.icon = icon;
         this.lstUsersExercises = lstUsersExercises;
-        this.cadioRate = cadioRate;
-        this.strength_rate = strength_rate;
-        this.mobility_rate = mobility_rate;
+        this.cardioRate = cardioRate;
+        this.strengthRate = strengthRate;
+        this.mobilityRate = mobilityRate;
     }
 
-    public Workout(String id, String userId, String title, String icon, ArrayList<Exercise> lstUsersExercises, int cadioRate, int strength_rate, int mobility_rate, double caloriesBurn) {
+    public Workout(String id, String userId, String title, String icon, ArrayList<Exercise> lstUsersExercises, int cardioRate, int strengthRate, int mobilityRate, double caloriesBurn) {
         this.id = id;
         this.userId = userId;
         this.title = title;
         this.icon = icon;
         this.lstUsersExercises = lstUsersExercises;
-        this.cadioRate = cadioRate;
-        this.strength_rate = strength_rate;
-        this.mobility_rate = mobility_rate;
+        this.cardioRate = cardioRate;
+        this.strengthRate = strengthRate;
+        this.mobilityRate = mobilityRate;
     }
 
     public String getId() {
@@ -89,33 +89,33 @@ public class Workout implements Serializable {
         this.lstUsersExercises = lstUsersExercises;
     }
 
-    @PropertyName("cadio_rate")
-    public int getCadioRate() {
-        return cadioRate;
+    @PropertyName("cardio_rate")
+    public int getCardioRate() {
+        return cardioRate;
     }
 
-    @PropertyName("cadio_rate")
-    public void setCadioRate(int cadioRate) {
-        this.cadioRate = cadioRate;
+    @PropertyName("cardio_rate")
+    public void setCardioRate(int cardioRate) {
+        this.cardioRate = cardioRate;
     }
 
     @PropertyName("strength_rate")
     public int getStrengthRate() {
-        return strength_rate;
+        return strengthRate;
     }
 
     @PropertyName("strength_rate")
-    public void setStrengthRate(int strength_rate) {
-        this.strength_rate = strength_rate;
+    public void setStrengthRate(int strengthRate) {
+        this.strengthRate = strengthRate;
     }
 
     @PropertyName("mobility_rate")
     public int getMobilityRate() {
-        return mobility_rate;
+        return mobilityRate;
     }
 
     @PropertyName("mobility_rate")
-    public void setMobilityRate(int mobility_rate) {
-        this.mobility_rate = mobility_rate;
+    public void setMobilityRate(int mobilityRate) {
+        this.mobilityRate = mobilityRate;
     }
 }
