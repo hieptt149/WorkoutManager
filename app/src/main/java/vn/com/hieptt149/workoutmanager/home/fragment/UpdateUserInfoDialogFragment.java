@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
 import vn.com.hieptt149.workoutmanager.model.User;
+import vn.com.hieptt149.workoutmanager.utils.Common;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 
 public class UpdateUserInfoDialogFragment extends DialogFragment implements View.OnClickListener {
@@ -52,7 +53,7 @@ public class UpdateUserInfoDialogFragment extends DialogFragment implements View
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dialog_user_info,container,false);
+        return inflater.inflate(R.layout.dialog_user_info, container, false);
     }
 
     @Override
@@ -105,22 +106,28 @@ public class UpdateUserInfoDialogFragment extends DialogFragment implements View
         }
         user = new User(age, gender, height, weight);
         DisplayView.showProgressDialog(getContext());
-        UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName(name).build();
-        auth.getCurrentUser().updateProfile(userProfileChangeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                DisplayView.dismissProgressDialog();
-                FirebaseDatabase.getInstance().getReference().child(ConstantValue.USER).child(auth.getCurrentUser().getUid()).setValue(user);
-                Bundle bundle = new Bundle();
-                bundle.putString(ConstantValue.USERS_NAME,name);
-                bundle.putInt(ConstantValue.USERS_AGE,age);
-                bundle.putBoolean(ConstantValue.USERS_GENDER,gender);
-                bundle.putDouble(ConstantValue.USERS_HEIGHT,height);
-                bundle.putDouble(ConstantValue.USERS_WEIGHT,weight);
-                updateUserInfoListener.updateUserInfo(bundle);
-                dismiss();
-            }
-        });
+        if (Common.haveNetworkConnection(getContext())) {
+            UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName(name).build();
+            auth.getCurrentUser().updateProfile(userProfileChangeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    DisplayView.dismissProgressDialog();
+                    FirebaseDatabase.getInstance().getReference().child(ConstantValue.USER).child(auth.getCurrentUser().getUid()).setValue(user);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(ConstantValue.USERS_NAME, name);
+                    bundle.putInt(ConstantValue.USERS_AGE, age);
+                    bundle.putBoolean(ConstantValue.USERS_GENDER, gender);
+                    bundle.putDouble(ConstantValue.USERS_HEIGHT, height);
+                    bundle.putDouble(ConstantValue.USERS_WEIGHT, weight);
+                    updateUserInfoListener.updateUserInfo(bundle);
+                    DisplayView.dismissProgressDialog();
+                    dismiss();
+                }
+            });
+        } else {
+            DisplayView.showToast(getContext(), getString(R.string.no_connection));
+            DisplayView.dismissProgressDialog();
+        }
     }
 
     private void init(View view) {
@@ -137,7 +144,7 @@ public class UpdateUserInfoDialogFragment extends DialogFragment implements View
         updateUserInfoListener = (UpdateUserInfoListener) getTargetFragment();
     }
 
-    public interface UpdateUserInfoListener{
+    public interface UpdateUserInfoListener {
         void updateUserInfo(Bundle bundle);
     }
 }

@@ -254,7 +254,8 @@
                         android:id="@+id/rv_preview_selected_exercise"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="horizontal"></android.support.v7.widget.RecyclerView>
+                        android:orientation="horizontal"
+                        android:overScrollMode="never"></android.support.v7.widget.RecyclerView>
                 </LinearLayout>
             </LinearLayout>
 
@@ -274,7 +275,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/large_space"
-            android:padding="@dimen/medium_space"
+            android:padding="@dimen/large_space"
             android:text="@string/add_exercise"
             style="@style/MyButton"/>
     </LinearLayout>

@@ -24,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
 import vn.com.hieptt149.workoutmanager.model.User;
+import vn.com.hieptt149.workoutmanager.utils.Common;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 
 public class UserInfoDialog extends Dialog implements View.OnClickListener {
@@ -98,14 +99,19 @@ public class UserInfoDialog extends Dialog implements View.OnClickListener {
         user = new User(age, gender, height, weight);
         DisplayView.showProgressDialog(getContext());
         UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName(name).build();
-        auth.getCurrentUser().updateProfile(userProfileChangeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                DisplayView.dismissProgressDialog();
-                FirebaseDatabase.getInstance().getReference().child(ConstantValue.USER).child(auth.getCurrentUser().getUid()).setValue(user);
-                dismiss();
-            }
-        });
+        if (Common.haveNetworkConnection(getContext())) {
+            auth.getCurrentUser().updateProfile(userProfileChangeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    DisplayView.dismissProgressDialog();
+                    FirebaseDatabase.getInstance().getReference().child(ConstantValue.USER).child(auth.getCurrentUser().getUid()).setValue(user);
+                    dismiss();
+                }
+            });
+        } else {
+            DisplayView.dismissProgressDialog();
+            DisplayView.showToast(context, context.getString(R.string.no_connection));
+        }
     }
 
     private void init() {

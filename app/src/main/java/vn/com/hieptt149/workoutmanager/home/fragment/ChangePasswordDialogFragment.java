@@ -20,15 +20,12 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
-import vn.com.hieptt149.workoutmanager.model.User;
+import vn.com.hieptt149.workoutmanager.utils.Common;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 
 public class ChangePasswordDialogFragment extends DialogFragment implements View.OnTouchListener, View.OnFocusChangeListener, View.OnClickListener {
@@ -152,35 +149,39 @@ public class ChangePasswordDialogFragment extends DialogFragment implements View
         }
         DisplayView.showProgressDialog(getContext());
         credential = EmailAuthProvider.getCredential(auth.getCurrentUser().getEmail(), oldPassword);
-        auth.getCurrentUser().reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    auth.getCurrentUser().updatePassword(newPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                DisplayView.showToast(getContext(), getString(R.string.password_updated));
-                            } else {
-                                DisplayView.showToast(getContext(), getString(R.string.update_password_failed));
+        if (Common.haveNetworkConnection(getContext())){
+            auth.getCurrentUser().reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        auth.getCurrentUser().updatePassword(newPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    DisplayView.showToast(getContext(), getString(R.string.password_updated));
+                                } else {
+                                    DisplayView.showToast(getContext(), getString(R.string.update_password_failed));
+                                }
+                                dismiss();
                             }
-                            dismiss();
+                        });
+                    } else {
+                        try {
+                            throw task.getException();
                         }
-                    });
-                } else {
-                    try {
-                        throw task.getException();
+                        //Nhập sai password
+                        catch (FirebaseAuthInvalidCredentialsException e) {
+                            edtOld.setError(getString(R.string.wrong_password));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
-                    //Nhập sai password
-                    catch (FirebaseAuthInvalidCredentialsException e) {
-                        edtOld.setError(getString(R.string.wrong_password));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    DisplayView.dismissProgressDialog();
                 }
-                DisplayView.dismissProgressDialog();
-            }
-        });
+            });
+        } else {
+            DisplayView.showToast(getContext(),getString(R.string.no_connection));
+        }
     }
 
     private void init(View view) {

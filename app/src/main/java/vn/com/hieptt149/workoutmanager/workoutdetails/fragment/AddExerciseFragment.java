@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.adapter.ExerciseListAdapter;
+import vn.com.hieptt149.workoutmanager.utils.Common;
 import vn.com.hieptt149.workoutmanager.workoutdetails.AddWorkoutActivityIntf;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
 import vn.com.hieptt149.workoutmanager.model.Exercise;
@@ -78,14 +79,18 @@ public class AddExerciseFragment extends Fragment implements AddExerciseFragment
     @Override
     public void onResume() {
         super.onResume();
-        //Trường hợp user muốn thêm mới exercise vào workout
-        if (lstSelectedExercises != null) {
-            mergeSelectedExsWithDefaultExs();
-        }
-        //Trường hợp tạo mới workout lần đầu
-        else {
-            lstSelectedExercises = new ArrayList<>();
-            getNewExerciseList();
+        if (Common.haveNetworkConnection(getContext())) {
+            //Trường hợp user muốn thêm mới exercise vào workout
+            if (lstSelectedExercises != null) {
+                mergeSelectedExsWithDefaultExs();
+            }
+            //Trường hợp tạo mới workout lần đầu
+            else {
+                lstSelectedExercises = new ArrayList<>();
+                getNewExerciseList();
+            }
+        } else {
+            DisplayView.showToast(getContext(), getString(R.string.no_connection));
         }
     }
 
@@ -118,7 +123,7 @@ public class AddExerciseFragment extends Fragment implements AddExerciseFragment
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     lstExercises.add(snapshot.getValue(Exercise.class));
                 }
-                exerciseListAdapter = new ExerciseListAdapter(getContext(),lstExercises, AddExerciseFragment.this);
+                exerciseListAdapter = new ExerciseListAdapter(getContext(), lstExercises, AddExerciseFragment.this);
                 rvExercise.setAdapter(exerciseListAdapter);
                 DisplayView.dismissProgressDialog();
             }
@@ -149,7 +154,7 @@ public class AddExerciseFragment extends Fragment implements AddExerciseFragment
                         }
                     }
                 }
-                exerciseListAdapter = new ExerciseListAdapter(getContext(),lstExercises, AddExerciseFragment.this);
+                exerciseListAdapter = new ExerciseListAdapter(getContext(), lstExercises, AddExerciseFragment.this);
                 rvExercise.setAdapter(exerciseListAdapter);
                 DisplayView.dismissProgressDialog();
             }

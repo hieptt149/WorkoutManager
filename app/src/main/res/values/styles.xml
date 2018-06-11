@@ -25,6 +25,7 @@
         <item name="android:background">@drawable/bg_blue_gradient</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">@dimen/normal_text_size</item>
+        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="Widget.GifView" parent="@android:style/Widget" />

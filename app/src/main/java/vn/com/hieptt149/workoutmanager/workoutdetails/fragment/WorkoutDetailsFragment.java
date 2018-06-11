@@ -221,41 +221,52 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         DisplayView.showAlertDialog(getContext(), getString(R.string.confirm_save),
                 new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                    public void onClick(final DialogInterface dialogInterface, int i) {
                         Workout newWorkout = new Workout(edtWorkoutTitle.getText().toString(),
                                 (String) ivChooseWorkoutIcon.getTag(), lstSelectedExercise, cadioRate, strengthRate, mobilityRate);
-                        if (tag.equals(ConstantValue.ADD_WORKOUT)) {
-                            if (currUser != null) {
-                                currUsersWorkoutRef = FirebaseDatabase.getInstance().getReference()
-                                        .child(ConstantValue.WORKOUT).child(currUser.getId());
-                            } else {
-                                if (auth.getCurrentUser() != null) {
+                        if (Common.haveNetworkConnection(getContext())) {
+                            DisplayView.showProgressDialog(getContext());
+                            if (tag.equals(ConstantValue.ADD_WORKOUT)) {
+                                if (currUser != null) {
                                     currUsersWorkoutRef = FirebaseDatabase.getInstance().getReference()
-                                            .child(ConstantValue.WORKOUT).child(auth.getCurrentUser().getUid());
+                                            .child(ConstantValue.WORKOUT).child(currUser.getId());
+                                } else {
+                                    if (auth.getCurrentUser() != null) {
+                                        currUsersWorkoutRef = FirebaseDatabase.getInstance().getReference()
+                                                .child(ConstantValue.WORKOUT).child(auth.getCurrentUser().getUid());
+                                    }
                                 }
+                                currUsersWorkoutRef.push().setValue(newWorkout).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        DisplayView.dismissProgressDialog();
+                                        if (!task.isComplete()) {
+                                            DisplayView.showToast(getContext(), "Can't save your workout. Please check your connection and try again");
+                                        } else {
+                                            dialogInterface.dismiss();
+                                            getActivity().onBackPressed();
+                                        }
+                                    }
+                                });
+                            } else if (tag.equals(ConstantValue.WORKOUT_DETAILS)) {
+                                currUsersWorkoutRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.WORKOUT).
+                                        child(usersWorkoutDetails.getUserId()).child(usersWorkoutDetails.getId());
+                                currUsersWorkoutRef.setValue(newWorkout).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        DisplayView.dismissProgressDialog();
+                                        if (!task.isComplete()) {
+                                            DisplayView.showToast(getContext(), "Can't save your change. Please check your connection and try again");
+                                        } else {
+                                            dialogInterface.dismiss();
+                                            getActivity().onBackPressed();
+                                        }
+                                    }
+                                });
                             }
-                            currUsersWorkoutRef.push().setValue(newWorkout).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (!task.isComplete()) {
-                                        DisplayView.showToast(getContext(), "Can't save your workout. Please check your connection and try again");
-                                    }
-                                }
-                            });
-                        } else if (tag.equals(ConstantValue.WORKOUT_DETAILS)) {
-                            currUsersWorkoutRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.WORKOUT).
-                                    child(usersWorkoutDetails.getUserId()).child(usersWorkoutDetails.getId());
-                            currUsersWorkoutRef.setValue(newWorkout).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (!task.isComplete()) {
-                                        DisplayView.showToast(getContext(), "Can't save your change. Please check your connection and try again");
-                                    }
-                                }
-                            });
+                        } else {
+                            DisplayView.showToast(getContext(), getString(R.string.no_connection));
                         }
-                        dialogInterface.dismiss();
-                        getActivity().onBackPressed();
                     }
                 }, new DialogInterface.OnClickListener() {
                     @Override

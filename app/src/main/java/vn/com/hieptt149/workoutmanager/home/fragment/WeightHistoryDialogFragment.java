@@ -35,6 +35,7 @@ import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
 import vn.com.hieptt149.workoutmanager.model.History;
 import vn.com.hieptt149.workoutmanager.model.User;
+import vn.com.hieptt149.workoutmanager.utils.Common;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 
 public class WeightHistoryDialogFragment extends DialogFragment implements OnChartValueSelectedListener {
@@ -77,7 +78,12 @@ public class WeightHistoryDialogFragment extends DialogFragment implements OnCha
         chartWeight = view.findViewById(R.id.chart_weight);
         tvClickItem = view.findViewById(R.id.tv_click_item);
         lstWeightChartEntries = new ArrayList<>();
-        showWeightChart();
+        if (Common.haveNetworkConnection(getContext())) {
+            DisplayView.showProgressDialog(getContext());
+            showWeightChart();
+        } else {
+            DisplayView.showToast(getContext(), getString(R.string.no_connection));
+        }
     }
 
     @Override
@@ -112,11 +118,12 @@ public class WeightHistoryDialogFragment extends DialogFragment implements OnCha
                         tvClickItem.setVisibility(View.INVISIBLE);
                     }
                 }
+                DisplayView.dismissProgressDialog();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                DisplayView.dismissProgressDialog();
             }
         });
     }

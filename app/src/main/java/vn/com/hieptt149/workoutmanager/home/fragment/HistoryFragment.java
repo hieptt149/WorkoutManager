@@ -93,7 +93,11 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
                     .child(auth.getCurrentUser().getUid());
             currUserHistoryRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.HISTORY)
                     .child(auth.getCurrentUser().getUid());
-            getCurrUserInfo();
+            if (Common.haveNetworkConnection(getContext())) {
+                getCurrUserInfo();
+            } else {
+                DisplayView.showToast(getContext(), getString(R.string.no_connection));
+            }
         }
     }
 

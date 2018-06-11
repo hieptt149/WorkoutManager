@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
 
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
+import vn.com.hieptt149.workoutmanager.utils.Common;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener,
@@ -78,10 +79,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     return;
                 }
                 DisplayView.showProgressDialog(this);
-                if (rdbtnLogin.isChecked()) {
-                    login();
-                } else if (rdbtnRegister.isChecked()) {
-                    register();
+                if (Common.haveNetworkConnection(LoginActivity.this)) {
+                    if (rdbtnLogin.isChecked()) {
+                        login();
+                    } else if (rdbtnRegister.isChecked()) {
+                        register();
+                    }
+                } else {
+                    DisplayView.dismissProgressDialog();
+                    DisplayView.showToast(LoginActivity.this, getString(R.string.no_connection));
                 }
                 break;
             case R.id.tv_forgot_password:
@@ -94,7 +100,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     edtEmail.setError(getString(R.string.not_email));
                     return;
                 }
-                sendResetPasswordInstructions();
+                if (Common.haveNetworkConnection(LoginActivity.this)) {
+                    sendResetPasswordInstructions();
+                } else {
+                    DisplayView.showToast(LoginActivity.this, getString(R.string.no_connection));
+                }
                 break;
             case R.id.tv_back:
                 onBackPressed();
@@ -106,10 +116,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             View v = getCurrentFocus();
-            if ( v instanceof EditText) {
+            if (v instanceof EditText) {
                 Rect outRect = new Rect();
                 v.getGlobalVisibleRect(outRect);
-                if (!outRect.contains((int)ev.getRawX(), (int)ev.getRawY())) {
+                if (!outRect.contains((int) ev.getRawX(), (int) ev.getRawY())) {
                     v.clearFocus();
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
@@ -202,6 +212,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         DisplayView.dismissProgressDialog();
                         if (task.isSuccessful()) {
                             UserInfoDialog userInfoDialog = new UserInfoDialog(LoginActivity.this);
+                            userInfoDialog.setCancelable(false);
+                            userInfoDialog.setCanceledOnTouchOutside(false);
                             userInfoDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                                 @Override
                                 public void onDismiss(DialogInterface dialog) {

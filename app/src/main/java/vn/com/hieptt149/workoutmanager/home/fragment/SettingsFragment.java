@@ -38,6 +38,7 @@ import vn.com.hieptt149.workoutmanager.home.MainActivityIntf;
 import vn.com.hieptt149.workoutmanager.login.LoginActivity;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
 import vn.com.hieptt149.workoutmanager.model.User;
+import vn.com.hieptt149.workoutmanager.utils.Common;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;
 
 /**
@@ -198,61 +199,66 @@ public class SettingsFragment extends Fragment implements View.OnClickListener,
      * Lấy thông tin của người dùng đã đăng nhập
      */
     private void getCurrUserInformation() {
-        currUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChildren()) {
-                    currUser = dataSnapshot.getValue(User.class);
-                    currUser.setId(dataSnapshot.getKey());
-                } else {
-                    currUser = new User();
-                    currUser.setId(auth.getCurrentUser().getUid());
-                }
-                lnUsersSettings.setVisibility(View.VISIBLE);
-                tvUpdateHeightWeight.setVisibility(View.VISIBLE);
-                tvChangePassword.setVisibility(View.VISIBLE);
-                String url = "http://picasaweb.google.com/data/entry/api/user/" + auth.getCurrentUser().getEmail() + "?alt=json";
-                JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                try {
-                                    JSONObject object = response.getJSONObject("entry").getJSONObject("gphoto$thumbnail");
-                                    String imgUrl = object.getString("$t").replace("s64", "s200");
-                                    RequestOptions requestOptions = new RequestOptions();
-                                    requestOptions.placeholder(R.drawable.avatar);
-                                    requestOptions.circleCrop();
-                                    Glide.with(getContext()).load(imgUrl).apply(requestOptions).into(ivUserAvatar);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        ivUserAvatar.setImageResource(R.drawable.avatar);
+        if (Common.haveNetworkConnection(getContext())) {
+            currUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.hasChildren()) {
+                        currUser = dataSnapshot.getValue(User.class);
+                        currUser.setId(dataSnapshot.getKey());
+                    } else {
+                        currUser = new User();
+                        currUser.setId(auth.getCurrentUser().getUid());
                     }
-                });
-                Volley.newRequestQueue(getContext()).add(request);
-                tvUsersName.setText(auth.getCurrentUser().getDisplayName() != null && !auth.getCurrentUser().getDisplayName().equals("") ?
-                        auth.getCurrentUser().getDisplayName() : getString(R.string.user));
-                tvUsersAge.setText(currUser.getAge() != 0 ? getString(R.string.age) + ": " + currUser.getAge() : getString(R.string.unknown_age));
-                if (currUser.getAge() != 0) {
-                    tvUsersGender.setText(currUser.getGender() ? getString(R.string.male) : getString(R.string.female));
-                } else {
-                    tvUsersGender.setText(getString(R.string.unknown_gender));
+                    lnUsersSettings.setVisibility(View.VISIBLE);
+                    tvUpdateHeightWeight.setVisibility(View.VISIBLE);
+                    tvChangePassword.setVisibility(View.VISIBLE);
+                    String url = "http://picasaweb.google.com/data/entry/api/user/" + auth.getCurrentUser().getEmail() + "?alt=json";
+                    JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                            new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        JSONObject object = response.getJSONObject("entry").getJSONObject("gphoto$thumbnail");
+                                        String imgUrl = object.getString("$t").replace("s64", "s200");
+                                        RequestOptions requestOptions = new RequestOptions();
+                                        requestOptions.placeholder(R.drawable.avatar);
+                                        requestOptions.circleCrop();
+                                        Glide.with(getContext()).load(imgUrl).apply(requestOptions).into(ivUserAvatar);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            ivUserAvatar.setImageResource(R.drawable.avatar);
+                        }
+                    });
+                    Volley.newRequestQueue(getContext()).add(request);
+                    tvUsersName.setText(auth.getCurrentUser().getDisplayName() != null && !auth.getCurrentUser().getDisplayName().equals("") ?
+                            auth.getCurrentUser().getDisplayName() : getString(R.string.user));
+                    tvUsersAge.setText(currUser.getAge() != 0 ? getString(R.string.age) + ": " + currUser.getAge() : getString(R.string.unknown_age));
+                    if (currUser.getAge() != 0) {
+                        tvUsersGender.setText(currUser.getGender() ? getString(R.string.male) : getString(R.string.female));
+                    } else {
+                        tvUsersGender.setText(getString(R.string.unknown_gender));
+                    }
+                    tvUsersHeight.setText(currUser.getHeight() != 0 ? getString(R.string.height) + ": " + currUser.getHeight() + " cm" : getString(R.string.unknown_height));
+                    tvUsersWeight.setText(currUser.getWeight() != 0 ? getString(R.string.weight) + ": " + currUser.getWeight() + " kg" : getString(R.string.unknown_weight));
+                    DisplayView.dismissProgressDialog();
                 }
-                tvUsersHeight.setText(currUser.getHeight() != 0 ? getString(R.string.height) + ": " + currUser.getHeight() + " cm" : getString(R.string.unknown_height));
-                tvUsersWeight.setText(currUser.getWeight() != 0 ? getString(R.string.weight) + ": " + currUser.getWeight() + " kg" : getString(R.string.unknown_weight));
-                DisplayView.dismissProgressDialog();
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                DisplayView.showToast(getContext(), "Can't get your information. Please check your connection");
-                DisplayView.dismissProgressDialog();
-            }
-        });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    DisplayView.showToast(getContext(), "Can't get your information. Please check your connection");
+                    DisplayView.dismissProgressDialog();
+                }
+            });
+        } else {
+            DisplayView.showToast(getContext(), getString(R.string.no_connection));
+            DisplayView.dismissProgressDialog();
+        }
     }
 
     private void init(View view) {

@@ -230,7 +230,11 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
                     }
                     countDownTimer.cancel();
                     if (currUser != null && currUser.getAge() != 0) {
-                        createWorkoutHistory();
+                        if (Common.haveNetworkConnection(getContext())) {
+                            createWorkoutHistory();
+                        } else {
+                            DisplayView.showToast(getContext(), getString(R.string.no_connection));
+                        }
                     }
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -239,7 +243,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
                             secondaryAlarm.release();
                             refreshTimer();
                         }
-                    },300);
+                    }, 300);
                 }
             }
 

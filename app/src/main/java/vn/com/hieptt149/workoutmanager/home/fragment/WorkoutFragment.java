@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.adapter.WorkoutPreviewAdapter;
 import vn.com.hieptt149.workoutmanager.model.User;
+import vn.com.hieptt149.workoutmanager.utils.Common;
 import vn.com.hieptt149.workoutmanager.utils.ExpandableChildGridView;
 import vn.com.hieptt149.workoutmanager.workoutdetails.AddWorkoutActivity;
 import vn.com.hieptt149.workoutmanager.home.MainActivityIntf;
@@ -84,9 +85,14 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener, A
     public void onResume() {
         super.onResume();
         DisplayView.showProgressDialog(getContext());
-        getListQuickStartWorkout();
-        if (auth.getCurrentUser() != null) {
-            getListWorkout();
+        if (Common.haveNetworkConnection(getContext())) {
+            getListQuickStartWorkout();
+            if (auth.getCurrentUser() != null) {
+                getListWorkout();
+            }
+        } else {
+            DisplayView.dismissProgressDialog();
+            DisplayView.showToast(getContext(), getString(R.string.no_connection));
         }
     }
 
@@ -120,13 +126,13 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener, A
             case R.id.gv_preview_workout:
                 i.putExtra(ConstantValue.CURRENT_USER, currUser);
                 i.putExtra(ConstantValue.SELECTED_WORKOUT, lstUsersWorkout.get(position));
-                i.putExtra(ConstantValue.WORKOUT_TYPE,false);
+                i.putExtra(ConstantValue.WORKOUT_TYPE, false);
                 startActivity(i);
                 break;
             case R.id.gv_preview_workout_quick_start:
                 i.putExtra(ConstantValue.CURRENT_USER, currUser);
                 i.putExtra(ConstantValue.SELECTED_WORKOUT, lstQuickStart.get(position));
-                i.putExtra(ConstantValue.WORKOUT_TYPE,true);
+                i.putExtra(ConstantValue.WORKOUT_TYPE, true);
                 startActivity(i);
                 break;
         }
@@ -154,6 +160,7 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener, A
     }
 
     private void getListWorkout() {
+        DisplayView.dismissProgressDialog();
         usersWorkoutRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.WORKOUT).child(auth.getCurrentUser().getUid());
         usersWorkoutRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -167,13 +174,11 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener, A
                 }
                 workoutPreviewAdapter.notifyDataSetChanged();
                 lnPreviewWorkout.setVisibility(View.VISIBLE);
-                DisplayView.dismissProgressDialog();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 DisplayView.showToast(getContext(), "Can't get your workouts. Please check your connection");
-                DisplayView.dismissProgressDialog();
             }
         });
     }
