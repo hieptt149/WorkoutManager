@@ -87,8 +87,6 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener, A
         getListQuickStartWorkout();
         if (auth.getCurrentUser() != null) {
             getListWorkout();
-        } else {
-            DisplayView.dismissProgressDialog();
         }
     }
 

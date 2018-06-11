@@ -32,67 +32,59 @@
                 android:id="@+id/rdbtn_male"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/male"
-                android:buttonTint="@color/colorPrimary"/>
+                android:buttonTint="@color/colorPrimary"
+                android:text="@string/male" />
 
             <RadioButton
                 android:id="@+id/rdbtn_female"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/female"
-                android:buttonTint="@color/colorPrimary"/>
+                android:buttonTint="@color/colorPrimary"
+                android:text="@string/female" />
         </RadioGroup>
 
         <EditText
             android:id="@+id/edt_name"
+            style="@style/MyEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/medium_space"
             android:drawableLeft="@drawable/name"
             android:drawablePadding="@dimen/small_space"
-            android:hint="@string/name"
-            android:singleLine="true"
-            android:backgroundTint="@color/colorPrimary"
-            android:textCursorDrawable="@color/colorPrimaryDark" />
+            android:hint="@string/name" />
 
         <EditText
             android:id="@+id/edt_age"
+            style="@style/MyEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/medium_space"
+            android:backgroundTint="@color/colorPrimary"
             android:drawableLeft="@drawable/age"
             android:drawablePadding="@dimen/small_space"
-            android:hint="@string/age"
-            android:inputType="number"
-            android:singleLine="true"
-            android:backgroundTint="@color/colorPrimary"
-            android:textCursorDrawable="@color/colorPrimaryDark" />
+            android:hint="@string/age" />
 
         <EditText
             android:id="@+id/edt_height"
+            style="@style/MyEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/medium_space"
+            android:backgroundTint="@color/colorPrimary"
             android:drawableLeft="@drawable/height"
             android:drawablePadding="@dimen/small_space"
-            android:hint="@string/height"
-            android:inputType="number"
-            android:singleLine="true"
-            android:backgroundTint="@color/colorPrimary"
-            android:textCursorDrawable="@color/colorPrimaryDark" />
+            android:hint="@string/height" />
 
         <EditText
             android:id="@+id/edt_weight"
+            style="@style/MyEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/medium_space"
+            android:backgroundTint="@color/colorPrimary"
             android:drawableLeft="@drawable/scale"
             android:drawablePadding="@dimen/small_space"
-            android:hint="@string/weight"
-            android:inputType="number"
-            android:singleLine="true"
-            android:backgroundTint="@color/colorPrimary"
-            android:textCursorDrawable="@color/colorPrimaryDark" />
+            android:hint="@string/weight" />
 
         <Button
             android:id="@+id/btn_confirm"
@@ -100,7 +92,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/medium_space"
             android:text="@string/confirm"
-            android:textColor="@android:color/white"
-            android:background="@drawable/bg_blue_gradient"/>
+            style="@style/MyButton"/>
     </LinearLayout>
 </LinearLayout>

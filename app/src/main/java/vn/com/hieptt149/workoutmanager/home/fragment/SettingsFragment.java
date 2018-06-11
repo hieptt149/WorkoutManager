@@ -146,6 +146,12 @@ public class SettingsFragment extends Fragment implements View.OnClickListener,
                         public void onClick(DialogInterface dialogInterface, int i) {
                             auth.signOut();
                             isLogin = false;
+                            tvUsersName.setText("");
+                            tvUsersAge.setText("");
+                            tvUsersGender.setText("");
+                            tvUsersHeight.setText("");
+                            tvUsersWeight.setText("");
+                            ivUserAvatar.setImageResource(R.drawable.avatar);
                             lnUsersSettings.setVisibility(View.GONE);
                             tvUpdateHeightWeight.setVisibility(View.GONE);
                             tvChangePassword.setVisibility(View.GONE);

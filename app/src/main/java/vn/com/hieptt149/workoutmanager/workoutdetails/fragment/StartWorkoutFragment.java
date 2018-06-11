@@ -113,40 +113,27 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
             case R.id.iv_next_exercise:
                 if (countDownTimer != null) {
                     countDownTimer.cancel();
-//                    animationTimer.cancel();
                     currInterval++;
                     initCountDownTimer();
-//                    initAnimation();
                     timer = lstTimer.get(currInterval).getDuration();
                     animation = lstTimer.get(currInterval).getDuration();
                     countDownTimer.start();
-//                    animationTimer.start();
                 }
                 break;
             case R.id.tv_duration:
                 if (status == Status.STOP) {
                     status = Status.START;
                     initCountDownTimer();
-//                    initAnimation();
                     currExercisePreview.playGifAnimation();
                     countDownTimer.start();
-//                    animationTimer.start();
                 } else if (status == Status.START) {
                     status = Status.PAUSE;
                     currExercisePreview.pauseGifAnimation();
                     countDownTimer.pause();
-//                    animationTimer.pause();
                 } else if (status == Status.PAUSE) {
                     status = Status.START;
                     currExercisePreview.playGifAnimation();
                     countDownTimer.resume();
-//                    handler.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            countDownTimer.resume();
-//                        }
-//                    }, animation - timer);
-//                    animationTimer.resume();
                 }
                 break;
         }
@@ -163,9 +150,6 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         if (countDownTimer != null) {
             countDownTimer.cancel();
         }
-//        if (animationTimer != null) {
-//            animationTimer.cancel();
-//        }
     }
 
     private void init(View view) {
@@ -191,7 +175,6 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
             calculateWorkoutsCaloriesBurned();
         }
         initCountDownTimer();
-//        initAnimation();
     }
 
     /**
@@ -240,13 +223,23 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
                 timer -= 1000;
                 //Chạy hết interval cuối cùng
                 if (timer < 0 && currInterval == lstTimer.size() - 1) {
+                    if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
+                        vibrator.vibrate(500);
+                    } else {
+                        mainAlarm.start();
+                    }
                     countDownTimer.cancel();
-                    mainAlarm.release();
-                    secondaryAlarm.release();
                     if (currUser != null && currUser.getAge() != 0) {
                         createWorkoutHistory();
                     }
-                    refreshTimer();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mainAlarm.release();
+                            secondaryAlarm.release();
+                            refreshTimer();
+                        }
+                    },300);
                 }
             }
 
