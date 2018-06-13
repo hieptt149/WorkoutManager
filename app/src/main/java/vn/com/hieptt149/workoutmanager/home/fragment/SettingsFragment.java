@@ -47,8 +47,10 @@ import vn.com.hieptt149.workoutmanager.home.MainActivityIntf;
 import vn.com.hieptt149.workoutmanager.login.LoginActivity;
 import vn.com.hieptt149.workoutmanager.model.ConstantValue;
 import vn.com.hieptt149.workoutmanager.model.User;
+import vn.com.hieptt149.workoutmanager.utils.AlarmReceiver;
 import vn.com.hieptt149.workoutmanager.utils.Common;
 import vn.com.hieptt149.workoutmanager.utils.DisplayView;
+import vn.com.hieptt149.workoutmanager.utils.NotificationScheduler;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -194,6 +196,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener,
                         editor = sharedPreferences.edit();
                         editor.putString(ConstantValue.TIME_REMIND, timeRemind);
                         editor.apply();
+                        NotificationScheduler.setReminder(getContext(), AlarmReceiver.class, selectedHour, selectedMinute);
                     }
                 }, defaultTime.get(Calendar.HOUR_OF_DAY), defaultTime.get(Calendar.MINUTE), false);
                 timePickerDialog.show();
@@ -204,10 +207,23 @@ public class SettingsFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
         isReminderEnabled = isChecked;
-        lnReminderTime.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+        if (isChecked) {
+            lnReminderTime.setVisibility(View.VISIBLE);
+            Calendar currentScheduler = Calendar.getInstance();
+            try {
+                currentScheduler.setTime(hhmmformat.parse(timeRemind));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            NotificationScheduler.setReminder(getContext(), AlarmReceiver.class, currentScheduler.get(Calendar.HOUR_OF_DAY), currentScheduler.get(Calendar.MINUTE));
+        } else {
+            lnReminderTime.setVisibility(View.GONE);
+            NotificationScheduler.cancelReminder(getContext(), AlarmReceiver.class);
+        }
         editor = sharedPreferences.edit();
         editor.putBoolean(ConstantValue.REMINDER_STATUS, isReminderEnabled);
         editor.apply();
+
     }
 
     @Override
