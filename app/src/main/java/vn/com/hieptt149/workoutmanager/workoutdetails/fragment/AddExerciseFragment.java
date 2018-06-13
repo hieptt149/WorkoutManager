@@ -36,7 +36,7 @@ public class AddExerciseFragment extends Fragment implements AddExerciseFragment
 
     private AddWorkoutActivityIntf addWorkoutActivityIntf;
     private WorkoutDetailsFragmentIntf workoutDetailsFragmentIntf;
-    private TextView tvAddWorkoutToolBarTitle;
+    private TextView tvAddWorkoutToolBarTitle, tvAddworkoutDone;
     private RecyclerView rvExercise;
     private DatabaseReference exercisesRef;
     private ExerciseListAdapter exerciseListAdapter;
@@ -44,7 +44,6 @@ public class AddExerciseFragment extends Fragment implements AddExerciseFragment
     private DividerItemDecoration dividerItemDecoration;
     private static ArrayList<Exercise> lstSelectedExercises;
     private ArrayList<Exercise> lstExercises;
-    private int practiceTime = 60000;
 
     public AddExerciseFragment() {
     }
@@ -168,9 +167,11 @@ public class AddExerciseFragment extends Fragment implements AddExerciseFragment
 
     private void init(View view) {
         tvAddWorkoutToolBarTitle = getActivity().findViewById(R.id.tv_addworkout_toolbar_title);
+        tvAddworkoutDone = getActivity().findViewById(R.id.tv_addworkout_back);
         rvExercise = view.findViewById(R.id.rv_exercise);
         exercisesRef = FirebaseDatabase.getInstance().getReference().child(ConstantValue.EXERCISE);
         tvAddWorkoutToolBarTitle.setText(R.string.add_exercise);
+        tvAddworkoutDone.setText(R.string.done);
         linearLayoutManager = new LinearLayoutManager(getContext());
         dividerItemDecoration = new DividerItemDecoration(getContext(), linearLayoutManager.getOrientation());
         rvExercise.setHasFixedSize(true);

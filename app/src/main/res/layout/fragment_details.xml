@@ -138,7 +138,7 @@
                     android:gravity="center"
                     android:hint="Workout Name"
                     android:singleLine="true"
-                    android:textCursorDrawable="@null"/>
+                    android:textCursorDrawable="@null" />
 
                 <LinearLayout
                     android:id="@+id/ln_btn_save_delete"
@@ -160,11 +160,11 @@
                         android:id="@+id/iv_save"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/medium_space"
+                        android:layout_marginRight="@dimen/medium_space"
                         android:adjustViewBounds="true"
                         android:src="@drawable/ic_save"
-                        android:visibility="gone"
-                        android:layout_marginLeft="@dimen/medium_space"
-                        android:layout_marginRight="@dimen/medium_space"/>
+                        android:visibility="gone" />
 
                     <ImageView
                         android:id="@+id/iv_start"
@@ -176,26 +176,29 @@
                 </LinearLayout>
 
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/ln_exercise_detail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:weightSum="10">
+
                 <vn.com.hieptt149.workoutmanager.utils.GifView
                     android:id="@+id/iv_exercise_preview"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="8"
-                    android:layout_gravity="center_horizontal"/>
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="8" />
+
                 <TextView
                     android:id="@+id/tv_exercise_name"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="2"
+                    android:gravity="center"
                     android:textSize="@dimen/big_text_size"
-                    android:textStyle="bold"
-                    android:gravity="center"/>
+                    android:textStyle="bold" />
             </LinearLayout>
         </RelativeLayout>
 
@@ -271,13 +274,13 @@
 
         <Button
             android:id="@+id/btn_add_exercise"
+            style="@style/MyButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/large_space"
             android:padding="@dimen/large_space"
-            android:text="@string/add_exercise"
-            style="@style/MyButton"/>
+            android:text="@string/add_exercise" />
     </LinearLayout>
 
 </ScrollView>

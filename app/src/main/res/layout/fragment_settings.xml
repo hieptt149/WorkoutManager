@@ -201,34 +201,67 @@
 
         </LinearLayout>
 
-        <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="1dp"-->
-        <!--android:background="@android:color/darker_gray" />-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray" />
 
-        <!--<LinearLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="@dimen/item_height"-->
-        <!--android:orientation="horizontal"-->
-        <!--android:padding="@dimen/medium_space"-->
-        <!--android:weightSum="10">-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        <!--<TextView-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_weight="6"-->
-        <!--android:gravity="center_vertical"-->
-        <!--android:text="@string/themes"-->
-        <!--android:textSize="@dimen/normal_text_size" />-->
+            <LinearLayout
+                android:id="@+id/ln_reminder"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:orientation="horizontal"
+                android:padding="@dimen/medium_space"
+                android:weightSum="10">
 
-        <!--<Spinner-->
-        <!--android:id="@+id/spn_themes"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_weight="4"-->
-        <!--android:gravity="center_vertical|right"></Spinner>-->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="8"
+                    android:gravity="center_vertical"
+                    android:text="@string/reminder"
+                    android:textSize="@dimen/normal_text_size" />
 
-        <!--</LinearLayout>-->
+                <Switch
+                    android:id="@+id/sw_reminder"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="center_vertical|right" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ln_reminder_time"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:layout_marginLeft="@dimen/small_space"
+                android:layout_marginRight="@dimen/small_space"
+                android:orientation="horizontal"
+                android:padding="@dimen/medium_space"
+                android:weightSum="10">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5"
+                    android:gravity="center_vertical"
+                    android:text="@string/time"
+                    android:textSize="@dimen/normal_text_size" />
+
+                <TextView
+                    android:id="@+id/tv_reminder_time"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5"
+                    android:gravity="center_vertical|right"
+                    android:textSize="@dimen/normal_text_size" />
+            </LinearLayout>
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"

@@ -1,6 +1,7 @@
 package vn.com.hieptt149.workoutmanager.home.fragment;
 
 
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,9 +13,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -33,6 +37,11 @@ import com.google.firebase.database.ValueEventListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import vn.com.hieptt149.workoutmanager.R;
 import vn.com.hieptt149.workoutmanager.home.MainActivityIntf;
 import vn.com.hieptt149.workoutmanager.login.LoginActivity;
@@ -45,21 +54,25 @@ import vn.com.hieptt149.workoutmanager.utils.DisplayView;
  * A simple {@link Fragment} subclass.
  */
 public class SettingsFragment extends Fragment implements View.OnClickListener,
-        SettingsBottomSheetDialogFragment.SettingsBottomSheetDialogListener, UpdateUserInfoDialogFragment.UpdateUserInfoListener {
+        SettingsBottomSheetDialogFragment.SettingsBottomSheetDialogListener, UpdateUserInfoDialogFragment.UpdateUserInfoListener, CompoundButton.OnCheckedChangeListener {
 
     private DatabaseReference currUserRef;
     private FirebaseAuth auth;
     private MainActivityIntf mainActivityIntf;
     private SharedPreferences sharedPreferences;
-    //    private Switch swSounds;
-    private LinearLayout lnUsersSettings, lnExercisesDuration, lnRestsDuration;
+    private LinearLayout lnUsersSettings, lnExercisesDuration, lnRestsDuration, lnReminder, lnReminderTime;
     private ImageView ivUserAvatar, ivWeightChart;
+    private Switch swReminder;
     private TextView tvUsersName, tvUsersAge, tvUsersGender, tvUsersHeight, tvUsersWeight, tvChangePassword,
-            tvExercisesDuration, tvRestsDuration, tvLogin, tvUpdateHeightWeight;
-    //    private Spinner spnThemes;
+            tvExercisesDuration, tvRestsDuration, tvLogin, tvUpdateHeightWeight, tvReminderTime;
     private long exerscisesDuration, restsDuration;
     private Bundle bundle;
     private User currUser;
+    private boolean isReminderEnabled;
+    private String timeRemind;
+    private SharedPreferences.Editor editor;
+    private TimePickerDialog timePickerDialog;
+    private SimpleDateFormat hhmmformat = new SimpleDateFormat("hh:mm a");
 
     private static boolean isLogin;
 
@@ -166,12 +179,40 @@ public class SettingsFragment extends Fragment implements View.OnClickListener,
                     });
                 }
                 break;
+            case R.id.ln_reminder_time:
+                Calendar defaultTime = Calendar.getInstance();
+                try {
+                    defaultTime.setTime(hhmmformat.parse(timeRemind));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        timeRemind = hhmmformat.format(new Date(0, 0, 0, selectedHour, selectedMinute));
+                        tvReminderTime.setText(timeRemind);
+                        editor = sharedPreferences.edit();
+                        editor.putString(ConstantValue.TIME_REMIND, timeRemind);
+                        editor.apply();
+                    }
+                }, defaultTime.get(Calendar.HOUR_OF_DAY), defaultTime.get(Calendar.MINUTE), false);
+                timePickerDialog.show();
+                break;
         }
     }
 
     @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+        isReminderEnabled = isChecked;
+        lnReminderTime.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+        editor = sharedPreferences.edit();
+        editor.putBoolean(ConstantValue.REMINDER_STATUS, isReminderEnabled);
+        editor.apply();
+    }
+
+    @Override
     public void onTvDoneClick(long currDuration, boolean isExercisesDuration) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+
         if (isExercisesDuration) {
             exerscisesDuration = currDuration;
             tvExercisesDuration.setText(exerscisesDuration / 1000 + " sec");
@@ -272,24 +313,33 @@ public class SettingsFragment extends Fragment implements View.OnClickListener,
         ivWeightChart = view.findViewById(R.id.iv_weight_chart);
         tvUpdateHeightWeight = view.findViewById(R.id.tv_update_height_weight);
         tvChangePassword = view.findViewById(R.id.tv_change_password);
-//        swSounds = view.findViewById(R.id.sw_sounds);
         lnExercisesDuration = view.findViewById(R.id.ln_exercises_duration);
         tvExercisesDuration = view.findViewById(R.id.tv_exercises_duration);
+        lnReminder = view.findViewById(R.id.ln_reminder);
+        lnReminderTime = view.findViewById(R.id.ln_reminder_time);
         lnRestsDuration = view.findViewById(R.id.ln_rests_duration);
         tvRestsDuration = view.findViewById(R.id.tv_rests_duration);
-//        spnThemes = view.findViewById(R.id.spn_themes);
+        tvReminderTime = view.findViewById(R.id.tv_reminder_time);
+        swReminder = view.findViewById(R.id.sw_reminder);
         tvLogin = view.findViewById(R.id.tv_login);
         ivWeightChart.setOnClickListener(this);
         tvUpdateHeightWeight.setOnClickListener(this);
         tvChangePassword.setOnClickListener(this);
         lnExercisesDuration.setOnClickListener(this);
         lnRestsDuration.setOnClickListener(this);
+        lnReminderTime.setOnClickListener(this);
         tvLogin.setOnClickListener(this);
+        swReminder.setOnCheckedChangeListener(this);
         auth = FirebaseAuth.getInstance();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         exerscisesDuration = sharedPreferences.getLong(ConstantValue.EXERCISES_DURATION, ConstantValue.DEFAULT_EXERCISES_DURATION);
         restsDuration = sharedPreferences.getLong(ConstantValue.RESTS_DURATION, ConstantValue.DEFAULT_RESTS_DURATION);
+        isReminderEnabled = sharedPreferences.getBoolean(ConstantValue.REMINDER_STATUS, false);
+        timeRemind = sharedPreferences.getString(ConstantValue.TIME_REMIND, "08:00");
+        lnReminderTime.setVisibility(isReminderEnabled ? View.VISIBLE : View.GONE);
         tvExercisesDuration.setText(exerscisesDuration / 1000 + " sec");
         tvRestsDuration.setText(restsDuration / 1000 + " sec");
+        swReminder.setChecked(isReminderEnabled);
+        tvReminderTime.setText(timeRemind);
     }
 }

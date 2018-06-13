@@ -47,7 +47,7 @@ import vn.com.hieptt149.workoutmanager.utils.MyCountDownTimer;
  */
 public class StartWorkoutFragment extends Fragment implements View.OnClickListener, View.OnTouchListener {
 
-    private TextView tvAddWorkoutToolbarTitle, tvExerciseName, tvDuration;
+    private TextView tvAddWorkoutToolbarTitle,tvAddworkoutDone, tvExerciseName, tvDuration;
     private ImageView ivPreviousExercise, ivNextExercise;
     private CustomViewPager vpExercisePreview;
     private CircularSeekBar sbDuration;
@@ -154,6 +154,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
 
     private void init(View view) {
         tvAddWorkoutToolbarTitle = getActivity().findViewById(R.id.tv_addworkout_toolbar_title);
+        tvAddworkoutDone = getActivity().findViewById(R.id.tv_addworkout_back);
         vpExercisePreview = view.findViewById(R.id.vp_exercise_preview);
         tvExerciseName = view.findViewById(R.id.tv_exercise_name);
         ivPreviousExercise = view.findViewById(R.id.iv_previous_exercise);
@@ -168,6 +169,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         vibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
         audioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
         tvAddWorkoutToolbarTitle.setText(!workoutTitle.equals("") ? workoutTitle : getString(R.string.start_workout));
+        tvAddworkoutDone.setText(R.string.back);
         createTimerList();
         createExercisePreviewList();
         refreshTimer();

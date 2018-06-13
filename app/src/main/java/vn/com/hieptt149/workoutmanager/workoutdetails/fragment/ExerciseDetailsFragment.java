@@ -29,7 +29,7 @@ import vn.com.hieptt149.workoutmanager.workoutdetails.AddWorkoutActivityIntf;
 public class ExerciseDetailsFragment extends Fragment {
 
     private AddWorkoutActivityIntf addWorkoutActivityIntf;
-    private TextView tvAddWorkoutToolbarTitle, tvTotalExercise, tvTotalTime, tvClickToChoose, tvExerciseDescription, tvExerciseName;
+    private TextView tvAddWorkoutToolbarTitle, tvAddworkoutDone, tvTotalExercise, tvTotalTime, tvClickToChoose, tvExerciseDescription, tvExerciseName;
     private ProgressBar pbCardio, pbStrength, pbMobility;
     private ImageView ivStart, ivSave, ivDelete;
     private GifView ivExercisePreview;
@@ -69,6 +69,7 @@ public class ExerciseDetailsFragment extends Fragment {
 
     private void showExerciseDetails() {
         tvAddWorkoutToolbarTitle.setText(selectedExercise.getName());
+        tvAddworkoutDone.setText(R.string.back);
         lnWorkoutInfo.setVisibility(View.GONE);
         lnExercisesInfo.setVisibility(View.GONE);
         tvExerciseDescription.setVisibility(View.VISIBLE);
@@ -88,6 +89,7 @@ public class ExerciseDetailsFragment extends Fragment {
 
     private void initView(View view) {
         tvAddWorkoutToolbarTitle = getActivity().findViewById(R.id.tv_addworkout_toolbar_title);
+        tvAddworkoutDone = getActivity().findViewById(R.id.tv_addworkout_back);
         tvTotalExercise = view.findViewById(R.id.tv_total_exercise);
         tvTotalTime = view.findViewById(R.id.tv_total_time);
         tvExerciseName = view.findViewById(R.id.tv_exercise_name);

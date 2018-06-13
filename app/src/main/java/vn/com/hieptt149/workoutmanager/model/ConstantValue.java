@@ -45,6 +45,9 @@ public class ConstantValue {
     public static final String USERS_GENDER = "users_gender";
     public static final String USERS_HEIGHT = "users_height";
     public static final String USERS_WEIGHT = "users_weight";
+    public static final String REMINDER_STATUS = "reminder_status";
+    public static final String TIME_REMIND = "time_remind";
+    public static final String KEY_TYPE = "key_type";
 
     public static final String validemail = "[a-zA-Z0-9._-]{1,100}+@[a-zA-Z0-9]+\\.+[a-zA-Z0-9.]+";
     public static final int MAX_EXERSCISE_DURATION = 90000;

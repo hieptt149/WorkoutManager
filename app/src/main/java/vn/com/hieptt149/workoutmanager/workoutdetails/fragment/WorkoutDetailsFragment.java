@@ -53,7 +53,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
     private AddWorkoutActivityIntf addWorkoutActivityIntf;
     private DatabaseReference currUsersWorkoutRef;
     private SharedPreferences sharedPreferences;
-    private TextView tvAddWorkoutToolbarTitle, tvExerciseName, tvTotalExercise, tvTotalTime, tvClickToChoose, tvExerciseDescription;
+    private TextView tvAddWorkoutToolbarTitle, tvAddworkoutDone, tvExerciseName, tvTotalExercise, tvTotalTime, tvClickToChoose, tvExerciseDescription;
     private ProgressBar pbCardio, pbStrength, pbMobility;
     private ImageView ivChooseWorkoutIcon, ivStart, ivSave, ivDelete;
     private GifView ivExercisePreview;
@@ -368,6 +368,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
 
     private void init(View view) {
         tvAddWorkoutToolbarTitle = getActivity().findViewById(R.id.tv_addworkout_toolbar_title);
+        tvAddworkoutDone=getActivity().findViewById(R.id.tv_addworkout_back);
         tvTotalExercise = view.findViewById(R.id.tv_total_exercise);
         tvTotalTime = view.findViewById(R.id.tv_total_time);
         tvExerciseName = view.findViewById(R.id.tv_exercise_name);
@@ -397,5 +398,6 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
         practiceTime = sharedPreferences.getLong(ConstantValue.EXERCISES_DURATION, ConstantValue.DEFAULT_EXERCISES_DURATION);
         restTime = sharedPreferences.getLong(ConstantValue.RESTS_DURATION, ConstantValue.DEFAULT_RESTS_DURATION);
         auth = FirebaseAuth.getInstance();
+        tvAddworkoutDone.setText(R.string.back);
     }
 }
