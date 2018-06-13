@@ -33,13 +33,10 @@ public class NotificationScheduler {
         setcalendar.set(Calendar.MINUTE, min);
         setcalendar.set(Calendar.SECOND, 0);
 
-        // cancel already scheduled reminders
         cancelReminder(context, cls);
 
         if (setcalendar.before(calendar))
             setcalendar.add(Calendar.DATE, 1);
-
-        // Enable a receiver
 
         ComponentName receiver = new ComponentName(context, cls);
         PackageManager pm = context.getPackageManager();
@@ -61,7 +58,6 @@ public class NotificationScheduler {
     }
 
     public static void cancelReminder(Context context, Class<?> cls) {
-        // Disable a receiver
 
         ComponentName receiver = new ComponentName(context, cls);
         PackageManager pm = context.getPackageManager();
@@ -97,10 +93,10 @@ public class NotificationScheduler {
                 .setSound(alarmSound)
                 .setSmallIcon(R.drawable.workout_mng)
                 .setVibrate(new long[]{TIME_VIBRATE, TIME_VIBRATE, TIME_VIBRATE, TIME_VIBRATE, TIME_VIBRATE})
+                .setPriority(6)
                 .setContentIntent(pendingIntent).build();
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(DAILY_REMINDER_REQUEST_CODE, notification);
-
     }
 }
