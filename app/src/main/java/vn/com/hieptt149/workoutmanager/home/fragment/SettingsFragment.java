@@ -228,7 +228,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onTvDoneClick(long currDuration, boolean isExercisesDuration) {
-
+        editor = sharedPreferences.edit();
         if (isExercisesDuration) {
             exerscisesDuration = currDuration;
             tvExercisesDuration.setText(exerscisesDuration / 1000 + " sec");

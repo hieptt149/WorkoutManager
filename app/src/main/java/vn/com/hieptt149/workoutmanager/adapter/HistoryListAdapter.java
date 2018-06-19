@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -24,6 +25,7 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
     private NumberFormat nf = new DecimalFormat("#.##");
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     private int itemHighlight = -1;
+    private double caloriesBurnADay = 0;
 
     public HistoryListAdapter(Context context, ArrayList<History> lstHistories) {
         this.lstHistories = lstHistories;
@@ -44,10 +46,13 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
         holder.tvCaloriesBurn.setText(context.getString(R.string.total_calories_burned) + " " + nf.format(history.getCaloriesBurn()) + " cal");
 //        holder.tvHeight.setText(context.getString(R.string.height) + ": " + history.getCurrHeight() + " cm");
 //        holder.tvWeight.setText(context.getString(R.string.weight) + ": " + history.getCurrWeight() + " kg");
-        if (itemHighlight == position){
+        if (itemHighlight == position) {
             holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.itemFocused));
         } else {
             holder.itemView.setBackgroundColor(Color.TRANSPARENT);
+        }
+        if (caloriesBurnADay > 0) {
+            holder.ivMedal.setVisibility(history.getCaloriesBurn() > caloriesBurnADay ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -59,12 +64,14 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvPracticeDate, tvWorkoutTimes, tvCaloriesBurn;
+        private ImageView ivMedal;
 
         public ViewHolder(View itemView) {
             super(itemView);
             tvPracticeDate = itemView.findViewById(R.id.tv_practice_date);
             tvWorkoutTimes = itemView.findViewById(R.id.tv_workout_times);
             tvCaloriesBurn = itemView.findViewById(R.id.tv_calories_burn);
+            ivMedal = itemView.findViewById(R.id.iv_medal);
 //            tvHeight = itemView.findViewById(R.id.tv_height);
 //            tvWeight = itemView.findViewById(R.id.tv_weight);
         }
@@ -76,5 +83,14 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
 
     public void setItemHighlight(int itemHighlight) {
         this.itemHighlight = itemHighlight;
+    }
+
+    public double getCaloriesBurnADay() {
+        return caloriesBurnADay;
+    }
+
+    public void setCaloriesBurnADay(double caloriesBurnADay) {
+        this.caloriesBurnADay = caloriesBurnADay;
+        notifyDataSetChanged();
     }
 }

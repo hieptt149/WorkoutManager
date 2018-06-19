@@ -185,6 +185,7 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
                     currUser = dataSnapshot.getValue(User.class);
                     currUser.setId(dataSnapshot.getKey());
                     caloriesBurnADay = Common.calculateCaloriesBurnADay(currUser.getGender(), currUser.getAge(), currUser.getHeight(), currUser.getWeight());
+                    historyListAdapter.setCaloriesBurnADay(caloriesBurnADay);
                     tvCaloriesBurnADay.setText("Calories need to burn a day: " + nf.format(caloriesBurnADay));
                 } else {
                     currUser = new User();
@@ -220,9 +221,11 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
                             history.setPracticeDate(snapshot.getKey());
                             lstHistories.add(history);
                             if (history.getCaloriesBurn() > caloriesBurnADay) {
-                                lstHistoryChartEntries.add(new Entry(Float.parseFloat(history.getPracticeDate()), (float) history.getCaloriesBurn(), getResources().getDrawable(R.drawable.star)));
+                                lstHistoryChartEntries.add(new Entry(Float.parseFloat(history.getPracticeDate()),
+                                        (float) history.getCaloriesBurn(), getResources().getDrawable(R.drawable.star)));
                             } else {
-                                lstHistoryChartEntries.add(new Entry(Float.parseFloat(history.getPracticeDate()), (float) history.getCaloriesBurn()));
+                                lstHistoryChartEntries.add(new Entry(Float.parseFloat(history.getPracticeDate()),
+                                        (float) history.getCaloriesBurn()));
                             }
                         }
                         historyListAdapter.notifyDataSetChanged();

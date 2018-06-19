@@ -3,54 +3,56 @@
     android:id="@+id/ln_history_item_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/small_space"
+    android:paddingLeft="@dimen/large_space"
+    android:paddingTop="@dimen/small_space">
+
+    <TextView
+        android:id="@+id/tv_practice_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="marquee"
+        android:gravity="center"
+        android:singleLine="true"
+        android:textSize="@dimen/normal_text_size"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingTop="@dimen/small_space"
-        android:paddingBottom="@dimen/small_space"
-        android:paddingLeft="@dimen/large_space"
-        android:paddingRight="@dimen/large_space">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/tv_practice_date"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="@dimen/normal_text_size"
-            android:textStyle="bold"
-            android:singleLine="true"
-            android:ellipsize="marquee"/>
+            android:layout_weight="8"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_workout_times"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/normal_text_size"
-            android:singleLine="true"
-            android:ellipsize="marquee"/>
+            <TextView
+                android:id="@+id/tv_workout_times"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:textSize="@dimen/normal_text_size" />
 
-        <TextView
-            android:id="@+id/tv_calories_burn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/normal_text_size"
-            android:singleLine="true"
-            android:ellipsize="marquee"/>
+            <TextView
+                android:id="@+id/tv_calories_burn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:textSize="@dimen/normal_text_size" />
 
-        <!--<TextView-->
-            <!--android:id="@+id/tv_height"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:textSize="@dimen/normal_text_size" />-->
+        </LinearLayout>
 
-        <!--<TextView-->
-            <!--android:id="@+id/tv_weight"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:textSize="@dimen/normal_text_size" />-->
+        <ImageView
+            android:id="@+id/iv_medal"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:src="@drawable/medal"
+            android:visibility="gone" />
     </LinearLayout>
-
 </LinearLayout>
