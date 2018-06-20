@@ -23,7 +23,6 @@ import static android.content.Context.ALARM_SERVICE;
 public class NotificationScheduler {
     public static final int DAILY_REMINDER_REQUEST_CODE = 100;
     private static final int TIME_VIBRATE = 1000;
-    public static final String TAG = "NotificationScheduler";
 
     public static void setReminder(Context context, Class<?> cls, int hour, int min) {
         Calendar calendar = Calendar.getInstance();
