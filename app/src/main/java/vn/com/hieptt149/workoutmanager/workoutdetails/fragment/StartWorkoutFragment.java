@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -47,6 +48,7 @@ import vn.com.hieptt149.workoutmanager.utils.MyCountDownTimer;
  */
 public class StartWorkoutFragment extends Fragment implements View.OnClickListener, View.OnTouchListener {
 
+    private FirebaseAuth auth;
     private TextView tvAddWorkoutToolbarTitle,tvAddworkoutDone, tvExerciseName, tvDuration;
     private ImageView ivPreviousExercise, ivNextExercise;
     private CustomViewPager vpExercisePreview;
@@ -168,6 +170,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         handler = new Handler();
         vibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
         audioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
+        auth = FirebaseAuth.getInstance();
         tvAddWorkoutToolbarTitle.setText(!workoutTitle.equals("") ? workoutTitle : getString(R.string.start_workout));
         tvAddworkoutDone.setText(R.string.back);
         createTimerList();
@@ -231,7 +234,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
                         mainAlarm.start();
                     }
                     countDownTimer.cancel();
-                    if (currUser != null && currUser.getAge() != 0) {
+                    if (auth.getCurrentUser() != null) {
                         if (Common.haveNetworkConnection(getContext())) {
                             createWorkoutHistory();
                         } else {
@@ -315,7 +318,7 @@ public class StartWorkoutFragment extends Fragment implements View.OnClickListen
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
         currUsersHistoryRef = FirebaseDatabase.getInstance().getReference()
-                .child(ConstantValue.HISTORY).child(currUser.getId()).child(String.valueOf(cal.getTimeInMillis()));
+                .child(ConstantValue.HISTORY).child(auth.getCurrentUser().getUid()).child(String.valueOf(cal.getTimeInMillis()));
         currUsersHistoryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

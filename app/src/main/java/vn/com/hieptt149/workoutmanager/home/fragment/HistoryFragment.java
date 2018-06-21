@@ -166,6 +166,7 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
             ll.setLineWidth(2f);
             ll.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
             ll.setTextSize(14f);
+            yAxis.removeAllLimitLines();
             yAxis.addLimitLine(ll);
             yAxis.setDrawLimitLinesBehindData(true);
 
