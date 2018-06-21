@@ -227,15 +227,15 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
                         if (Common.haveNetworkConnection(getContext())) {
                             DisplayView.showProgressDialog(getContext());
                             if (tag.equals(ConstantValue.ADD_WORKOUT)) {
-                                if (currUser != null) {
+//                                if (currUser != null && !currUser.getId().equals(auth.getCurrentUser().getUid())) {
+//                                    currUsersWorkoutRef = FirebaseDatabase.getInstance().getReference()
+//                                            .child(ConstantValue.WORKOUT).child(currUser.getId());
+//                                } else {
+                                if (auth.getCurrentUser() != null) {
                                     currUsersWorkoutRef = FirebaseDatabase.getInstance().getReference()
-                                            .child(ConstantValue.WORKOUT).child(currUser.getId());
-                                } else {
-                                    if (auth.getCurrentUser() != null) {
-                                        currUsersWorkoutRef = FirebaseDatabase.getInstance().getReference()
-                                                .child(ConstantValue.WORKOUT).child(auth.getCurrentUser().getUid());
-                                    }
+                                            .child(ConstantValue.WORKOUT).child(auth.getCurrentUser().getUid());
                                 }
+//                                }
                                 currUsersWorkoutRef.push().setValue(newWorkout).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
@@ -368,7 +368,7 @@ public class WorkoutDetailsFragment extends Fragment implements View.OnClickList
 
     private void init(View view) {
         tvAddWorkoutToolbarTitle = getActivity().findViewById(R.id.tv_addworkout_toolbar_title);
-        tvAddworkoutDone=getActivity().findViewById(R.id.tv_addworkout_back);
+        tvAddworkoutDone = getActivity().findViewById(R.id.tv_addworkout_back);
         tvTotalExercise = view.findViewById(R.id.tv_total_exercise);
         tvTotalTime = view.findViewById(R.id.tv_total_time);
         tvExerciseName = view.findViewById(R.id.tv_exercise_name);
